@@ -5,4 +5,7 @@ abstract class NutritionxSearchService extends ChopperService {
 
   static NutritionxSearchService create([ChopperClient client]) => _$NutritionxSearchService(client);
 
+  @Get(path: "instant/{detailed}/{query}")
+  Future<Response> getListOfSearchFood(@Path('query') String food, @Path('detailed') bool isShowDetails);
+
 }
