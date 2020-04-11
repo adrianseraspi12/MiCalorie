@@ -50,6 +50,7 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
                   onEditingComplete: () {
                     final query = _textEditingController.text;
                     bloc.submitQuery(query);
+                    FocusScope.of(context).requestFocus(FocusNode());
                   },
                 ),
               ),
