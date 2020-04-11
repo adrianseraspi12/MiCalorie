@@ -37,12 +37,13 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> {
             child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12.0),
                 child: TextFormField(
+                  textInputAction: TextInputAction.search,
                   controller: _controller,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: 'Search Food',
                     labelStyle: TextStyle(color: Colors.black),
-                    suffixIcon: Icon(Icons.search, color: Colors.black,),
+                    suffixIcon: Icon(Icons.search, color: Colors.black),
                   ),
                   onEditingComplete: () {
                     final query = _controller.text;
