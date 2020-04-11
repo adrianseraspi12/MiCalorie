@@ -3,18 +3,56 @@ import 'package:flutter/material.dart';
 import 'package:calorie_counter/bloc/bloc_provider.dart';
 import 'package:calorie_counter/bloc/search_food_query_bloc.dart';
 
-class SearchFoodScreen extends StatelessWidget {
+class SearchFoodScreen extends StatefulWidget {
+  
+  @override
+  _SearchFoodScreenState createState() => _SearchFoodScreenState();
+
+}
+
+class _SearchFoodScreenState extends State<SearchFoodScreen> {
+
+  TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-
     final bloc = SearchFoodQueryBloc();
     bloc.setUpClient();
 
     return BlocProvider<SearchFoodQueryBloc>(
       bloc: bloc,
-          child: Scaffold(
-        appBar: AppBar(title: Text('Food List')),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(4.0)),
+            ),
+            child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12.0),
+                child: TextFormField(
+                  controller: _controller,
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Search Food',
+                    labelStyle: TextStyle(color: Colors.black),
+                    suffixIcon: Icon(Icons.search, color: Colors.black,),
+                  ),
+                  onEditingComplete: () {
+                    final query = _controller.text;
+                    bloc.submitQuery(query);
+                  },
+                ),
+              ),
+            ),
+
+        ),
         body: Column(
           children: <Widget>[
             Padding(
@@ -73,6 +111,12 @@ class SearchFoodScreen extends StatelessWidget {
       }, 
       separatorBuilder: (BuildContext context, int index) => Divider(), 
       itemCount: listOfFood.brandedFood.length);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
 }
