@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:rxdart/rxdart.dart';
 
 import 'package:calorie_counter/data/model/list_of_food.dart';
 import 'package:calorie_counter/data/nutritionx_client.dart';
@@ -7,9 +8,13 @@ import 'bloc.dart';
 
 class SearchFoodQueryBloc implements Bloc {
 
-  final _controller = StreamController<ListOfFood>();
+  final _commonFoodController = BehaviorSubject<List<CommonFood>>();
+  final _brandedFoodController = BehaviorSubject<List<BrandedFood>>();
+
   final _nutritionxClient = NutritionxClient();
-  Stream<ListOfFood> get listOfFoodStream => _controller.stream;
+
+  Stream<List<CommonFood>> get commonFoodStream => _commonFoodController.stream;
+  Stream<List<BrandedFood>> get brandedFoodStream => _brandedFoodController.stream;
 
   void setUpClient() async {
     await _nutritionxClient.setUpClient();
@@ -17,13 +22,14 @@ class SearchFoodQueryBloc implements Bloc {
 
   void submitQuery(String query) async {
     final results = await _nutritionxClient.searchFood(query);
-    print("FOOD NAME = ${results.commonFood}");
-    _controller.sink.add(results);
+    _commonFoodController.sink.add(results.commonFood);
+    _brandedFoodController.sink.add(results.brandedFood);
   }
 
   @override
   void dispose() {
-    _controller.close();
+    _commonFoodController.close();
+    _brandedFoodController.close();
   }
 
 }

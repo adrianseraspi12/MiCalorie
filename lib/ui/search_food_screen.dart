@@ -10,13 +10,15 @@ class SearchFoodScreen extends StatefulWidget {
 
 }
 
-class _SearchFoodScreenState extends State<SearchFoodScreen> {
+class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerProviderStateMixin {
 
-  TextEditingController _controller = TextEditingController();
+  TextEditingController _textEditingController = TextEditingController();
+  TabController _tabController;
 
   @override
   void initState() {
     // TODO: implement initState
+    _tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
 
@@ -38,7 +40,7 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> {
                 padding: EdgeInsets.symmetric(horizontal: 12.0),
                 child: TextFormField(
                   textInputAction: TextInputAction.search,
-                  controller: _controller,
+                  controller: _textEditingController,
                   decoration: InputDecoration(
                     border: InputBorder.none,
                     hintText: 'Search Food',
@@ -46,42 +48,41 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> {
                     suffixIcon: Icon(Icons.search, color: Colors.black),
                   ),
                   onEditingComplete: () {
-                    final query = _controller.text;
+                    final query = _textEditingController.text;
                     bloc.submitQuery(query);
                   },
                 ),
               ),
             ),
 
-        ),
-        body: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: TextField(
-                decoration: InputDecoration(border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(4)),
-                  hintText: 'Search Food'),
-                
-                onChanged: (query) {
-                  bloc.submitQuery(query);
-                },
-                
-              ),
+          bottom: TabBar(
+            controller: _tabController,
+            indicatorColor: Colors.white,
+            unselectedLabelColor: Colors.grey,
+            labelColor: Colors.white,
+            tabs: <Widget>[
+              Tab(text: 'Common Foods',),
+              Tab(text: 'Branded Foods',)
+            ],
+            
             ),
 
-            Expanded(child: _buildResults(bloc))
-
+        ),
+        body: TabBarView(
+          controller: _tabController,
+          children: <Widget> [
+            _buildCommonFoodResults(bloc),
+            _buildBrandedFoodResults(bloc),
           ],
+          )
 
-          ),
       ),
     );
   }
 
-  Widget _buildResults(SearchFoodQueryBloc bloc) {
-    return StreamBuilder<ListOfFood>(
-      stream: bloc.listOfFoodStream,
+  Widget _buildCommonFoodResults(SearchFoodQueryBloc bloc) {
+    return StreamBuilder<List<CommonFood>>(
+      stream: bloc.commonFoodStream,
       builder: (context, snapshot) {
 
         final results = snapshot.data;
@@ -90,33 +91,61 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> {
           return Center(child: Text('Search A Food'));
         }
 
-        if (results.commonFood.isEmpty) {
+        if (results.isEmpty) {
           return Center(child: Text('No Food Found'));
         }
 
-        return _buildSearchResults(results);
+        return ListView.separated(
+          itemBuilder: (context, index) {
+
+            final commonFood = results[index];
+        
+            return ListTile(
+              title: Text(commonFood.foodName)
+            );
+
+        }, 
+        separatorBuilder: (BuildContext context, int index) => Divider(), 
+        itemCount: results.length);
 
       });
   }
 
-  Widget _buildSearchResults(ListOfFood listOfFood) {
-    return ListView.separated(
-      itemBuilder: (context, index) {
+  Widget _buildBrandedFoodResults(SearchFoodQueryBloc bloc) {
+    return StreamBuilder<List<BrandedFood>>(
+      stream: bloc.brandedFoodStream,
+      builder: (context, snapshot) {
 
-        final commonFood = listOfFood.commonFood[index];
+        final results = snapshot.data;
+
+        if (results == null) {
+          return Center(child: Text('Search A Food'));
+        }
+
+        if (results.isEmpty) {
+          return Center(child: Text('No Food Found'));
+        }
+
+        return ListView.separated(
+          itemBuilder: (context, index) {
+
+            final commonFood = results[index];
         
-        return ListTile(
-          title: Text(commonFood.foodName)
-        );
+            return ListTile(
+              title: Text(commonFood.foodName)
+            );
 
-      }, 
-      separatorBuilder: (BuildContext context, int index) => Divider(), 
-      itemCount: listOfFood.brandedFood.length);
+        }, 
+        separatorBuilder: (BuildContext context, int index) => Divider(), 
+        itemCount: results.length);
+
+      });
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _textEditingController.dispose();
+    _tabController.dispose();
     super.dispose();
   }
 
