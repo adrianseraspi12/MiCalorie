@@ -7,4 +7,6 @@ class Food {
   String servingSize;
   List<Nutrients> nutrients;
 
+  Food(this.name, this.numberOfServings, this.servingSize, this.nutrients);
+
 }
