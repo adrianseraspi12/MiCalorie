@@ -1,7 +1,11 @@
+import 'package:calorie_counter/data/model/food.dart';
 import 'package:calorie_counter/data/model/list_of_food.dart';
 import 'package:flutter/material.dart';
 import 'package:calorie_counter/bloc/bloc_provider.dart';
 import 'package:calorie_counter/bloc/search_food_query_bloc.dart';
+import 'package:calorie_counter/util/extension/ext_nutrient_list.dart';
+
+import 'food_details_screen.dart';
 
 class SearchFoodScreen extends StatefulWidget {
   
@@ -17,7 +21,6 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
 
   @override
   void initState() {
-    // TODO: implement initState
     _tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
@@ -97,18 +100,28 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
         }
 
         return ListView.separated(
+          separatorBuilder: (BuildContext context, int index) => Divider(), 
+          itemCount: results.length,
           itemBuilder: (context, index) {
 
             final commonFood = results[index];
         
             return ListTile(
-              title: Text(commonFood.foodName)
+              title: Text(commonFood.foodName),
+              onTap: () {
+                final food = Food(name: commonFood.foodName,
+                                  numberOfServings: commonFood.servingQty,
+                                  servingSize: commonFood.servingUnit,
+                                  nutrients: commonFood.nutrients);
+                
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (BuildContext context) => FoodDetailsScreen(food: food,))
+                );
+              },
             );
 
-        }, 
-        separatorBuilder: (BuildContext context, int index) => Divider(), 
-        itemCount: results.length);
-
+        },
+        );
       });
   }
 
@@ -128,17 +141,28 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
         }
 
         return ListView.separated(
+          separatorBuilder: (BuildContext context, int index) => Divider(), 
+          itemCount: results.length,
           itemBuilder: (context, index) {
 
-            final commonFood = results[index];
+            final brandedFood = results[index];
         
             return ListTile(
-              title: Text(commonFood.foodName)
+              title: Text(brandedFood.foodName),
+              onTap: () {
+                final food = Food(name: brandedFood.foodName,
+                                  numberOfServings: brandedFood.servingQty,
+                                  servingSize: brandedFood.servingUnit,
+                                  nutrients: brandedFood.nutrients);
+                
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (BuildContext context) => FoodDetailsScreen(food: food,))
+                );
+              },
             );
 
         }, 
-        separatorBuilder: (BuildContext context, int index) => Divider(), 
-        itemCount: results.length);
+        );
 
       });
   }
