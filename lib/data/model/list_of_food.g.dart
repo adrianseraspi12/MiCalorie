@@ -54,6 +54,8 @@ BrandedFood _$BrandedFoodFromJson(Map<String, dynamic> json) {
     json['nix_item_id'] as String,
     json['food_name'] as String,
     json['brand_name'] as String,
+    json['serving_unit'] as String,
+    json['serving_qty'] as int,
     json['photo'] == null
         ? null
         : Photo.fromJson(json['photo'] as Map<String, dynamic>),
@@ -69,6 +71,8 @@ Map<String, dynamic> _$BrandedFoodToJson(BrandedFood instance) =>
       'nix_item_id': instance.nixItemId,
       'food_name': instance.foodName,
       'brand_name': instance.brandName,
+      'serving_unit': instance.servingUnit,
+      'serving_qty': instance.servingQty,
       'photo': instance.photo,
       'full_nutrients': instance.nutrients,
     };

@@ -56,12 +56,18 @@ class BrandedFood {
   @JsonKey(name: 'brand_name')
   String brandName;
 
+  @JsonKey(name: 'serving_unit')
+  String servingUnit;
+
+  @JsonKey(name: 'serving_qty')
+  int servingQty;
+
   Photo photo;
 
   @JsonKey(name: 'full_nutrients')
   List<Nutrients> nutrients;
 
-  BrandedFood(this.nixItemId, this.foodName, this.brandName, this.photo, this.nutrients);
+  BrandedFood(this.nixItemId, this.foodName, this.brandName, this.servingUnit, this.servingQty, this.photo, this.nutrients);
 
   factory BrandedFood.fromJson(Map<String, dynamic> json) => _$BrandedFoodFromJson(json);
 
