@@ -5,7 +5,8 @@ extension NutrientList on List<Nutrients> {
   static const Map<NutrientType, int> _nutrientTypeAttrId = {
     NutrientType.carbs: 205,
     NutrientType.fat: 204,
-    NutrientType.protein: 203
+    NutrientType.protein: 203,
+    NutrientType.calories: 208
   };
 
   double getNutrient(NutrientType type) {
@@ -24,5 +25,6 @@ enum NutrientType {
   carbs,
   fat,
   protein,
+  calories
 
 }
