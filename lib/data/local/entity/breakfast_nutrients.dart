@@ -10,4 +10,6 @@ class BreakfastNutrients {
   final double fat;
   final double protein;
 
+  BreakfastNutrients(this.id, this.calories, this.carbs, this.fat, this.protein);
+
 }
