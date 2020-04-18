@@ -4,13 +4,16 @@ import 'package:calorie_counter/data/local/entity/lunch_nutrients.dart';
 @dao
 abstract class LunchNutrientsDao {
 
+  @Query('SELECT * FROM lunch_nutrients WHERE id = :id')
+  Future<LunchNutrients> findLunchById(int id);
+
   @insert
-  Future<int> insertBreakfast(LunchNutrients lunchNutrients);
+  Future<int> insertLunch(LunchNutrients lunchNutrients);
 
   @update
-  Future<int> updateBreakfast(LunchNutrients lunchNutrients);
+  Future<int> updateLunch(LunchNutrients lunchNutrients);
 
   @delete
-  Future<int> deleteBreakfast(LunchNutrients lunchNutrients);
+  Future<int> deleteLunch(LunchNutrients lunchNutrients);
 
 }

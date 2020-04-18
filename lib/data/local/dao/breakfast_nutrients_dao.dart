@@ -5,6 +5,9 @@ import 'package:floor/floor.dart';
 @dao
 abstract class BreakfastNutrientsDao {
 
+  @Query('SELECT * FROM breakfast_nutrients WHERE id = :id')
+  Future<BreakfastNutrients> findBreakfastById(int id);
+
   @insert
   Future<int> insertBreakfast(BreakfastNutrients breakfastNutrients);
 
