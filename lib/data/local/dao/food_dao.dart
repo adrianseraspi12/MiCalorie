@@ -1,5 +1,5 @@
+import 'package:calorie_counter/data/local/entity/food.dart';
 import 'package:floor/floor.dart';
-import 'package:calorie_counter/data/model/food.dart';
 
 @dao
 abstract class FoodDao {
