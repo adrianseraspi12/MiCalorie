@@ -3,7 +3,7 @@ import 'package:floor/floor.dart';
 @Entity(tableName: 'dinner_nutrients')
 class DinnerNutrients {
 
-  @primaryKey
+  @PrimaryKey(autoGenerate: true)
   final int id;
   final int calories;
   final double carbs;
