@@ -5,12 +5,12 @@ import 'package:calorie_counter/data/local/entity/lunch_nutrients.dart';
 abstract class LunchNutrientsDao {
 
   @insert
-  Future<int> insertBreakfast(LunchNutrients breakfastNutrients);
+  Future<int> insertBreakfast(LunchNutrients lunchNutrients);
 
   @update
-  Future<int> updateBreakfast(LunchNutrients breakfastNutrients);
+  Future<int> updateBreakfast(LunchNutrients lunchNutrients);
 
   @delete
-  Future<int> deleteBreakfast(LunchNutrients breakfastNutrients);
+  Future<int> deleteBreakfast(LunchNutrients lunchNutrients);
 
 }
