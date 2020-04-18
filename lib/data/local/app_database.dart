@@ -30,8 +30,8 @@ abstract class AppDatabase extends FloorDatabase {
   SnackNutrientsDao get snackNutrientsDao;
   FoodDao get foodDao;
 
-  // static AppDatabase getInstance() async {
-  //   return await $AppDatabase
-  // }
+  static Future<AppDatabase> getInstance() async {
+    return await $FloorAppDatabase.databaseBuilder('app_db.sqlite').build();
+  }
 
 }
