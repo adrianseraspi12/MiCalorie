@@ -11,6 +11,7 @@ abstract class BreakfastNutrientsDao {
   @update
   Future<int> updateBreakfast(BreakfastNutrients breakfastNutrients);
 
+  @delete
   Future<int> deleteBreakfast(BreakfastNutrients breakfastNutrients);
 
 }
