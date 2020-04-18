@@ -1,7 +1,6 @@
-import 'package:calorie_counter/data/local/entity/total_nutrients_per_day.dart';
 import 'package:floor/floor.dart';
 
-@entity
+@Entity(tableName: 'breakfast_nutrients')
 class BreakfastNutrients {
 
   @primaryKey
