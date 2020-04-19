@@ -9,14 +9,15 @@ class TotalNutrientsPerDayRepository implements Repository<TotalNutrientsPerDay>
   TotalNutrientsPerDayRepository(this._totalNutrientsPerDayDao);
 
   @override
-  void get(int itemDate, successCallback, failCallback) async {
-    final totalNutrientsPerDay = await _totalNutrientsPerDayDao.findTotalNutrientsByDate(itemDate);
-    
+  void get<String>(String date, successCallback, failCallback) async {
+    final totalNutrientsPerDay = await _totalNutrientsPerDayDao.findTotalNutrientsByDate(date.toString());
+
     if (totalNutrientsPerDay != null) {
       successCallback(totalNutrientsPerDay);
     }
     else {
-      failCallback('Cannot find the reference $itemDate');
+      final totalNutrientsPerDay = TotalNutrientsPerDay(0, 0, 0, 0, 0, date.toString(), 0, 0, 0, 0);
+      successCallback(totalNutrientsPerDay);
     }
   }
 
