@@ -28,7 +28,7 @@ class TotalNutrientsPerDay {
 
   @PrimaryKey(autoGenerate: true)
   final int id;
-  final int date;
+  final String date;
   final int calories;
   final double carbs;
   final double fat;

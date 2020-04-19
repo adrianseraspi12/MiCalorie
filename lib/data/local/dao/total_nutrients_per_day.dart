@@ -6,7 +6,7 @@ import 'package:floor/floor.dart';
 abstract class TotalNutrientsPerDayDao {
 
   @Query('SELECT * FROM total_nutrients_per_day WHERE date = :date')
-  Future<TotalNutrientsPerDay> findTotalNutrientsByDate(int date);
+  Future<TotalNutrientsPerDay> findTotalNutrientsByDate(String date);
 
   @insert
   Future<int> insertTotalNutrients(TotalNutrientsPerDay totalNutrientsPerDay);
