@@ -9,50 +9,57 @@ class TotalNutrientsPerDayRepository implements Repository<TotalNutrientsPerDay>
   TotalNutrientsPerDayRepository(this._totalNutrientsPerDayDao);
 
   @override
-  void get(int itemDate, Listener<TotalNutrientsPerDay> listener) async {
+  void get(int itemDate, successCallback, failCallback) async {
     final totalNutrientsPerDay = await _totalNutrientsPerDayDao.findTotalNutrientsByDate(itemDate);
     
     if (totalNutrientsPerDay != null) {
-      listener.onSuccess(totalNutrientsPerDay);
+      successCallback(totalNutrientsPerDay);
     }
     else {
-      listener.onFailed('Cannot find the reference $itemDate');
+      failCallback('Cannot find the reference $itemDate');
     }
   }
 
   @override
-  void getListOfData(Listener<List<TotalNutrientsPerDay>> listener) async {
+  void getListOfData(successCallback, failCallback) async {
 
   }
 
   @override
-  void save(TotalNutrientsPerDay data, Listener<TotalNutrientsPerDay> listener) async {
+  void remove(TotalNutrientsPerDay data, successCallback, failCallback) async {
+    final itemId = await _totalNutrientsPerDayDao.deleteTotalNutrients(data);
+    
+    if (itemId == data.id) {
+      successCallback(data);
+    }
+    else {
+      failCallback('Failed deleting the total nutrients');
+    }
+  }
+
+  @override
+  void update(TotalNutrientsPerDay data, successCallback, failCallback) async {
     final itemId = await _totalNutrientsPerDayDao.insertTotalNutrients(data);
     
     if (itemId == data.id) {
-      listener.onSuccess(data);
+      successCallback(data);
     }
     else {
-      listener.onFailed('Failed saving the total nutrients');
-    }
+      failCallback('Failed updating the total nutrients');
+    }   
 
   }
 
   @override
-  void update(TotalNutrientsPerDay data, Listener<TotalNutrientsPerDay> listener) async {
-    final itemId = await _totalNutrientsPerDayDao.updateTotalNutrients(data);
+  void save(TotalNutrientsPerDay data, successCallback, failCallback) async {
+    final itemId = await _totalNutrientsPerDayDao.insertTotalNutrients(data);
     
     if (itemId == data.id) {
-      listener.onSuccess(data);
+      successCallback(data);
     }
     else {
-      listener.onFailed('Failed updating the total nutrients');
-    }
-  }
-
-  @override
-  void remove(TotalNutrientsPerDay data, Listener<TotalNutrientsPerDay> listener) {
-
+      failCallback('Failed saving the total nutrients');
+    } 
   }
 
 }
