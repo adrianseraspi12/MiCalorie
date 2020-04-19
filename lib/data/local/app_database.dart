@@ -1,3 +1,7 @@
+import 'dart:async';
+import 'package:sqflite/sqflite.dart' as sqflite;
+import 'package:path/path.dart';
+
 import 'package:floor/floor.dart';
 
 import 'package:calorie_counter/data/local/dao/breakfast_nutrients_dao.dart';
@@ -31,7 +35,7 @@ abstract class AppDatabase extends FloorDatabase {
   FoodDao get foodDao;
 
   static Future<AppDatabase> getInstance() async {
-    return await $FloorAppDatabase.databaseBuilder('app_db.sqlite').build();
+    return await $FloorAppDatabase.databaseBuilder('app_database.db').build();
   }
 
 }

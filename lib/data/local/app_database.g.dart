@@ -91,7 +91,7 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `total_nutrients_per_day` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` INTEGER, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, `breakfast_id` INTEGER, `lunch_id` INTEGER, `dinner_id` INTEGER, `snack_id` INTEGER, FOREIGN KEY (`breakfast_id`) REFERENCES `breakfast_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`lunch_id`) REFERENCES `lunch_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`dinner_id`) REFERENCES `dinner_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`snack_id`) REFERENCES `snack_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
+            'CREATE TABLE IF NOT EXISTS `total_nutrients_per_day` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` TEXT, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, `breakfast_id` INTEGER, `lunch_id` INTEGER, `dinner_id` INTEGER, `snack_id` INTEGER, FOREIGN KEY (`breakfast_id`) REFERENCES `breakfast_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`lunch_id`) REFERENCES `lunch_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`dinner_id`) REFERENCES `dinner_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`snack_id`) REFERENCES `snack_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `breakfast_nutrients` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL)');
         await database.execute(
@@ -208,7 +208,7 @@ class _$TotalNutrientsPerDayDao extends TotalNutrientsPerDayDao {
           row['lunch_id'] as int,
           row['dinner_id'] as int,
           row['snack_id'] as int,
-          row['date'] as int,
+          row['date'] as String,
           row['calories'] as int,
           row['carbs'] as double,
           row['fat'] as double,
@@ -223,7 +223,7 @@ class _$TotalNutrientsPerDayDao extends TotalNutrientsPerDayDao {
       _totalNutrientsPerDayDeletionAdapter;
 
   @override
-  Future<TotalNutrientsPerDay> findTotalNutrientsByDate(int date) async {
+  Future<TotalNutrientsPerDay> findTotalNutrientsByDate(String date) async {
     return _queryAdapter.query(
         'SELECT * FROM total_nutrients_per_day WHERE date = ?',
         arguments: <dynamic>[date],
