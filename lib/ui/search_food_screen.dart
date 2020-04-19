@@ -3,7 +3,6 @@ import 'package:calorie_counter/data/model/list_of_food.dart';
 import 'package:flutter/material.dart';
 import 'package:calorie_counter/bloc/bloc_provider.dart';
 import 'package:calorie_counter/bloc/search_food_query_bloc.dart';
-import 'package:calorie_counter/util/extension/ext_nutrient_list.dart';
 
 import 'food_details_screen.dart';
 
