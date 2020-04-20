@@ -1,10 +1,7 @@
 import 'dart:async';
+import 'package:calorie_counter/data/model/meal_summary.dart';
 
 import 'package:calorie_counter/data/local/app_database.dart';
-import 'package:calorie_counter/data/local/entity/breakfast_nutrients.dart';
-import 'package:calorie_counter/data/local/entity/dinner_nutrients.dart';
-import 'package:calorie_counter/data/local/entity/lunch_nutrients.dart';
-import 'package:calorie_counter/data/local/entity/snack_nutrients.dart';
 import 'package:calorie_counter/data/local/entity/total_nutrients_per_day.dart';
 import 'package:calorie_counter/data/local/repository/total_nutrients_per_day_repository.dart';
 import 'package:rxdart/subjects.dart';
@@ -12,17 +9,8 @@ import 'bloc.dart';
 
 class DailySummaryBloc implements Bloc {
   
-  final _totalNutrientsPerDayController = PublishSubject<TotalNutrientsPerDay>();
-  final _breakfastController = PublishSubject<BreakfastNutrients>();
-  final _lunchController = PublishSubject<LunchNutrients>();
-  final _dinnerController = PublishSubject<DinnerNutrients>();
-  final _snackController = PublishSubject<SnackNutrients>();
-
-  Stream<TotalNutrientsPerDay> get totalNutrientsPerDayStream => _totalNutrientsPerDayController.stream;
-  Stream<BreakfastNutrients> get breakfastNutrientsStream => _breakfastController.stream;
-  Stream<LunchNutrients> get lunchNutrientsStream => _lunchController.stream;
-  Stream<DinnerNutrients> get dinnerNutrientsStream => _dinnerController.stream;
-  Stream<SnackNutrients> get snackNutrientsStream => _snackController.stream;
+  final _dailySummaryController = PublishSubject<DailySummaryResult>();
+  Stream<DailySummaryResult> get dailySummaryResultStream => _dailySummaryController.stream;
 
   TotalNutrientsPerDayRepository _totalNutrientsPerDayRepository;
 
@@ -33,22 +21,30 @@ class DailySummaryBloc implements Bloc {
   }
 
   void changeTotalNutrients(String dateInMills) async {
-    _totalNutrientsPerDayRepository.get<String>(dateInMills, 
-    (data) {
-      _totalNutrientsPerDayController.sink.add(data);
-    }, 
-    (message) {
-      print('ERROR = $message');
-    });
+    List<MealSummary> listMealSummary = [];
+    // final totalNutrientsPerDay = await _totalNutrientsPerDayRepository.get<String>(dateInMills);
+    final totalNutrientsPerDay = TotalNutrientsPerDay(0, 0, 0, 0, 0, '03/12/2020', 0, 0, 0, 0);
+    listMealSummary.add(MealSummary('Breakfast', 0, 0, 0, 0));
+    listMealSummary.add(MealSummary('Lunch', 0, 0, 0, 0));
+    listMealSummary.add(MealSummary('Dinner', 0, 0, 0, 0));
+    listMealSummary.add(MealSummary('Snack', 0, 0, 0, 0));
+
+    final dailySummary = DailySummaryResult(totalNutrientsPerDay, listMealSummary);
+    _dailySummaryController.sink.add(dailySummary);
   }
 
   @override
   void dispose() {
-    _totalNutrientsPerDayController.close();
-    _breakfastController.close();
-    _lunchController.close();
-    _dinnerController.close();
-    _snackController.close();
+    _dailySummaryController.close();
   }
+
+}
+
+class DailySummaryResult {
+
+  TotalNutrientsPerDay totalNutrientsPerDay;
+  List<MealSummary> mealSummary;
+
+  DailySummaryResult(this.totalNutrientsPerDay, this.mealSummary);
 
 }
