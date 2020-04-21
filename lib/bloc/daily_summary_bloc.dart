@@ -24,10 +24,10 @@ class DailySummaryBloc implements Bloc {
     List<MealSummary> listMealSummary = [];
     // final totalNutrientsPerDay = await _totalNutrientsPerDayRepository.get<String>(dateInMills);
     final totalNutrientsPerDay = TotalNutrientsPerDay(0, 0, 0, 0, 0, '03/12/2020', 0, 0, 0, 0);
-    listMealSummary.add(MealSummary('Breakfast', 0, 0, 0, 0));
-    listMealSummary.add(MealSummary('Lunch', 0, 0, 0, 0));
-    listMealSummary.add(MealSummary('Dinner', 0, 0, 0, 0));
-    listMealSummary.add(MealSummary('Snack', 0, 0, 0, 0));
+    listMealSummary.add(MealSummary(0, 'Breakfast', 0, 0, 0, 0));
+    listMealSummary.add(MealSummary(0, 'Lunch', 0, 0, 0, 0));
+    listMealSummary.add(MealSummary(0, 'Dinner', 0, 0, 0, 0));
+    listMealSummary.add(MealSummary(0, 'Snack', 0, 0, 0, 0));
 
     final dailySummary = DailySummaryResult(totalNutrientsPerDay, listMealSummary);
     _dailySummaryController.sink.add(dailySummary);
