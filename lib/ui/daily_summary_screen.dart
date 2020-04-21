@@ -2,6 +2,7 @@ import 'package:calorie_counter/bloc/bloc_provider.dart';
 import 'package:calorie_counter/bloc/daily_summary_bloc.dart';
 import 'package:calorie_counter/data/local/entity/total_nutrients_per_day.dart';
 import 'package:calorie_counter/data/model/meal_summary.dart';
+import 'package:calorie_counter/ui/meal_food_list_screen.dart';
 import 'package:flutter/material.dart';
 
 class DailySummaryScreen extends StatelessWidget {
@@ -44,7 +45,7 @@ class DailySummaryScreen extends StatelessWidget {
 
               var mealSummary = dailySummaryResult.mealSummary[index];
 
-              return _buildMealSummary(mealSummary);
+              return _buildMealSummary(context, mealSummary);
 
             });
         }
@@ -102,12 +103,16 @@ class DailySummaryScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMealSummary(MealSummary mealSummary) {
+  Widget _buildMealSummary(BuildContext context, MealSummary mealSummary) {
     return Material(
       child: Card(
         margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: InkWell(
-          onTap: () {},
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => MealFoodListScreen(mealSummary: mealSummary,))
+            );
+          },
           child: Container(
             child: Column(
               
