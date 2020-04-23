@@ -91,17 +91,17 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `total_nutrients_per_day` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `date` TEXT, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, `breakfast_id` INTEGER, `lunch_id` INTEGER, `dinner_id` INTEGER, `snack_id` INTEGER, FOREIGN KEY (`breakfast_id`) REFERENCES `breakfast_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`lunch_id`) REFERENCES `lunch_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`dinner_id`) REFERENCES `dinner_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`snack_id`) REFERENCES `snack_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
+            'CREATE TABLE IF NOT EXISTS `total_nutrients_per_day` (`id` INTEGER, `date` TEXT, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, `breakfast_id` INTEGER, `lunch_id` INTEGER, `dinner_id` INTEGER, `snack_id` INTEGER, FOREIGN KEY (`breakfast_id`) REFERENCES `breakfast_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`lunch_id`) REFERENCES `lunch_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`dinner_id`) REFERENCES `dinner_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`snack_id`) REFERENCES `snack_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `breakfast_nutrients` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL)');
+            'CREATE TABLE IF NOT EXISTS `breakfast_nutrients` (`id` INTEGER, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `lunch_nutrients` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL)');
+            'CREATE TABLE IF NOT EXISTS `lunch_nutrients` (`id` INTEGER, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `dinner_nutrients` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL)');
+            'CREATE TABLE IF NOT EXISTS `dinner_nutrients` (`id` INTEGER, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `snack_nutrients` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL)');
+            'CREATE TABLE IF NOT EXISTS `snack_nutrients` (`id` INTEGER, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `food` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `meal_id` INTEGER, `name` TEXT, `number_of_servings` INTEGER, `serving_size` TEXT, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, FOREIGN KEY (`meal_id`) REFERENCES `breakfast_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`meal_id`) REFERENCES `lunch_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`meal_id`) REFERENCES `dinner_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`meal_id`) REFERENCES `snack_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION)');
+            'CREATE TABLE IF NOT EXISTS `food` (`id` INTEGER, `meal_id` INTEGER, `name` TEXT, `number_of_servings` INTEGER, `serving_size` TEXT, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, FOREIGN KEY (`meal_id`) REFERENCES `breakfast_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`meal_id`) REFERENCES `lunch_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`meal_id`) REFERENCES `dinner_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`meal_id`) REFERENCES `snack_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -233,13 +233,13 @@ class _$TotalNutrientsPerDayDao extends TotalNutrientsPerDayDao {
   @override
   Future<int> insertTotalNutrients(TotalNutrientsPerDay totalNutrientsPerDay) {
     return _totalNutrientsPerDayInsertionAdapter.insertAndReturnId(
-        totalNutrientsPerDay, sqflite.ConflictAlgorithm.abort);
+        totalNutrientsPerDay, sqflite.ConflictAlgorithm.ignore);
   }
 
   @override
   Future<int> updateTotalNutrients(TotalNutrientsPerDay totalNutrientsPerDay) {
     return _totalNutrientsPerDayUpdateAdapter.updateAndReturnChangedRows(
-        totalNutrientsPerDay, sqflite.ConflictAlgorithm.abort);
+        totalNutrientsPerDay, sqflite.ConflictAlgorithm.ignore);
   }
 
   @override
@@ -315,13 +315,13 @@ class _$BreakfastNutrientsDao extends BreakfastNutrientsDao {
   @override
   Future<int> insertBreakfast(BreakfastNutrients breakfastNutrients) {
     return _breakfastNutrientsInsertionAdapter.insertAndReturnId(
-        breakfastNutrients, sqflite.ConflictAlgorithm.abort);
+        breakfastNutrients, sqflite.ConflictAlgorithm.ignore);
   }
 
   @override
   Future<int> updateBreakfast(BreakfastNutrients breakfastNutrients) {
     return _breakfastNutrientsUpdateAdapter.updateAndReturnChangedRows(
-        breakfastNutrients, sqflite.ConflictAlgorithm.abort);
+        breakfastNutrients, sqflite.ConflictAlgorithm.ignore);
   }
 
   @override
@@ -396,13 +396,13 @@ class _$LunchNutrientsDao extends LunchNutrientsDao {
   @override
   Future<int> insertLunch(LunchNutrients lunchNutrients) {
     return _lunchNutrientsInsertionAdapter.insertAndReturnId(
-        lunchNutrients, sqflite.ConflictAlgorithm.abort);
+        lunchNutrients, sqflite.ConflictAlgorithm.ignore);
   }
 
   @override
   Future<int> updateLunch(LunchNutrients lunchNutrients) {
     return _lunchNutrientsUpdateAdapter.updateAndReturnChangedRows(
-        lunchNutrients, sqflite.ConflictAlgorithm.abort);
+        lunchNutrients, sqflite.ConflictAlgorithm.ignore);
   }
 
   @override
@@ -477,13 +477,13 @@ class _$DinnerNutrientsDao extends DinnerNutrientsDao {
   @override
   Future<int> insertDinner(DinnerNutrients dinnerNutrients) {
     return _dinnerNutrientsInsertionAdapter.insertAndReturnId(
-        dinnerNutrients, sqflite.ConflictAlgorithm.abort);
+        dinnerNutrients, sqflite.ConflictAlgorithm.ignore);
   }
 
   @override
   Future<int> updateDinner(DinnerNutrients dinnerNutrients) {
     return _dinnerNutrientsUpdateAdapter.updateAndReturnChangedRows(
-        dinnerNutrients, sqflite.ConflictAlgorithm.abort);
+        dinnerNutrients, sqflite.ConflictAlgorithm.ignore);
   }
 
   @override
@@ -558,13 +558,13 @@ class _$SnackNutrientsDao extends SnackNutrientsDao {
   @override
   Future<int> insertSnack(SnackNutrients snackNutrients) {
     return _snackNutrientsInsertionAdapter.insertAndReturnId(
-        snackNutrients, sqflite.ConflictAlgorithm.abort);
+        snackNutrients, sqflite.ConflictAlgorithm.ignore);
   }
 
   @override
   Future<int> updateSnack(SnackNutrients snackNutrients) {
     return _snackNutrientsUpdateAdapter.updateAndReturnChangedRows(
-        snackNutrients, sqflite.ConflictAlgorithm.abort);
+        snackNutrients, sqflite.ConflictAlgorithm.ignore);
   }
 
   @override
@@ -654,13 +654,13 @@ class _$FoodDao extends FoodDao {
   @override
   Future<int> insertFood(Food food) {
     return _foodInsertionAdapter.insertAndReturnId(
-        food, sqflite.ConflictAlgorithm.abort);
+        food, sqflite.ConflictAlgorithm.ignore);
   }
 
   @override
   Future<int> updateFood(Food food) {
     return _foodUpdateAdapter.updateAndReturnChangedRows(
-        food, sqflite.ConflictAlgorithm.abort);
+        food, sqflite.ConflictAlgorithm.ignore);
   }
 
   @override
