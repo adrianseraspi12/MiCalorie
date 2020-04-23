@@ -4,7 +4,7 @@ import 'package:floor/floor.dart';
 @Entity(tableName: 'lunch_nutrients')
 class LunchNutrients {
 
-  @PrimaryKey(autoGenerate: true)
+  @primaryKey  
   final int id;
   final int calories;
   final double carbs;

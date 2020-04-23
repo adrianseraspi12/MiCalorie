@@ -8,13 +8,21 @@ abstract class TotalNutrientsPerDayDao {
   @Query('SELECT * FROM total_nutrients_per_day WHERE date = :date')
   Future<TotalNutrientsPerDay> findTotalNutrientsByDate(String date);
 
-  @insert
+  @Insert(onConflict: OnConflictStrategy.IGNORE)
   Future<int> insertTotalNutrients(TotalNutrientsPerDay totalNutrientsPerDay);
 
-  @update
+  @Update(onConflict: OnConflictStrategy.IGNORE)
   Future<int> updateTotalNutrients(TotalNutrientsPerDay totalNutrientsPerDay);
 
   @delete
   Future<int> deleteTotalNutrients(TotalNutrientsPerDay totalNutrientsPerDay);
   
+  void upsert(TotalNutrientsPerDay totalNutrientsPerDay) async {
+    final id = await insertTotalNutrients(totalNutrientsPerDay);
+  
+    if (id == -1) {
+      await updateTotalNutrients(totalNutrientsPerDay);
+    }
+  }
+
 }

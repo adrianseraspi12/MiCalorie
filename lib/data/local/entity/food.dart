@@ -25,7 +25,7 @@ import 'package:floor/floor.dart';
         ])
 class Food {
 
-  @PrimaryKey(autoGenerate: true)
+  @primaryKey
   final int id;
   
   @ColumnInfo(name: 'meal_id')

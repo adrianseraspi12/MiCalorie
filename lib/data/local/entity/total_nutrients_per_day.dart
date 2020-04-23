@@ -26,7 +26,7 @@ import 'breakfast_nutrients.dart';
         ])
 class TotalNutrientsPerDay {
 
-  @PrimaryKey(autoGenerate: true)
+  @primaryKey
   final int id;
   final String date;
   final int calories;

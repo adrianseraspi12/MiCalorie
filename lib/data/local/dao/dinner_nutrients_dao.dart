@@ -7,13 +7,21 @@ abstract class DinnerNutrientsDao {
   @Query('SELECT * FROM dinner_nutrients WHERE id = :id')
   Future<DinnerNutrients> findDinnerById(int id);
 
-  @insert
+  @Insert(onConflict: OnConflictStrategy.IGNORE)
   Future<int> insertDinner(DinnerNutrients dinnerNutrients);
 
-  @update
+  @Update(onConflict: OnConflictStrategy.IGNORE)
   Future<int> updateDinner(DinnerNutrients dinnerNutrients);
 
   @delete
   Future<int> deleteDinner(DinnerNutrients dinnerNutrients);
+
+  void upsert(DinnerNutrients dinnerNutrients) async {
+    final id = await insertDinner(dinnerNutrients);
+  
+    if (id == -1) {
+      await updateDinner(dinnerNutrients);
+    }
+  }
 
 }
