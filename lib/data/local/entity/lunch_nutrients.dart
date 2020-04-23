@@ -10,7 +10,8 @@ class LunchNutrients {
   final double carbs;
   final double fat;
   final double protein;
+  final int totalNutrientsPerDayId;
 
-  LunchNutrients(this.id, this.calories, this.carbs, this.fat, this.protein);
+  LunchNutrients(this.id, this.calories, this.carbs, this.fat, this.protein, this.totalNutrientsPerDayId);
 
 }

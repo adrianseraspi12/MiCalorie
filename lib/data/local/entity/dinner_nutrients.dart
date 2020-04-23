@@ -9,7 +9,8 @@ class DinnerNutrients {
   final double carbs;
   final double fat;
   final double protein;
+  final int totalNutrientsPerDayId;
 
-  DinnerNutrients(this.id, this.calories, this.carbs, this.fat, this.protein);
+  DinnerNutrients(this.id, this.calories, this.carbs, this.fat, this.protein, this.totalNutrientsPerDayId);
 
 }

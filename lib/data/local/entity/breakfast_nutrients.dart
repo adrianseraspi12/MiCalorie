@@ -9,7 +9,8 @@ class BreakfastNutrients {
   final double carbs;
   final double fat;
   final double protein;
+  final int totalNutrientsPerDayId;
 
-  BreakfastNutrients(this.id, this.calories, this.carbs, this.fat, this.protein);
+  BreakfastNutrients(this.id, this.calories, this.carbs, this.fat, this.protein, this.totalNutrientsPerDayId);
 
 }

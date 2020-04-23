@@ -91,15 +91,15 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `total_nutrients_per_day` (`id` INTEGER, `date` TEXT, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, `breakfast_id` INTEGER, `lunch_id` INTEGER, `dinner_id` INTEGER, `snack_id` INTEGER, FOREIGN KEY (`breakfast_id`) REFERENCES `breakfast_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`lunch_id`) REFERENCES `lunch_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`dinner_id`) REFERENCES `dinner_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`snack_id`) REFERENCES `snack_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `total_nutrients_per_day` (`id` INTEGER, `date` TEXT, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `breakfast_nutrients` (`id` INTEGER, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `breakfast_nutrients` (`id` INTEGER, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, `totalNutrientsPerDayId` INTEGER, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `lunch_nutrients` (`id` INTEGER, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `lunch_nutrients` (`id` INTEGER, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, `totalNutrientsPerDayId` INTEGER, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `dinner_nutrients` (`id` INTEGER, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `dinner_nutrients` (`id` INTEGER, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, `totalNutrientsPerDayId` INTEGER, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `snack_nutrients` (`id` INTEGER, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `snack_nutrients` (`id` INTEGER, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, `totalNutrientsPerDayId` INTEGER, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `food` (`id` INTEGER, `meal_id` INTEGER, `name` TEXT, `number_of_servings` INTEGER, `serving_size` TEXT, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, FOREIGN KEY (`meal_id`) REFERENCES `breakfast_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`meal_id`) REFERENCES `lunch_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`meal_id`) REFERENCES `dinner_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, FOREIGN KEY (`meal_id`) REFERENCES `snack_nutrients` (`id`) ON UPDATE NO ACTION ON DELETE NO ACTION, PRIMARY KEY (`id`))');
 
@@ -156,11 +156,7 @@ class _$TotalNutrientsPerDayDao extends TotalNutrientsPerDayDao {
                   'calories': item.calories,
                   'carbs': item.carbs,
                   'fat': item.fat,
-                  'protein': item.protein,
-                  'breakfast_id': item.breakfastId,
-                  'lunch_id': item.lunchId,
-                  'dinner_id': item.dinnerId,
-                  'snack_id': item.snackId
+                  'protein': item.protein
                 }),
         _totalNutrientsPerDayUpdateAdapter = UpdateAdapter(
             database,
@@ -172,11 +168,7 @@ class _$TotalNutrientsPerDayDao extends TotalNutrientsPerDayDao {
                   'calories': item.calories,
                   'carbs': item.carbs,
                   'fat': item.fat,
-                  'protein': item.protein,
-                  'breakfast_id': item.breakfastId,
-                  'lunch_id': item.lunchId,
-                  'dinner_id': item.dinnerId,
-                  'snack_id': item.snackId
+                  'protein': item.protein
                 }),
         _totalNutrientsPerDayDeletionAdapter = DeletionAdapter(
             database,
@@ -188,11 +180,7 @@ class _$TotalNutrientsPerDayDao extends TotalNutrientsPerDayDao {
                   'calories': item.calories,
                   'carbs': item.carbs,
                   'fat': item.fat,
-                  'protein': item.protein,
-                  'breakfast_id': item.breakfastId,
-                  'lunch_id': item.lunchId,
-                  'dinner_id': item.dinnerId,
-                  'snack_id': item.snackId
+                  'protein': item.protein
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -204,10 +192,6 @@ class _$TotalNutrientsPerDayDao extends TotalNutrientsPerDayDao {
   static final _total_nutrients_per_dayMapper = (Map<String, dynamic> row) =>
       TotalNutrientsPerDay(
           row['id'] as int,
-          row['breakfast_id'] as int,
-          row['lunch_id'] as int,
-          row['dinner_id'] as int,
-          row['snack_id'] as int,
           row['date'] as String,
           row['calories'] as int,
           row['carbs'] as double,
@@ -260,7 +244,8 @@ class _$BreakfastNutrientsDao extends BreakfastNutrientsDao {
                   'calories': item.calories,
                   'carbs': item.carbs,
                   'fat': item.fat,
-                  'protein': item.protein
+                  'protein': item.protein,
+                  'totalNutrientsPerDayId': item.totalNutrientsPerDayId
                 }),
         _breakfastNutrientsUpdateAdapter = UpdateAdapter(
             database,
@@ -271,7 +256,8 @@ class _$BreakfastNutrientsDao extends BreakfastNutrientsDao {
                   'calories': item.calories,
                   'carbs': item.carbs,
                   'fat': item.fat,
-                  'protein': item.protein
+                  'protein': item.protein,
+                  'totalNutrientsPerDayId': item.totalNutrientsPerDayId
                 }),
         _breakfastNutrientsDeletionAdapter = DeletionAdapter(
             database,
@@ -282,7 +268,8 @@ class _$BreakfastNutrientsDao extends BreakfastNutrientsDao {
                   'calories': item.calories,
                   'carbs': item.carbs,
                   'fat': item.fat,
-                  'protein': item.protein
+                  'protein': item.protein,
+                  'totalNutrientsPerDayId': item.totalNutrientsPerDayId
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -297,7 +284,8 @@ class _$BreakfastNutrientsDao extends BreakfastNutrientsDao {
           row['calories'] as int,
           row['carbs'] as double,
           row['fat'] as double,
-          row['protein'] as double);
+          row['protein'] as double,
+          row['totalNutrientsPerDayId'] as int);
 
   final InsertionAdapter<BreakfastNutrients>
       _breakfastNutrientsInsertionAdapter;
@@ -342,7 +330,8 @@ class _$LunchNutrientsDao extends LunchNutrientsDao {
                   'calories': item.calories,
                   'carbs': item.carbs,
                   'fat': item.fat,
-                  'protein': item.protein
+                  'protein': item.protein,
+                  'totalNutrientsPerDayId': item.totalNutrientsPerDayId
                 }),
         _lunchNutrientsUpdateAdapter = UpdateAdapter(
             database,
@@ -353,7 +342,8 @@ class _$LunchNutrientsDao extends LunchNutrientsDao {
                   'calories': item.calories,
                   'carbs': item.carbs,
                   'fat': item.fat,
-                  'protein': item.protein
+                  'protein': item.protein,
+                  'totalNutrientsPerDayId': item.totalNutrientsPerDayId
                 }),
         _lunchNutrientsDeletionAdapter = DeletionAdapter(
             database,
@@ -364,7 +354,8 @@ class _$LunchNutrientsDao extends LunchNutrientsDao {
                   'calories': item.calories,
                   'carbs': item.carbs,
                   'fat': item.fat,
-                  'protein': item.protein
+                  'protein': item.protein,
+                  'totalNutrientsPerDayId': item.totalNutrientsPerDayId
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -379,7 +370,8 @@ class _$LunchNutrientsDao extends LunchNutrientsDao {
           row['calories'] as int,
           row['carbs'] as double,
           row['fat'] as double,
-          row['protein'] as double);
+          row['protein'] as double,
+          row['totalNutrientsPerDayId'] as int);
 
   final InsertionAdapter<LunchNutrients> _lunchNutrientsInsertionAdapter;
 
@@ -423,7 +415,8 @@ class _$DinnerNutrientsDao extends DinnerNutrientsDao {
                   'calories': item.calories,
                   'carbs': item.carbs,
                   'fat': item.fat,
-                  'protein': item.protein
+                  'protein': item.protein,
+                  'totalNutrientsPerDayId': item.totalNutrientsPerDayId
                 }),
         _dinnerNutrientsUpdateAdapter = UpdateAdapter(
             database,
@@ -434,7 +427,8 @@ class _$DinnerNutrientsDao extends DinnerNutrientsDao {
                   'calories': item.calories,
                   'carbs': item.carbs,
                   'fat': item.fat,
-                  'protein': item.protein
+                  'protein': item.protein,
+                  'totalNutrientsPerDayId': item.totalNutrientsPerDayId
                 }),
         _dinnerNutrientsDeletionAdapter = DeletionAdapter(
             database,
@@ -445,7 +439,8 @@ class _$DinnerNutrientsDao extends DinnerNutrientsDao {
                   'calories': item.calories,
                   'carbs': item.carbs,
                   'fat': item.fat,
-                  'protein': item.protein
+                  'protein': item.protein,
+                  'totalNutrientsPerDayId': item.totalNutrientsPerDayId
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -460,7 +455,8 @@ class _$DinnerNutrientsDao extends DinnerNutrientsDao {
           row['calories'] as int,
           row['carbs'] as double,
           row['fat'] as double,
-          row['protein'] as double);
+          row['protein'] as double,
+          row['totalNutrientsPerDayId'] as int);
 
   final InsertionAdapter<DinnerNutrients> _dinnerNutrientsInsertionAdapter;
 
@@ -504,7 +500,8 @@ class _$SnackNutrientsDao extends SnackNutrientsDao {
                   'calories': item.calories,
                   'carbs': item.carbs,
                   'fat': item.fat,
-                  'protein': item.protein
+                  'protein': item.protein,
+                  'totalNutrientsPerDayId': item.totalNutrientsPerDayId
                 }),
         _snackNutrientsUpdateAdapter = UpdateAdapter(
             database,
@@ -515,7 +512,8 @@ class _$SnackNutrientsDao extends SnackNutrientsDao {
                   'calories': item.calories,
                   'carbs': item.carbs,
                   'fat': item.fat,
-                  'protein': item.protein
+                  'protein': item.protein,
+                  'totalNutrientsPerDayId': item.totalNutrientsPerDayId
                 }),
         _snackNutrientsDeletionAdapter = DeletionAdapter(
             database,
@@ -526,7 +524,8 @@ class _$SnackNutrientsDao extends SnackNutrientsDao {
                   'calories': item.calories,
                   'carbs': item.carbs,
                   'fat': item.fat,
-                  'protein': item.protein
+                  'protein': item.protein,
+                  'totalNutrientsPerDayId': item.totalNutrientsPerDayId
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -541,7 +540,8 @@ class _$SnackNutrientsDao extends SnackNutrientsDao {
           row['calories'] as int,
           row['carbs'] as double,
           row['fat'] as double,
-          row['protein'] as double);
+          row['protein'] as double,
+          row['totalNutrientsPerDayId'] as int);
 
   final InsertionAdapter<SnackNutrients> _snackNutrientsInsertionAdapter;
 

@@ -9,7 +9,8 @@ class SnackNutrients {
   final double carbs;
   final double fat;
   final double protein;
+  final int totalNutrientsPerDayId;
 
-  SnackNutrients(this.id, this.calories, this.carbs, this.fat, this.protein);
+  SnackNutrients(this.id, this.calories, this.carbs, this.fat, this.protein, this.totalNutrientsPerDayId);
   
 }
