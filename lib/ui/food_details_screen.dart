@@ -1,16 +1,42 @@
-import 'package:calorie_counter/data/model/food.dart';
+import 'package:calorie_counter/bloc/food_details_bloc.dart';
+import 'package:calorie_counter/data/model/client_food.dart';
+import 'package:calorie_counter/data/model/meal_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:calorie_counter/util/extension/ext_nutrient_list.dart';
 
 class FoodDetailsScreen extends StatelessWidget {
-  final Food food;
+  final ClientFood food;
+  final MealSummary mealSummary;
 
-  const FoodDetailsScreen({Key key, this.food}) : super(key: key);
+  const FoodDetailsScreen({Key key, this.food, this.mealSummary}) : super(key: key);
+
+  void _onAddFoodClick(BuildContext context, FoodDetailsBloc bloc) {
+    bloc.addFood(mealSummary, food).then((respones) {
+      // navigate to the meal food list
+      //  show snackbar
+      final snackBar = SnackBar(content: Text('$respones'),);
+      
+      Scaffold.of(context).showSnackBar(snackBar);
+    })
+    .catchError((e) {
+      //  show snackbar
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final bloc = FoodDetailsBloc();
+    _setupRepository(bloc);
+
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: <Widget>[
+            IconButton(
+              icon: Icon(Icons.add),
+              color: Colors.white ,
+              onPressed: () { _onAddFoodClick(context, bloc); })
+          ]
+      ),
       body: ListView(
         shrinkWrap: true,
         children: <Widget>[
@@ -104,4 +130,9 @@ class FoodDetailsScreen extends StatelessWidget {
       )
     );
   }
+
+  void _setupRepository(FoodDetailsBloc bloc) async {
+    bloc.setupRepository();
+  }
+
 }
