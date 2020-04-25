@@ -37,9 +37,15 @@ class DailySummaryBloc implements Bloc {
       _dailySummaryController.sink.add(dailySummary);
     }
     else {
-
+      //  Request for meal nutrients
+      listMealSummary.add(MealSummary(0, 'Breakfast', 0, 0, 0, 0, date, totalNutrientsPerDay.id));
+      listMealSummary.add(MealSummary(0, 'Lunch', 0, 0, 0, 0, date, totalNutrientsPerDay.id));
+      listMealSummary.add(MealSummary(0, 'Dinner', 0, 0, 0, 0, date, totalNutrientsPerDay.id));
+      listMealSummary.add(MealSummary(0, 'Snack', 0, 0, 0, 0, date, totalNutrientsPerDay.id));
+      
+      final dailySummary = DailySummaryResult(totalNutrientsPerDay, listMealSummary);
+      _dailySummaryController.sink.add(dailySummary);
     }
-    // final totalNutrientsPerDay = TotalNutrientsPerDay(0, 0, 0, 0, 0, '03/12/2020', 0, 0, 0, 0);
   }
 
   @override
