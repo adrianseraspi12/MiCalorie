@@ -8,6 +8,9 @@ abstract class BreakfastNutrientsDao {
   @Query('SELECT * FROM breakfast_nutrients WHERE id = :id')
   Future<BreakfastNutrients> findBreakfastById(int id);
 
+  @Query('SELECT * FROM breakfast_nutrients WHERE total_nutrients_per_day_id = :id')
+  Future<BreakfastNutrients> findBreakfastByTotalNutrientsId(int id);
+
   @Query('SELECT * FROM breakfast_nutrients')
   Future<List<BreakfastNutrients>> getAllBreakfast();
 
