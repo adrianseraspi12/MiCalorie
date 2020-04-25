@@ -8,6 +8,9 @@ abstract class TotalNutrientsPerDayDao {
   @Query('SELECT * FROM total_nutrients_per_day WHERE date = :date')
   Future<TotalNutrientsPerDay> findTotalNutrientsByDate(String date);
 
+  @Query('SELECT * FROM total_nutrients_per_day')
+  Future<List<TotalNutrientsPerDay>> getAllNutrients();
+
   @Insert(onConflict: OnConflictStrategy.IGNORE)
   Future<int> insertTotalNutrients(TotalNutrientsPerDay totalNutrientsPerDay);
 

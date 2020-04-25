@@ -215,6 +215,12 @@ class _$TotalNutrientsPerDayDao extends TotalNutrientsPerDayDao {
   }
 
   @override
+  Future<List<TotalNutrientsPerDay>> getAllNutrients() async {
+    return _queryAdapter.queryList('SELECT * FROM total_nutrients_per_day',
+        mapper: _total_nutrients_per_dayMapper);
+  }
+
+  @override
   Future<int> insertTotalNutrients(TotalNutrientsPerDay totalNutrientsPerDay) {
     return _totalNutrientsPerDayInsertionAdapter.insertAndReturnId(
         totalNutrientsPerDay, sqflite.ConflictAlgorithm.ignore);
@@ -298,6 +304,12 @@ class _$BreakfastNutrientsDao extends BreakfastNutrientsDao {
   Future<BreakfastNutrients> findBreakfastById(int id) async {
     return _queryAdapter.query('SELECT * FROM breakfast_nutrients WHERE id = ?',
         arguments: <dynamic>[id], mapper: _breakfast_nutrientsMapper);
+  }
+
+  @override
+  Future<List<BreakfastNutrients>> getAllBreakfast() async {
+    return _queryAdapter.queryList('SELECT * FROM breakfast_nutrients',
+        mapper: _breakfast_nutrientsMapper);
   }
 
   @override
@@ -649,6 +661,11 @@ class _$FoodDao extends FoodDao {
   Future<List<Food>> findAllFoodByMealId(int mealId) async {
     return _queryAdapter.queryList('SELECT * FROM food WHERE mealId = ?',
         arguments: <dynamic>[mealId], mapper: _foodMapper);
+  }
+
+  @override
+  Future<List<Food>> getAllFood() async {
+    return _queryAdapter.queryList('SELECT * FROM food', mapper: _foodMapper);
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:calorie_counter/data/local/dao/total_nutrients_per_day_dao.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 import 'package:path/path.dart';
 
@@ -9,7 +10,6 @@ import 'package:calorie_counter/data/local/dao/dinner_nutrients_dao.dart';
 import 'package:calorie_counter/data/local/dao/food_dao.dart';
 import 'package:calorie_counter/data/local/dao/lunch_nutrients_dao.dart';
 import 'package:calorie_counter/data/local/dao/snack_nutrients_dao.dart';
-import 'package:calorie_counter/data/local/dao/total_nutrients_per_day.dart';
 import 'package:calorie_counter/data/local/entity/food.dart';
 import 'package:calorie_counter/data/local/entity/breakfast_nutrients.dart';
 import 'package:calorie_counter/data/local/entity/dinner_nutrients.dart';

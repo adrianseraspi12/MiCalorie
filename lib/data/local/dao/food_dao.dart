@@ -7,6 +7,9 @@ abstract class FoodDao {
   @Query('SELECT * FROM food WHERE mealId = :mealId')
   Future<List<Food>> findAllFoodByMealId(int mealId);
 
+  @Query('SELECT * FROM food')
+  Future<List<Food>> getAllFood();
+
   @Insert(onConflict: OnConflictStrategy.IGNORE)
   Future<int> insertFood(Food food);
 
