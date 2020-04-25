@@ -406,6 +406,14 @@ class _$LunchNutrientsDao extends LunchNutrientsDao {
   }
 
   @override
+  Future<LunchNutrients> findLunchByTotalNutrientsId(int id) async {
+    return _queryAdapter.query(
+        'SELECT * FROM lunch_nutrients WHERE total_nutrients_per_day_id = ?',
+        arguments: <dynamic>[id],
+        mapper: _lunch_nutrientsMapper);
+  }
+
+  @override
   Future<int> insertLunch(LunchNutrients lunchNutrients) {
     return _lunchNutrientsInsertionAdapter.insertAndReturnId(
         lunchNutrients, sqflite.ConflictAlgorithm.ignore);
@@ -491,6 +499,14 @@ class _$DinnerNutrientsDao extends DinnerNutrientsDao {
   }
 
   @override
+  Future<DinnerNutrients> findDinnerByTotalNutrientsId(int id) async {
+    return _queryAdapter.query(
+        'SELECT * FROM dinner_nutrients WHERE total_nutrients_per_day_id = ?',
+        arguments: <dynamic>[id],
+        mapper: _dinner_nutrientsMapper);
+  }
+
+  @override
   Future<int> insertDinner(DinnerNutrients dinnerNutrients) {
     return _dinnerNutrientsInsertionAdapter.insertAndReturnId(
         dinnerNutrients, sqflite.ConflictAlgorithm.ignore);
@@ -573,6 +589,14 @@ class _$SnackNutrientsDao extends SnackNutrientsDao {
   Future<SnackNutrients> findSnackById(int id) async {
     return _queryAdapter.query('SELECT * FROM snack_nutrients WHERE id = ?',
         arguments: <dynamic>[id], mapper: _snack_nutrientsMapper);
+  }
+
+  @override
+  Future<SnackNutrients> findSnackByTotalNutrientsId(int id) async {
+    return _queryAdapter.query(
+        'SELECT * FROM snack_nutrients WHERE total_nutrients_per_day_id = ?',
+        arguments: <dynamic>[id],
+        mapper: _snack_nutrientsMapper);
   }
 
   @override

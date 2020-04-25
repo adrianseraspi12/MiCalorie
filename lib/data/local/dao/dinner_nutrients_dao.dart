@@ -7,6 +7,9 @@ abstract class DinnerNutrientsDao {
   @Query('SELECT * FROM dinner_nutrients WHERE id = :id')
   Future<DinnerNutrients> findDinnerById(int id);
 
+  @Query('SELECT * FROM dinner_nutrients WHERE total_nutrients_per_day_id = :id')
+  Future<DinnerNutrients> findDinnerByTotalNutrientsId(int id);
+
   @Insert(onConflict: OnConflictStrategy.IGNORE)
   Future<int> insertDinner(DinnerNutrients dinnerNutrients);
 
