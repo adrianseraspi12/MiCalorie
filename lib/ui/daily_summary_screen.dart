@@ -205,7 +205,7 @@ class DailySummaryScreen extends StatelessWidget {
   }
 
   void setupData(DailySummaryBloc bloc) async {
-    bloc.setupRepository();
+    bloc.setupRepository("04//25/2020");
   }
 
 }
