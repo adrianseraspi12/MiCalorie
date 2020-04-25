@@ -14,23 +14,32 @@ class DailySummaryBloc implements Bloc {
 
   TotalNutrientsPerDayRepository _totalNutrientsPerDayRepository;
 
-  void setupRepository() async {
+  void setupRepository(String date) async {
     final database = await AppDatabase.getInstance();
     _totalNutrientsPerDayRepository = TotalNutrientsPerDayRepository(database.totalNutrientsPerDayDao);
-    changeTotalNutrients("03/20/2020");
+    changeTotalNutrients(date);
   }
 
-  void changeTotalNutrients(String dateInMills) async {
+  void changeTotalNutrients(String date) async {
     List<MealSummary> listMealSummary = [];
-    // final totalNutrientsPerDay = await _totalNutrientsPerDayRepository.get<String>(dateInMills);
-    final totalNutrientsPerDay = TotalNutrientsPerDay(0, 0, 0, 0, 0, '03/12/2020', 0, 0, 0, 0);
-    listMealSummary.add(MealSummary(0, 'Breakfast', 0, 0, 0, 0));
-    listMealSummary.add(MealSummary(0, 'Lunch', 0, 0, 0, 0));
-    listMealSummary.add(MealSummary(0, 'Dinner', 0, 0, 0, 0));
-    listMealSummary.add(MealSummary(0, 'Snack', 0, 0, 0, 0));
+    final totalNutrientsPerDay = await _totalNutrientsPerDayRepository.getTotalNutrientsByDate(date);
 
-    final dailySummary = DailySummaryResult(totalNutrientsPerDay, listMealSummary);
-    _dailySummaryController.sink.add(dailySummary);
+    if (totalNutrientsPerDay == null) {
+      final id = await _totalNutrientsPerDayRepository.getRowCount();
+      final currentId = id + 1;
+      var currentTotalNutrientsPerDay = TotalNutrientsPerDay(currentId, date, 0, 0, 0, 0);
+      listMealSummary.add(MealSummary(0, 'Breakfast', 0, 0, 0, 0, date, currentTotalNutrientsPerDay.id));
+      listMealSummary.add(MealSummary(0, 'Lunch', 0, 0, 0, 0, date, currentTotalNutrientsPerDay.id));
+      listMealSummary.add(MealSummary(0, 'Dinner', 0, 0, 0, 0, date, currentTotalNutrientsPerDay.id));
+      listMealSummary.add(MealSummary(0, 'Snack', 0, 0, 0, 0, date, currentTotalNutrientsPerDay.id));
+
+      final dailySummary = DailySummaryResult(currentTotalNutrientsPerDay, listMealSummary);
+      _dailySummaryController.sink.add(dailySummary);
+    }
+    else {
+
+    }
+    // final totalNutrientsPerDay = TotalNutrientsPerDay(0, 0, 0, 0, 0, '03/12/2020', 0, 0, 0, 0);
   }
 
   @override
