@@ -9,6 +9,7 @@ class SnackNutrients {
   final double carbs;
   final double fat;
   final double protein;
+  @ColumnInfo(name: 'total_nutrients_per_day_id')
   final int totalNutrientsPerDayId;
 
   SnackNutrients(this.id, this.calories, this.carbs, this.fat, this.protein, this.totalNutrientsPerDayId);
