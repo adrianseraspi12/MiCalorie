@@ -1,5 +1,6 @@
-import 'package:calorie_counter/data/model/food.dart';
+import 'package:calorie_counter/data/model/client_food.dart';
 import 'package:calorie_counter/data/model/list_of_food.dart';
+import 'package:calorie_counter/data/model/meal_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:calorie_counter/bloc/bloc_provider.dart';
 import 'package:calorie_counter/bloc/search_food_query_bloc.dart';
@@ -7,6 +8,9 @@ import 'package:calorie_counter/bloc/search_food_query_bloc.dart';
 import 'food_details_screen.dart';
 
 class SearchFoodScreen extends StatefulWidget {
+  
+  final MealSummary mealSummary;
+  SearchFoodScreen(this.mealSummary);
   
   @override
   _SearchFoodScreenState createState() => _SearchFoodScreenState();
@@ -108,13 +112,14 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
             return ListTile(
               title: Text(commonFood.foodName),
               onTap: () {
-                final food = Food(name: commonFood.foodName,
+                final food = ClientFood(name: commonFood.foodName,
                                   numberOfServings: commonFood.servingQty,
                                   servingSize: commonFood.servingUnit,
                                   nutrients: commonFood.nutrients);
                 
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (BuildContext context) => FoodDetailsScreen(food: food,))
+                  MaterialPageRoute(builder: (BuildContext context) => FoodDetailsScreen(
+                    food: food, mealSummary: widget.mealSummary,))
                 );
               },
             );
@@ -149,7 +154,7 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
             return ListTile(
               title: Text(brandedFood.foodName),
               onTap: () {
-                final food = Food(name: brandedFood.foodName,
+                final food = ClientFood(name: brandedFood.foodName,
                                   numberOfServings: brandedFood.servingQty,
                                   servingSize: brandedFood.servingUnit,
                                   nutrients: brandedFood.nutrients);
