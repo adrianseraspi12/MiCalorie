@@ -1,4 +1,4 @@
-import 'package:calorie_counter/data/local/dao/total_nutrients_per_day.dart';
+import 'package:calorie_counter/data/local/dao/total_nutrients_per_day_dao.dart';
 import 'package:calorie_counter/data/local/entity/total_nutrients_per_day.dart';
 import 'package:calorie_counter/data/local/repository/repository.dart';
 
@@ -8,51 +8,29 @@ class TotalNutrientsPerDayRepository implements Repository<TotalNutrientsPerDay>
 
   TotalNutrientsPerDayRepository(this._totalNutrientsPerDayDao);
 
-  @override
-  Future<TotalNutrientsPerDay> get<String>(String itemId) {
+  Future<int> getRowCount() async {
+    final listOfTotalNutrients = await _totalNutrientsPerDayDao.getAllNutrients();
+    return listOfTotalNutrients.length;
+  }
+
+  Future<TotalNutrientsPerDay> getTotalNutrientsByDate(String itemId) {
     return _totalNutrientsPerDayDao.findTotalNutrientsByDate(itemId.toString());
   }
 
   @override
-  Future<List<TotalNutrientsPerDay>> getListOfData() {
+  void remove(TotalNutrientsPerDay data) async {
+    await _totalNutrientsPerDayDao.deleteTotalNutrients(data);
+  }
+
+  @override
+  Future<List<TotalNutrientsPerDay>> findAllDataWith(int id) {
+    // TODO: implement findAllDataWith
     return null;
   }
 
   @override
-  void remove(TotalNutrientsPerDay data, successCallback, failCallback) async {
-    final itemId = await _totalNutrientsPerDayDao.deleteTotalNutrients(data);
-    
-    if (itemId == data.id) {
-      successCallback(data);
-    }
-    else {
-      failCallback('Failed deleting the total nutrients');
-    }
-  }
-
-  @override
-  void update(TotalNutrientsPerDay data, successCallback, failCallback) async {
-    final itemId = await _totalNutrientsPerDayDao.insertTotalNutrients(data);
-    
-    if (itemId == data.id) {
-      successCallback(data);
-    }
-    else {
-      failCallback('Failed updating the total nutrients');
-    }   
-
-  }
-
-  @override
-  void save(TotalNutrientsPerDay data, successCallback, failCallback) async {
-    final itemId = await _totalNutrientsPerDayDao.insertTotalNutrients(data);
-    
-    if (itemId == data.id) {
-      successCallback(data);
-    }
-    else {
-      failCallback('Failed saving the total nutrients');
-    } 
+  void upsert(TotalNutrientsPerDay data) async {
+    _totalNutrientsPerDayDao.upsert(data);
   }
 
 }
