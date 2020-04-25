@@ -12,6 +12,10 @@ class BreakfastRepository implements Repository<BreakfastNutrients> {
     return _breakfastNutrientsDao.findBreakfastById(id);
   }
 
+  Future<BreakfastNutrients> findBreakfastByTotalNutrientsId(int id) {
+    return _breakfastNutrientsDao.findBreakfastByTotalNutrientsId(id);
+  }
+
   Future<int> getTotalBreakfastCount() async {
     final listOfBreakfast = await _breakfastNutrientsDao.getAllBreakfast();
     return listOfBreakfast.length;
