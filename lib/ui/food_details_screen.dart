@@ -1,8 +1,10 @@
 import 'package:calorie_counter/bloc/food_details_bloc.dart';
 import 'package:calorie_counter/data/model/client_food.dart';
 import 'package:calorie_counter/data/model/meal_summary.dart';
+import 'package:calorie_counter/ui/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:calorie_counter/util/extension/ext_nutrient_list.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class FoodDetailsScreen extends StatelessWidget {
   final ClientFood food;
@@ -10,17 +12,8 @@ class FoodDetailsScreen extends StatelessWidget {
 
   const FoodDetailsScreen({Key key, this.food, this.mealSummary}) : super(key: key);
 
-  void _onAddFoodClick(BuildContext context, FoodDetailsBloc bloc) {
-    bloc.addFood(mealSummary, food).then((respones) {
-      // navigate to the meal food list
-      //  show snackbar
-      final snackBar = SnackBar(content: Text('$respones'),);
-      
-      Scaffold.of(context).showSnackBar(snackBar);
-    })
-    .catchError((e) {
-      //  show snackbar
-    });
+  void _onAddFoodClick(FoodDetailsBloc bloc) async {
+    bloc.addFood(mealSummary, food);
   }
 
   @override
@@ -31,10 +24,20 @@ class FoodDetailsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.add),
-              color: Colors.white ,
-              onPressed: () { _onAddFoodClick(context, bloc); })
+            Builder(
+              builder: (context) => IconButton(
+                icon: Icon(Icons.add),
+                color: Colors.white ,
+                onPressed: () {
+                  _onAddFoodClick(bloc); 
+                  Fluttertoast.showToast(
+                    msg: 'Food added',
+                    timeInSecForIosWeb: 2)
+                    .then( 
+                    (val) => Navigator.popUntil(context, (r) => r.settings.name == Routes.mealFoodListScreen)
+                  );
+                }),
+            )
           ]
       ),
       body: ListView(
@@ -125,7 +128,6 @@ class FoodDetailsScreen extends StatelessWidget {
           ),
 
           Divider(),
-
         ],
       )
     );
