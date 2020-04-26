@@ -8,14 +8,23 @@ import 'package:calorie_counter/data/local/repository/total_nutrients_per_day_re
 import 'package:calorie_counter/data/model/client_food.dart';
 import 'package:calorie_counter/data/model/meal_summary.dart';
 import 'package:calorie_counter/util/extension/ext_nutrient_list.dart';
+import 'package:rxdart/subjects.dart';
 
 import 'bloc.dart';
+
+enum FoodDetailsResult {
+  SUCCESS,
+  FAILED
+}
 
 class FoodDetailsBloc implements Bloc {
 
   FoodRepository _foodRepository;
   BreakfastRepository _breakfastNutrients;
   TotalNutrientsPerDayRepository _totalNutrientsPerDayRepository;
+
+  final _foodDetailsResultController = PublishSubject<FoodDetailsResult>();
+  Stream<FoodDetailsResult> get foodDetailsResult => _foodDetailsResultController.stream;
 
 
   void setupRepository() async {
@@ -63,7 +72,7 @@ class FoodDetailsBloc implements Bloc {
 
   void updateMeal(MealSummary mealSummary, ClientFood food) async {
     if (mealSummary.name == "Breakfast") {
-      final breakfastNutrients = _breakfastNutrients.getBreakfast(mealSummary.id);
+      final breakfastNutrients = await _breakfastNutrients.getBreakfast(mealSummary.id);
       int currentId;
 
       if (breakfastNutrients == null) {
@@ -99,11 +108,12 @@ class FoodDetailsBloc implements Bloc {
     clientFood.nutrients.getNutrient(NutrientType.protein));
 
     _foodRepository.upsert(food);
+    _foodDetailsResultController.sink.add(FoodDetailsResult.SUCCESS);
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    _foodDetailsResultController.close();
   }
 
 
