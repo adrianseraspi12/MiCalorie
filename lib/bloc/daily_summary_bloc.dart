@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:calorie_counter/data/local/repository/breakfast_repository.dart';
 import 'package:calorie_counter/data/model/meal_summary.dart';
 
 import 'package:calorie_counter/data/local/app_database.dart';
@@ -13,10 +14,12 @@ class DailySummaryBloc implements Bloc {
   Stream<DailySummaryResult> get dailySummaryResultStream => _dailySummaryController.stream;
 
   TotalNutrientsPerDayRepository _totalNutrientsPerDayRepository;
+  BreakfastRepository _breakfastRepository;
 
   void setupRepository(String date) async {
     final database = await AppDatabase.getInstance();
     _totalNutrientsPerDayRepository = TotalNutrientsPerDayRepository(database.totalNutrientsPerDayDao);
+    _breakfastRepository = BreakfastRepository(database.breakfastNutrientsDao);
     changeTotalNutrients(date);
   }
 
@@ -38,7 +41,16 @@ class DailySummaryBloc implements Bloc {
     }
     else {
       //  Request for meal nutrients
-      listMealSummary.add(MealSummary(0, 'Breakfast', 0, 0, 0, 0, date, totalNutrientsPerDay.id));
+      final breakFastNutrients = await _breakfastRepository.findBreakfastByTotalNutrientsId(totalNutrientsPerDay.id);
+      listMealSummary.add(MealSummary(breakFastNutrients.id, 
+                                      "Breakfast",
+                                      breakFastNutrients.calories, 
+                                      breakFastNutrients.carbs, 
+                                      breakFastNutrients.fat, 
+                                      breakFastNutrients.protein, 
+                                      totalNutrientsPerDay.date, 
+                                      totalNutrientsPerDay.id));
+
       listMealSummary.add(MealSummary(0, 'Lunch', 0, 0, 0, 0, date, totalNutrientsPerDay.id));
       listMealSummary.add(MealSummary(0, 'Dinner', 0, 0, 0, 0, date, totalNutrientsPerDay.id));
       listMealSummary.add(MealSummary(0, 'Snack', 0, 0, 0, 0, date, totalNutrientsPerDay.id));
