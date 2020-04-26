@@ -1,6 +1,7 @@
 import 'package:calorie_counter/data/model/client_food.dart';
 import 'package:calorie_counter/data/model/list_of_food.dart';
 import 'package:calorie_counter/data/model/meal_summary.dart';
+import 'package:calorie_counter/ui/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:calorie_counter/bloc/bloc_provider.dart';
 import 'package:calorie_counter/bloc/search_food_query_bloc.dart';
@@ -118,8 +119,10 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
                                   nutrients: commonFood.nutrients);
                 
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (BuildContext context) => FoodDetailsScreen(
-                    food: food, mealSummary: widget.mealSummary,))
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => FoodDetailsScreen(
+                    food: food, mealSummary: widget.mealSummary,),
+                    settings: RouteSettings(name: Routes.foodDetailsScreen))
                 );
               },
             );
