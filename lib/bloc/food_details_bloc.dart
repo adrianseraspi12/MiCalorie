@@ -8,6 +8,7 @@ import 'package:calorie_counter/data/local/repository/total_nutrients_per_day_re
 import 'package:calorie_counter/data/model/client_food.dart';
 import 'package:calorie_counter/data/model/meal_summary.dart';
 import 'package:calorie_counter/util/extension/ext_nutrient_list.dart';
+import 'package:calorie_counter/util/extension/ext_number_rounding.dart';
 import 'package:rxdart/subjects.dart';
 
 import 'bloc.dart';
@@ -51,19 +52,19 @@ class FoodDetailsBloc implements Bloc {
     else {
       totalNutrientsId = totalNutrientsPerDay.id;
 
-      final foodNutrients = food.nutrients;
-      final newCalories = totalNutrientsPerDay.calories + foodNutrients.getNutrient(NutrientType.calories).toInt();
-      final newCarbs = totalNutrientsPerDay.carbs + foodNutrients.getNutrient(NutrientType.carbs);
-      final newFat = totalNutrientsPerDay.fat + foodNutrients.getNutrient(NutrientType.fat);
-      final newProtein = totalNutrientsPerDay.protein + foodNutrients.getNutrient(NutrientType.protein);
+      var foodNutrients = food.nutrients;
+      var newCalories = totalNutrientsPerDay.calories + foodNutrients.getNutrient(NutrientType.calories).toInt();
+      var newCarbs = totalNutrientsPerDay.carbs + foodNutrients.getNutrient(NutrientType.carbs);
+      var newFat = totalNutrientsPerDay.fat + foodNutrients.getNutrient(NutrientType.fat);
+      var newProtein = totalNutrientsPerDay.protein + foodNutrients.getNutrient(NutrientType.protein);
 
       final newTotalNutrientsPerDay = TotalNutrientsPerDay(
         totalNutrientsPerDay.id, 
         totalNutrientsPerDay.date, 
         newCalories,
-        newCarbs, 
-        newFat, 
-        newProtein);
+        newCarbs.roundTo(2), 
+        newFat.roundTo(2), 
+        newProtein.roundTo(2));
 
       _totalNutrientsPerDayRepository.upsert(newTotalNutrientsPerDay);
     }
@@ -106,9 +107,9 @@ class FoodDetailsBloc implements Bloc {
         final newBreakfastNutrients = BreakfastNutrients(
           breakfastNutrients.id, 
           newCalories, 
-          newCarbs, 
-          newFat, 
-          newProtein, 
+          newCarbs.roundTo(2), 
+          newFat.roundTo(2), 
+          newProtein.roundTo(2), 
           breakfastNutrients.totalNutrientsPerDayId);
 
         _breakfastNutrients.upsert(newBreakfastNutrients);
