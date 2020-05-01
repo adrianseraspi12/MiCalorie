@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
 import 'package:calorie_counter/data/local/repository/breakfast_repository.dart';
 import 'package:calorie_counter/data/local/repository/lunch_repository.dart';
 import 'package:calorie_counter/data/model/meal_summary.dart';
@@ -6,6 +7,7 @@ import 'package:calorie_counter/data/model/meal_summary.dart';
 import 'package:calorie_counter/data/local/app_database.dart';
 import 'package:calorie_counter/data/local/entity/total_nutrients_per_day.dart';
 import 'package:calorie_counter/data/local/repository/total_nutrients_per_day_repository.dart';
+import 'package:calorie_counter/util/constant/meal_type.dart';
 import 'package:rxdart/subjects.dart';
 import 'package:calorie_counter/util/extension/ext_date_time_formatter.dart';
 
@@ -49,34 +51,35 @@ class DailySummaryBloc implements Bloc {
   }
 
   void changeTotalNutrients(String date) async {
-    List<MealSummary> listMealSummary = [];
+    List<MealNutrients> listOfMealNutrients = [];
     final totalNutrientsPerDay = await _totalNutrientsPerDayRepository.getTotalNutrientsByDate(date);
 
     if (totalNutrientsPerDay == null) {
       final id = await _totalNutrientsPerDayRepository.getRowCount();
       final currentId = id + 1;
       var currentTotalNutrientsPerDay = TotalNutrientsPerDay(currentId, date, 0, 0, 0, 0);
-      listMealSummary.add(MealSummary(0, 'Breakfast', 0, 0, 0, 0, date, currentTotalNutrientsPerDay.id));
-      listMealSummary.add(MealSummary(0, 'Lunch', 0, 0, 0, 0, date, currentTotalNutrientsPerDay.id));
-      listMealSummary.add(MealSummary(0, 'Dinner', 0, 0, 0, 0, date, currentTotalNutrientsPerDay.id));
-      listMealSummary.add(MealSummary(0, 'Snack', 0, 0, 0, 0, date, currentTotalNutrientsPerDay.id));
+      listOfMealNutrients.add(MealNutrients(0, 0, 0, 0, 0, MealType.BREAKFAST, currentTotalNutrientsPerDay.id, date: date));
+      listOfMealNutrients.add(MealNutrients(0, 0, 0, 0, 0, MealType.LUNCH, currentTotalNutrientsPerDay.id, date: date));
+      listOfMealNutrients.add(MealNutrients(0, 0, 0, 0, 0, MealType.DINNER, currentTotalNutrientsPerDay.id, date: date));
+      listOfMealNutrients.add(MealNutrients(0, 0, 0, 0, 0, MealType.SNACK, currentTotalNutrientsPerDay.id, date: date));
 
-      final dailySummary = DailySummaryResult(currentTotalNutrientsPerDay, listMealSummary);
+      final dailySummary = DailySummaryResult(currentTotalNutrientsPerDay, listOfMealNutrients);
       _dailySummaryController.sink.add(dailySummary);
     }
     else {
       //  Request for meal nutrients
-      final breakfastNutrients = await _loadBreakfast(totalNutrientsPerDay);
-      listMealSummary.add(breakfastNutrients);
 
-      final lunchNutrients = await _loadLunch(totalNutrientsPerDay);
-      listMealSummary.add(lunchNutrients);
+      // final breakfastNutrients = await _loadBreakfast(totalNutrientsPerDay);
+      // listOfMealNutrients.add(breakfastNutrients);
 
-      listMealSummary.add(MealSummary(0, 'Dinner', 0, 0, 0, 0, date, totalNutrientsPerDay.id));
-      listMealSummary.add(MealSummary(0, 'Snack', 0, 0, 0, 0, date, totalNutrientsPerDay.id));
+      // final lunchNutrients = await _loadLunch(totalNutrientsPerDay);
+      // listOfMealNutrients.add(lunchNutrients);
+
+      // listOfMealNutrients.add(MealSummary(0, 'Dinner', 0, 0, 0, 0, date, totalNutrientsPerDay.id));
+      // listOfMealNutrients.add(MealSummary(0, 'Snack', 0, 0, 0, 0, date, totalNutrientsPerDay.id));
       
-      final dailySummary = DailySummaryResult(totalNutrientsPerDay, listMealSummary);
-      _dailySummaryController.sink.add(dailySummary);
+      // final dailySummary = DailySummaryResult(totalNutrientsPerDay, listMealSummary);
+      // _dailySummaryController.sink.add(dailySummary);
     }
   }
 
@@ -130,8 +133,8 @@ class DailySummaryBloc implements Bloc {
 class DailySummaryResult {
 
   TotalNutrientsPerDay totalNutrientsPerDay;
-  List<MealSummary> mealSummary;
+  List<MealNutrients> mealNutrients;
 
-  DailySummaryResult(this.totalNutrientsPerDay, this.mealSummary);
+  DailySummaryResult(this.totalNutrientsPerDay, this.mealNutrients);
 
 }

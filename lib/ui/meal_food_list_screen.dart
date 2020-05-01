@@ -1,15 +1,16 @@
 import 'package:calorie_counter/bloc/bloc_provider.dart';
 import 'package:calorie_counter/bloc/meal_food_list_bloc.dart';
 import 'package:calorie_counter/data/local/entity/food.dart';
-import 'package:calorie_counter/data/model/meal_summary.dart';
+import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
 import 'package:calorie_counter/ui/search_food_screen.dart';
 import 'package:calorie_counter/util/constant/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:calorie_counter/util/extension/ext_meal_type_description.dart';
 
 class MealFoodListScreen extends StatefulWidget {
 
-  MealSummary mealSummary;
-  MealFoodListScreen(this.mealSummary);
+  MealNutrients mealNutrients;
+  MealFoodListScreen(this.mealNutrients);
 
   @override
   _MealFoodListScreenState createState() => _MealFoodListScreenState();
@@ -19,7 +20,7 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = MealFoodListBloc(widget.mealSummary.id); 
+    final bloc = MealFoodListBloc(widget.mealNutrients.id); 
     _setupRepository(bloc);
 
     return BlocProvider<MealFoodListBloc>(
@@ -29,22 +30,22 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
           leading: IconButton(
             icon: Icon(Icons.chevron_left), 
             onPressed: () {
-              Navigator.pop(context, this.widget.mealSummary.date);
+              Navigator.pop(context, this.widget.mealNutrients.date);
             }),
-          title: Text('${widget.mealSummary.name} Food List'),
+          title: Text('${widget.mealNutrients.type.description()} Food List'),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.add),
               color: Colors.white ,
               onPressed: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => SearchFoodScreen(widget.mealSummary),
-                    settings: RouteSettings(name: Routes.searchFoodScreen)
-                  )
-                ).then((v) {
-                    _retainData(context, bloc);
-                });
+                // Navigator.of(context).push(
+                //   MaterialPageRoute(
+                //     builder: (context) => SearchFoodScreen(widget.mealSummary),
+                //     settings: RouteSettings(name: Routes.searchFoodScreen)
+                //   )
+                // ).then((v) {
+                //     _retainData(context, bloc);
+                // });
               })
           ],
         ),
@@ -89,8 +90,8 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
   }
 
   void _retainData(BuildContext context, MealFoodListBloc bloc) {
-    final arguments = ModalRoute.of(context).settings.arguments as Map;
-    this.widget.mealSummary = arguments['mealSummary'];
-    bloc.setupFoodList();
+    // final arguments = ModalRoute.of(context).settings.arguments as Map;
+    // this.widget.mealSummary = arguments['mealSummary'];
+    // bloc.setupFoodList();
    }
 }

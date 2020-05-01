@@ -1,7 +1,8 @@
 import 'package:calorie_counter/bloc/bloc_provider.dart';
 import 'package:calorie_counter/bloc/daily_summary_bloc.dart';
+import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
 import 'package:calorie_counter/data/local/entity/total_nutrients_per_day.dart';
-import 'package:calorie_counter/data/model/meal_summary.dart';
+import 'package:calorie_counter/util/extension/ext_meal_type_description.dart';
 import 'package:calorie_counter/ui/meal_food_list_screen.dart';
 import 'package:calorie_counter/util/constant/routes.dart';
 import 'package:flutter/material.dart';
@@ -99,7 +100,7 @@ class _DailySummaryScreenState extends State<DailySummaryScreen> {
         }
         else {
           return ListView.builder(
-            itemCount: dailySummaryResult.mealSummary.length + 1,
+            itemCount: dailySummaryResult.mealNutrients.length + 1,
             itemBuilder: (context, index) {
 
               if (index == 0) {
@@ -108,9 +109,9 @@ class _DailySummaryScreenState extends State<DailySummaryScreen> {
 
               index -= 1;
 
-              var mealSummary = dailySummaryResult.mealSummary[index];
+              var mealNutrients = dailySummaryResult.mealNutrients[index];
 
-              return _buildMealSummary(context, bloc, mealSummary);
+              return _buildMealSummary(context, bloc, mealNutrients);
 
             });
         }
@@ -168,13 +169,13 @@ class _DailySummaryScreenState extends State<DailySummaryScreen> {
     );
   }
 
-  Widget _buildMealSummary(BuildContext context, DailySummaryBloc bloc, MealSummary mealSummary) {
+  Widget _buildMealSummary(BuildContext context, DailySummaryBloc bloc, MealNutrients mealNutrients) {
     return Material(
       child: Card(
         margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: InkWell(
           onTap: () {
-            _showMealFoodListScreen(context, mealSummary, bloc);
+            _showMealFoodListScreen(context, mealNutrients, bloc);
           },
           child: Container(
             child: Column(
@@ -186,11 +187,11 @@ class _DailySummaryScreenState extends State<DailySummaryScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        '${mealSummary.name}',
+                        '${mealNutrients.type.description()}',
                         style: TextStyle(fontSize: 32.0)),
                       
                       Text(
-                        '${mealSummary.calories}',
+                        '${mealNutrients.calories}',
                         style: TextStyle(fontSize: 32.0)),
 
                     ],
@@ -212,7 +213,7 @@ class _DailySummaryScreenState extends State<DailySummaryScreen> {
                         child: Column(
                           children: <Widget>[
                             Text(
-                              '${mealSummary.carbs}',
+                              '${mealNutrients.carbs}',
                               style: TextStyle(fontSize: 32.0),),
                             Text(
                               'Carbs',
@@ -226,7 +227,7 @@ class _DailySummaryScreenState extends State<DailySummaryScreen> {
                         child: Column(
                           children: <Widget>[
                             Text(
-                              '${mealSummary.fat}',
+                              '${mealNutrients.fat}',
                               style: TextStyle(fontSize: 32.0),),
                             Text(
                               'Fat',
@@ -240,7 +241,7 @@ class _DailySummaryScreenState extends State<DailySummaryScreen> {
                         child: Column(
                           children: <Widget>[
                             Text(
-                              '${mealSummary.protein}',
+                              '${mealNutrients.protein}',
                               style: TextStyle(fontSize: 32.0),),
                             Text(
                               'Protein',
@@ -267,10 +268,10 @@ class _DailySummaryScreenState extends State<DailySummaryScreen> {
     );
   }
 
-  void _showMealFoodListScreen(BuildContext context, MealSummary mealSummary, DailySummaryBloc bloc) async {
+  void _showMealFoodListScreen(BuildContext context, MealNutrients mealNutrients, DailySummaryBloc bloc) async {
     var date = await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => MealFoodListScreen(mealSummary,),
+        builder: (context) => MealFoodListScreen(mealNutrients),
         settings: RouteSettings(name: Routes.mealFoodListScreen,
                                 arguments: Map())
       )
