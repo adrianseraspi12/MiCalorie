@@ -15,7 +15,9 @@ extension NutrientList on List<Nutrients> {
       return element.attrId == attrId;
     });
 
-    return nutrient.value;
+    var value = nutrient.value;
+    final roundedValue = double.parse(value.toStringAsExponential(2));
+    return roundedValue;
   }
     
 }
