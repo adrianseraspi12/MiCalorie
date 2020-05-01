@@ -1,4 +1,5 @@
 import 'package:calorie_counter/data/model/list_of_food.dart';
+import 'ext_number_rounding.dart';
 
 extension NutrientList on List<Nutrients> {
 
@@ -16,8 +17,7 @@ extension NutrientList on List<Nutrients> {
     });
 
     var value = nutrient.value;
-    final roundedValue = double.parse(value.toStringAsFixed(2));
-    return roundedValue;
+    return value.roundTo(2);
   }
     
 }
