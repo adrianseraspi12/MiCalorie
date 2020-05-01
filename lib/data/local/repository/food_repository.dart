@@ -24,8 +24,12 @@ class FoodRepository implements Repository<Food> {
   }
 
   @override
-  void upsert(Food data) {
-    _foodDao.upsert(data);
+  void upsert(Food data) async {
+    final id = await _foodDao.insertFood(data);
+
+    if (id == -1) {
+      await _foodDao.updateFood(data);
+    }
   }
   
 }

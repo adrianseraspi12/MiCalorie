@@ -33,8 +33,13 @@ class BreakfastRepository implements Repository<BreakfastNutrients> {
   }
 
   @override
-  void upsert(BreakfastNutrients data) {
-    _breakfastNutrientsDao.upsert(data);
+  void upsert(BreakfastNutrients data) async {
+
+    final id = await _breakfastNutrientsDao.insertBreakfast(data);
+  
+    if (id == -1 || id == null) {
+      await _breakfastNutrientsDao.updateBreakfast(data);
+    }
   }
 
 }

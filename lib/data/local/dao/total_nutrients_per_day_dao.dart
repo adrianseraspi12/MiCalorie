@@ -19,13 +19,5 @@ abstract class TotalNutrientsPerDayDao {
 
   @delete
   Future<int> deleteTotalNutrients(TotalNutrientsPerDay totalNutrientsPerDay);
-  
-  void upsert(TotalNutrientsPerDay totalNutrientsPerDay) async {
-    final id = await insertTotalNutrients(totalNutrientsPerDay);
-  
-    if (id == -1) {
-      await updateTotalNutrients(totalNutrientsPerDay);
-    }
-  }
 
 }

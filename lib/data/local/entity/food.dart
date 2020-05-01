@@ -1,28 +1,6 @@
-import 'package:calorie_counter/data/local/entity/breakfast_nutrients.dart';
-import 'package:calorie_counter/data/local/entity/dinner_nutrients.dart';
-import 'package:calorie_counter/data/local/entity/lunch_nutrients.dart';
-import 'package:calorie_counter/data/local/entity/snack_nutrients.dart';
 import 'package:floor/floor.dart';
 
-@Entity(tableName: 'food', 
-        foreignKeys: [
-
-          ForeignKey(childColumns: ['meal_id'], 
-                    parentColumns: ['id'],
-                    entity: BreakfastNutrients),
-          ForeignKey(childColumns: ['meal_id'], 
-                    parentColumns: ['id'],
-                    entity: LunchNutrients),
-            
-          ForeignKey(childColumns: ['meal_id'], 
-                    parentColumns: ['id'],
-                    entity: DinnerNutrients),
-
-          ForeignKey(childColumns: ['meal_id'], 
-                    parentColumns: ['id'],
-                    entity: SnackNutrients),
-
-        ])
+@Entity(tableName: 'food')
 class Food {
 
   @primaryKey

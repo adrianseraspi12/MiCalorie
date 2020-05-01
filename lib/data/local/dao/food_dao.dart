@@ -4,7 +4,7 @@ import 'package:floor/floor.dart';
 @dao
 abstract class FoodDao {
 
-  @Query('SELECT * FROM food WHERE mealId = :mealId')
+  @Query('SELECT * FROM food WHERE meal_id = :mealId')
   Future<List<Food>> findAllFoodByMealId(int mealId);
 
   @Query('SELECT * FROM food')
@@ -18,13 +18,5 @@ abstract class FoodDao {
 
   @delete
   Future<int> deleteFood(Food food);
-
-  void upsert(Food food) async {
-    final id = await insertFood(food);
-  
-    if (id == -1) {
-      await updateFood(food);
-    }
-  }
 
 }

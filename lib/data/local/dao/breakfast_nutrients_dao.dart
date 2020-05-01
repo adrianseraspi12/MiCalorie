@@ -23,12 +23,4 @@ abstract class BreakfastNutrientsDao {
   @delete
   Future<int> deleteBreakfast(BreakfastNutrients breakfastNutrients);
 
-  void upsert(BreakfastNutrients breakfastNutrients) async {
-    final id = await insertBreakfast(breakfastNutrients);
-  
-    if (id == -1) {
-      await updateBreakfast(breakfastNutrients);
-    }
-  }
-
 }
