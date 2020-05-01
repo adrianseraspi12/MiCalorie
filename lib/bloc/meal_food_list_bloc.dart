@@ -22,15 +22,7 @@ class MealFoodListBloc implements Bloc {
   }
 
   void setupFoodList() async {
-    final listOfFood = await _foodRepository.findAllDataWith(mealId);  
-    // final listOfFood = await _foodRepository.getAllFoods();
-    // List<Food> listOfFood = [];
-    // listOfFood.add(Food(0, 0, 'Egg', 1, 'Large', 20, 0, 0, 15));
-    // listOfFood.add(Food(0, 0, 'Cake', 3, 'Small', 200, 5, 12, 2));
-    // listOfFood.add(Food(0, 0, 'Protein Shake', 1, 'Medium', 14, 6, 8, 20));
-    // listOfFood.add(Food(0, 0, 'Fish', 1, 'Small', 132, 1, 2, 34));
-    // listOfFood.add(Food(0, 0, 'Pancake', 1, 'Small', 100, 5, 5, 2));
-    // listOfFood.add(Food(0, 0, 'Egg White', 1, 'Small', 20, 0, 0, 10));
+    final listOfFood = await _foodRepository.findAllDataWith(mealId);
     _foodListController.sink.add(listOfFood);
   }
 
