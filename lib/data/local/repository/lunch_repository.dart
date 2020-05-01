@@ -8,7 +8,7 @@ class LunchRepository implements Repository<LunchNutrients> {
 
   LunchRepository(this._lunchNutrientsDao);
 
-  Future<LunchNutrients> getBreakfast(int id) {
+  Future<LunchNutrients> getLunch(int id) {
     return _lunchNutrientsDao.findLunchById(id);
   }
 
@@ -16,7 +16,7 @@ class LunchRepository implements Repository<LunchNutrients> {
     return _lunchNutrientsDao.findLunchByTotalNutrientsId(id);
   }
 
-  Future<int> getTotalBreakfastCount() async {
+  Future<int> getTotalLunchCount() async {
     final listOfBreakfast = await _lunchNutrientsDao.getAllLunch();
     return listOfBreakfast.length;
   }
