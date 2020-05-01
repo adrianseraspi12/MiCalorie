@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:calorie_counter/data/local/repository/breakfast_repository.dart';
+import 'package:calorie_counter/data/local/repository/lunch_repository.dart';
 import 'package:calorie_counter/data/model/meal_summary.dart';
 
 import 'package:calorie_counter/data/local/app_database.dart';
@@ -20,11 +21,13 @@ class DailySummaryBloc implements Bloc {
 
   TotalNutrientsPerDayRepository _totalNutrientsPerDayRepository;
   BreakfastRepository _breakfastRepository;
+  LunchRepository _lunchRepository;
 
   void setupRepository() async {
     final database = await AppDatabase.getInstance();
     _totalNutrientsPerDayRepository = TotalNutrientsPerDayRepository(database.totalNutrientsPerDayDao);
     _breakfastRepository = BreakfastRepository(database.breakfastNutrientsDao);
+    _lunchRepository = LunchRepository(database.lunchNutrientsDao);
 
     final formattedDate = DateTime.now().formatDate('MM-dd-yyyy');
     changeTotalNutrients(formattedDate);
@@ -63,23 +66,57 @@ class DailySummaryBloc implements Bloc {
     }
     else {
       //  Request for meal nutrients
-      final breakFastNutrients = await _breakfastRepository.findBreakfastByTotalNutrientsId(totalNutrientsPerDay.id);
-      listMealSummary.add(MealSummary(breakFastNutrients.id, 
-                                      "Breakfast",
-                                      breakFastNutrients.calories, 
-                                      breakFastNutrients.carbs, 
-                                      breakFastNutrients.fat, 
-                                      breakFastNutrients.protein, 
-                                      totalNutrientsPerDay.date, 
-                                      totalNutrientsPerDay.id));
+      final breakfastNutrients = await _loadBreakfast(totalNutrientsPerDay);
+      listMealSummary.add(breakfastNutrients);
 
-      listMealSummary.add(MealSummary(0, 'Lunch', 0, 0, 0, 0, date, totalNutrientsPerDay.id));
+      final lunchNutrients = await _loadLunch(totalNutrientsPerDay);
+      listMealSummary.add(lunchNutrients);
+
       listMealSummary.add(MealSummary(0, 'Dinner', 0, 0, 0, 0, date, totalNutrientsPerDay.id));
       listMealSummary.add(MealSummary(0, 'Snack', 0, 0, 0, 0, date, totalNutrientsPerDay.id));
       
       final dailySummary = DailySummaryResult(totalNutrientsPerDay, listMealSummary);
       _dailySummaryController.sink.add(dailySummary);
     }
+  }
+
+  Future<MealSummary> _loadBreakfast(TotalNutrientsPerDay totalNutrientsPerDay) async {
+    final breakFastNutrients = await _breakfastRepository.findBreakfastByTotalNutrientsId(totalNutrientsPerDay.id);
+    
+    if (breakFastNutrients != null) {
+      return MealSummary(
+      breakFastNutrients.id,
+        'Breakfast',
+        breakFastNutrients.calories, 
+        breakFastNutrients.carbs, 
+        breakFastNutrients.fat, 
+        breakFastNutrients.protein, 
+        totalNutrientsPerDay.date, 
+        totalNutrientsPerDay.id);
+    }
+    else {
+      return MealSummary(0, 'Lunch', 0, 0, 0, 0, totalNutrientsPerDay.date, totalNutrientsPerDay.id);
+    }
+  }
+
+  Future<MealSummary> _loadLunch(TotalNutrientsPerDay totalNutrientsPerDay) async {
+    final lunchNutrients = await _lunchRepository.findLunchByTotalNutrientsId(totalNutrientsPerDay.id);
+    
+    if (lunchNutrients != null) {
+      return MealSummary(
+        lunchNutrients.id,
+        'Lunch',
+        lunchNutrients.calories, 
+        lunchNutrients.carbs, 
+        lunchNutrients.fat, 
+        lunchNutrients.protein, 
+        totalNutrientsPerDay.date, 
+        totalNutrientsPerDay.id);
+    }
+    else {
+      return MealSummary(0, 'Lunch', 0, 0, 0, 0, totalNutrientsPerDay.date, totalNutrientsPerDay.id);
+    }
+    
   }
 
   @override

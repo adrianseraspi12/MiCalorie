@@ -1,9 +1,11 @@
 import 'package:calorie_counter/data/local/app_database.dart';
 import 'package:calorie_counter/data/local/entity/breakfast_nutrients.dart';
 import 'package:calorie_counter/data/local/entity/food.dart';
+import 'package:calorie_counter/data/local/entity/lunch_nutrients.dart';
 import 'package:calorie_counter/data/local/entity/total_nutrients_per_day.dart';
 import 'package:calorie_counter/data/local/repository/breakfast_repository.dart';
 import 'package:calorie_counter/data/local/repository/food_repository.dart';
+import 'package:calorie_counter/data/local/repository/lunch_repository.dart';
 import 'package:calorie_counter/data/local/repository/total_nutrients_per_day_repository.dart';
 import 'package:calorie_counter/data/model/client_food.dart';
 import 'package:calorie_counter/data/model/meal_summary.dart';
@@ -19,13 +21,15 @@ class FoodDetailsBloc implements Bloc {
   Stream<MealSummary> get mealSummaryStream => _mealSummaryController.stream;
 
   FoodRepository _foodRepository;
-  BreakfastRepository _breakfastNutrients;
+  BreakfastRepository _breakfastNutrientsRepository;
+  LunchRepository _lunchRepository;
   TotalNutrientsPerDayRepository _totalNutrientsPerDayRepository;
 
   void setupRepository() async {
     final database = await AppDatabase.getInstance();
     _foodRepository = FoodRepository(database.foodDao);
-    _breakfastNutrients = BreakfastRepository(database.breakfastNutrientsDao);
+    _breakfastNutrientsRepository = BreakfastRepository(database.breakfastNutrientsDao);
+    _lunchRepository = LunchRepository(database.lunchNutrientsDao);
     _totalNutrientsPerDayRepository = TotalNutrientsPerDayRepository(database.totalNutrientsPerDayDao);
   }
 
@@ -76,11 +80,20 @@ class FoodDetailsBloc implements Bloc {
 
   void _updateMeal(MealSummary mealSummary, ClientFood food) async {
     
-    if (mealSummary.name == "Breakfast") {
-      final breakfastNutrients = await _breakfastNutrients.getBreakfast(mealSummary.id);
+    if (mealSummary.name == 'Breakfast') {
+      _updateBreakfast(mealSummary, food);
+    }
+    else if (mealSummary.name == 'Lunch') {
+      _updateLunch(mealSummary, food);
+    }
+
+  }
+
+  void _updateBreakfast(MealSummary mealSummary, ClientFood food) async {
+    final breakfastNutrients = await _breakfastNutrientsRepository.getBreakfast(mealSummary.id);
 
       if (breakfastNutrients == null) {
-        final id = await _breakfastNutrients.getTotalBreakfastCount();
+        final id = await _breakfastNutrientsRepository.getTotalBreakfastCount();
         
         var currentId = id + 1;
         mealSummary.id = currentId;
@@ -92,7 +105,7 @@ class FoodDetailsBloc implements Bloc {
         food.nutrients.getNutrient(NutrientType.protein),
         mealSummary.totalNutrientsId);
 
-        _breakfastNutrients.upsert(breakfast);
+        _breakfastNutrientsRepository.upsert(breakfast);
       }
       else {
         var currentId = breakfastNutrients.id;
@@ -112,9 +125,50 @@ class FoodDetailsBloc implements Bloc {
           newProtein.roundTo(2), 
           breakfastNutrients.totalNutrientsPerDayId);
 
-        _breakfastNutrients.upsert(newBreakfastNutrients);
+        _breakfastNutrientsRepository.upsert(newBreakfastNutrients);
       }
-    }
+
+    _insertFood(mealSummary, food);
+  }
+
+  void _updateLunch(MealSummary mealSummary, ClientFood food) async {
+    final lunchNutrients = await _lunchRepository.getLunch(mealSummary.id);
+
+      if (lunchNutrients == null) {
+        final id = await _lunchRepository.getTotalLunchCount();
+        
+        var currentId = id + 1;
+        mealSummary.id = currentId;
+
+        final lunch = LunchNutrients(currentId,
+        food.nutrients.getNutrient(NutrientType.calories).toInt(),
+        food.nutrients.getNutrient(NutrientType.carbs),
+        food.nutrients.getNutrient(NutrientType.fat),
+        food.nutrients.getNutrient(NutrientType.protein),
+        mealSummary.totalNutrientsId);
+
+        _lunchRepository.upsert(lunch);
+      }
+      else {
+        var currentId = lunchNutrients.id;
+        mealSummary.id = currentId;
+
+        final foodNutrients = food.nutrients;
+        final newCalories = lunchNutrients.calories + foodNutrients.getNutrient(NutrientType.calories).toInt();
+        final newCarbs = lunchNutrients.carbs + foodNutrients.getNutrient(NutrientType.carbs);
+        final newFat = lunchNutrients.fat + foodNutrients.getNutrient(NutrientType.fat);
+        final newProtein = lunchNutrients.protein + foodNutrients.getNutrient(NutrientType.protein);
+
+        final newLunchNutrients = LunchNutrients(
+          lunchNutrients.id, 
+          newCalories, 
+          newCarbs.roundTo(2), 
+          newFat.roundTo(2), 
+          newProtein.roundTo(2), 
+          lunchNutrients.totalNutrientsPerDayId);
+
+        _lunchRepository.upsert(newLunchNutrients);
+      }
 
     _insertFood(mealSummary, food);
   }
