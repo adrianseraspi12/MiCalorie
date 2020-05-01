@@ -8,18 +8,18 @@ abstract class MealNutrientsDao {
   Future<MealNutrients> findMealById(int id);
 
   @Query('SELECT * FROM meal_nutrients WHERE total_nutrients_per_day_id = :id')
-  Future<List<MealNutrients>> findBreakfastByTotalNutrientsId(int id);
+  Future<List<MealNutrients>> finddMealByTotalNutrientsId(int id);
 
   @Query('SELECT * FROM meal_nutrients')
-  Future<List<MealNutrients>> getAllBreakfast();
+  Future<List<MealNutrients>> getAlldMeal();
 
   @Insert(onConflict: OnConflictStrategy.IGNORE)
-  Future<int> insertBreakfast(MealNutrients breakfastNutrients);
+  Future<int> insertMeal(MealNutrients breakfastNutrients);
 
   @Update(onConflict: OnConflictStrategy.IGNORE)
-  Future<int> updateBreakfast(MealNutrients breakfastNutrients);
+  Future<int> updatedMeal(MealNutrients breakfastNutrients);
 
   @delete
-  Future<int> deleteBreakfast(MealNutrients breakfastNutrients);
+  Future<int> deletedMeal(MealNutrients breakfastNutrients);
 
 }

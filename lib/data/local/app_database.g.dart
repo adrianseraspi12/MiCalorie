@@ -320,7 +320,7 @@ class _$MealNutrientsDao extends MealNutrientsDao {
   }
 
   @override
-  Future<List<MealNutrients>> findBreakfastByTotalNutrientsId(int id) async {
+  Future<List<MealNutrients>> finddMealByTotalNutrientsId(int id) async {
     return _queryAdapter.queryList(
         'SELECT * FROM meal_nutrients WHERE total_nutrients_per_day_id = ?',
         arguments: <dynamic>[id],
@@ -328,25 +328,25 @@ class _$MealNutrientsDao extends MealNutrientsDao {
   }
 
   @override
-  Future<List<MealNutrients>> getAllBreakfast() async {
+  Future<List<MealNutrients>> getAlldMeal() async {
     return _queryAdapter.queryList('SELECT * FROM meal_nutrients',
         mapper: _meal_nutrientsMapper);
   }
 
   @override
-  Future<int> insertBreakfast(MealNutrients breakfastNutrients) {
+  Future<int> insertMeal(MealNutrients breakfastNutrients) {
     return _mealNutrientsInsertionAdapter.insertAndReturnId(
         breakfastNutrients, sqflite.ConflictAlgorithm.ignore);
   }
 
   @override
-  Future<int> updateBreakfast(MealNutrients breakfastNutrients) {
+  Future<int> updatedMeal(MealNutrients breakfastNutrients) {
     return _mealNutrientsUpdateAdapter.updateAndReturnChangedRows(
         breakfastNutrients, sqflite.ConflictAlgorithm.ignore);
   }
 
   @override
-  Future<int> deleteBreakfast(MealNutrients breakfastNutrients) {
+  Future<int> deletedMeal(MealNutrients breakfastNutrients) {
     return _mealNutrientsDeletionAdapter
         .deleteAndReturnChangedRows(breakfastNutrients);
   }

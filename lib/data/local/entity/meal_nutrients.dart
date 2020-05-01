@@ -14,6 +14,9 @@ class MealNutrients {
   @ColumnInfo(name: 'total_nutrients_per_day_id')
   final int totalNutrientsPerDayId;
 
-  MealNutrients(this.id, this.calories, this.carbs, this.fat, this.protein, this.type, this.totalNutrientsPerDayId);
+  @ignore
+  String date;
+
+  MealNutrients(this.id, this.calories, this.carbs, this.fat, this.protein, this.type, this.totalNutrientsPerDayId, {this.date = ''});
   
 }
