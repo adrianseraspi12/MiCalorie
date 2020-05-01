@@ -17,7 +17,6 @@ extension NutrientList on List<Nutrients> {
 
     var value = nutrient.value;
     final roundedValue = double.parse(value.toStringAsFixed(2));
-    print('ROUNDED VALUE = $roundedValue');
     return roundedValue;
   }
     
