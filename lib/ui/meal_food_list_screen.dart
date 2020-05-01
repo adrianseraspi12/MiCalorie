@@ -26,6 +26,11 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
       bloc: bloc,
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.chevron_left), 
+            onPressed: () {
+              Navigator.pop(context, this.widget.mealSummary.date);
+            }),
           title: Text('${widget.mealSummary.name} Food List'),
           actions: <Widget>[
             IconButton(
