@@ -8,10 +8,14 @@ import 'package:calorie_counter/data/local/repository/total_nutrients_per_day_re
 import 'package:calorie_counter/data/model/client_food.dart';
 import 'package:calorie_counter/data/model/meal_summary.dart';
 import 'package:calorie_counter/util/extension/ext_nutrient_list.dart';
+import 'package:rxdart/subjects.dart';
 
 import 'bloc.dart';
 
 class FoodDetailsBloc implements Bloc {
+
+  final _mealSummaryController = PublishSubject<MealSummary>();
+  Stream<MealSummary> get mealSummaryStream => _mealSummaryController.stream;
 
   FoodRepository _foodRepository;
   BreakfastRepository _breakfastNutrients;
@@ -24,24 +28,17 @@ class FoodDetailsBloc implements Bloc {
     _totalNutrientsPerDayRepository = TotalNutrientsPerDayRepository(database.totalNutrientsPerDayDao);
   }
 
-  Future<MealSummary> addFood(MealSummary mealSummary, ClientFood food) async {
-    final totalNutrientsId = await updateTotalNutrients(mealSummary, food);
-    final breakfastNutrients = await updateMeal(mealSummary, food);
-    return MealSummary(
-      breakfastNutrients.id,
-      mealSummary.name, 
-      breakfastNutrients.calories, 
-      breakfastNutrients.carbs, 
-      breakfastNutrients.fat, 
-      breakfastNutrients.protein, 
-      mealSummary.date, 
-      totalNutrientsId);
+  void addFood(MealSummary mealSummary, ClientFood food) async {
+    _updateTotalNutrientsAndMeal(mealSummary, food);
   }
     
-  Future<int> updateTotalNutrients(MealSummary mealSummary, ClientFood food) async {
+  void _updateTotalNutrientsAndMeal(MealSummary mealSummary, ClientFood food) async {
     var totalNutrientsPerDay = await _totalNutrientsPerDayRepository.getTotalNutrientsByDate(mealSummary.date);
+    var totalNutrientsId;
 
     if (totalNutrientsPerDay == null) {
+      totalNutrientsId = mealSummary.totalNutrientsId;
+      
       final currentTotalNutrients = TotalNutrientsPerDay(mealSummary.totalNutrientsId,
         mealSummary.date, 
         food.nutrients.getNutrient(NutrientType.calories).toInt(),
@@ -50,9 +47,10 @@ class FoodDetailsBloc implements Bloc {
         food.nutrients.getNutrient(NutrientType.protein));
       
       _totalNutrientsPerDayRepository.upsert(currentTotalNutrients);
-      return mealSummary.totalNutrientsId;
     }
     else {
+      totalNutrientsId = totalNutrientsPerDay.id;
+
       final foodNutrients = food.nutrients;
       final newCalories = totalNutrientsPerDay.calories + foodNutrients.getNutrient(NutrientType.calories).toInt();
       final newCarbs = totalNutrientsPerDay.carbs + foodNutrients.getNutrient(NutrientType.carbs);
@@ -68,18 +66,23 @@ class FoodDetailsBloc implements Bloc {
         newProtein);
 
       _totalNutrientsPerDayRepository.upsert(newTotalNutrientsPerDay);
-      return totalNutrientsPerDay.id;
     }
+
+    mealSummary.totalNutrientsId = totalNutrientsId;
+
+    _updateMeal(mealSummary, food);
   }
 
-  Future<BreakfastNutrients> updateMeal(MealSummary mealSummary, ClientFood food) async {
+  void _updateMeal(MealSummary mealSummary, ClientFood food) async {
+    
     if (mealSummary.name == "Breakfast") {
       final breakfastNutrients = await _breakfastNutrients.getBreakfast(mealSummary.id);
-      int currentId;
 
       if (breakfastNutrients == null) {
         final id = await _breakfastNutrients.getTotalBreakfastCount();
-        currentId = id + 1;
+        
+        var currentId = id + 1;
+        mealSummary.id = currentId;
 
         final breakfast = BreakfastNutrients(currentId,
         food.nutrients.getNutrient(NutrientType.calories).toInt(),
@@ -89,10 +92,11 @@ class FoodDetailsBloc implements Bloc {
         mealSummary.totalNutrientsId);
 
         _breakfastNutrients.upsert(breakfast);
-        insertFood(currentId, food);
-        return breakfast;
       }
       else {
+        var currentId = breakfastNutrients.id;
+        mealSummary.id = currentId;
+
         final foodNutrients = food.nutrients;
         final newCalories = breakfastNutrients.calories + foodNutrients.getNutrient(NutrientType.calories).toInt();
         final newCarbs = breakfastNutrients.carbs + foodNutrients.getNutrient(NutrientType.carbs);
@@ -108,18 +112,18 @@ class FoodDetailsBloc implements Bloc {
           breakfastNutrients.totalNutrientsPerDayId);
 
         _breakfastNutrients.upsert(newBreakfastNutrients);
-        insertFood(currentId, food);
-        return newBreakfastNutrients;
       }
     }
+
+    _insertFood(mealSummary, food);
   }
 
-  void insertFood(int id, ClientFood clientFood) async {
+  void _insertFood(MealSummary mealSummary, ClientFood clientFood) async {
     final foodId = await _foodRepository.getAllFoodCount();
     final currentFoodId = foodId + 1;
 
     final food = Food(currentFoodId,
-    id, 
+    mealSummary.id, 
     clientFood.name, 
     clientFood.numberOfServings, 
     clientFood.servingSize, 
@@ -129,12 +133,12 @@ class FoodDetailsBloc implements Bloc {
     clientFood.nutrients.getNutrient(NutrientType.protein));
 
     _foodRepository.upsert(food);
+    _mealSummaryController.sink.add(mealSummary);
   }
 
   @override
   void dispose() {
-
+    _mealSummaryController.close();
   }
-
 
 }

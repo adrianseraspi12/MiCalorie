@@ -29,7 +29,59 @@ class FoodDetailsScreen extends StatelessWidget {
             )
           ]
       ),
-      body: ListView(
+      body: _buildResult(context, bloc)
+    );
+  }
+
+  void _onAddFoodClick(BuildContext context, FoodDetailsBloc bloc) async {
+    bloc.addFood(mealSummary, food);
+  }
+
+  void _setupRepository(FoodDetailsBloc bloc) async {
+    bloc.setupRepository();
+  }
+
+  Widget _buildResult(BuildContext context, FoodDetailsBloc bloc) {
+
+    return StreamBuilder<MealSummary>(
+      stream: bloc.mealSummaryStream,
+      builder: (context, snapshot) {
+
+        final mealSummary = snapshot.data;
+
+        if (mealSummary != null) {
+          _popAndShowMessage(context, mealSummary);
+          return Container();
+        }
+        else {
+          return _buildFoodDetails();
+        }
+
+
+      },
+    
+    );
+
+  }
+
+  void _popAndShowMessage(BuildContext context, MealSummary mealSummary) {
+    Fluttertoast.showToast(
+      msg: 'Food added',
+      timeInSecForIosWeb: 2)
+      .then((val) => Navigator.popUntil(
+        context,
+        (route) {
+          if (route.settings.name == '/mealFoodListScreen') {
+            (route.settings.arguments as Map) ['mealSummary'] = mealSummary;
+            return true;
+          }
+          return false;
+        })
+      );
+  }
+
+  Widget _buildFoodDetails() {
+    return ListView(
         shrinkWrap: true,
         children: <Widget>[
           Container(
@@ -118,34 +170,7 @@ class FoodDetailsScreen extends StatelessWidget {
 
           Divider(),
         ],
-      )
-    );
-  }
-
-  void _onAddFoodClick(BuildContext context, FoodDetailsBloc bloc) async {
-    bloc.addFood(mealSummary, food).then((value) {
-      _popAndShowMessage(context, value);
-    });
-  }
-
-  void _popAndShowMessage(BuildContext context, MealSummary mealSummary) {
-    Fluttertoast.showToast(
-      msg: 'Food added',
-      timeInSecForIosWeb: 2)
-      .then((val) => Navigator.popUntil(
-        context,
-        (route) {
-          if (route.settings.name == '/mealFoodListScreen') {
-            (route.settings.arguments as Map) ['mealSummary'] = mealSummary;
-            return true;
-          }
-          return false;
-        })
       );
-  }
-
-  void _setupRepository(FoodDetailsBloc bloc) async {
-    bloc.setupRepository();
   }
 
 }
