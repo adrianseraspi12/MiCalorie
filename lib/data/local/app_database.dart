@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:calorie_counter/data/local/dao/meal_nutrients_dao.dart';
 import 'package:calorie_counter/data/local/dao/total_nutrients_per_day_dao.dart';
 import 'package:sqflite/sqflite.dart' as sqflite;
 import 'package:path/path.dart';
@@ -17,9 +18,12 @@ import 'package:calorie_counter/data/local/entity/lunch_nutrients.dart';
 import 'package:calorie_counter/data/local/entity/snack_nutrients.dart';
 import 'package:calorie_counter/data/local/entity/total_nutrients_per_day.dart';
 
+import 'entity/meal_nutrients.dart';
+
 part 'app_database.g.dart';
 
 @Database(version: 1, entities: [TotalNutrientsPerDay, 
+                                MealNutrients,
                                 BreakfastNutrients,
                                 LunchNutrients,
                                 DinnerNutrients,
@@ -28,6 +32,7 @@ part 'app_database.g.dart';
 abstract class AppDatabase extends FloorDatabase {
 
   TotalNutrientsPerDayDao get totalNutrientsPerDayDao;
+  MealNutrientsDao get mealNutrientsDao;
   BreakfastNutrientsDao get breakfastNutrientsDao;
   LunchNutrientsDao get lunchNutrientsDao;
   DinnerNutrientsDao get dinnerNutrientsDao;
