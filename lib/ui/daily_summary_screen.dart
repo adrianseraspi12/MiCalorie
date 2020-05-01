@@ -16,8 +16,32 @@ class DailySummaryScreen extends StatelessWidget {
     return BlocProvider<DailySummaryBloc>(
       bloc: bloc,
       child: Scaffold(
-        appBar: AppBar(title: Text('Daily Summary')),
+        appBar: AppBar(
+          title: SizedBox(
+            width: 130,
+            child: FlatButton(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                Text(
+                'Today',
+                style: TextStyle(
+                  fontSize: 24.0,
+                  color: Colors.white)
+                ),
 
+                Icon(
+                  Icons.keyboard_arrow_down, 
+                  color: Colors.white,
+                ),
+
+              ]),
+              onPressed: () {
+
+              },
+            ),
+          ) 
+        ),
         body: _buildResult(bloc)
       ),
     );
