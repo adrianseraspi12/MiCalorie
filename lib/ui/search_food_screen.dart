@@ -163,7 +163,10 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
                                   nutrients: brandedFood.nutrients);
                 
                 Navigator.of(context).push(
-                  MaterialPageRoute(builder: (BuildContext context) => FoodDetailsScreen(food: food,))
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => FoodDetailsScreen(
+                    food: food, mealSummary: widget.mealSummary,),
+                    settings: RouteSettings(name: Routes.foodDetailsScreen))
                 );
               },
             );
