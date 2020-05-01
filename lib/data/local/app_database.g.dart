@@ -62,6 +62,8 @@ class _$AppDatabase extends AppDatabase {
 
   TotalNutrientsPerDayDao _totalNutrientsPerDayDaoInstance;
 
+  MealNutrientsDao _mealNutrientsDaoInstance;
+
   BreakfastNutrientsDao _breakfastNutrientsDaoInstance;
 
   LunchNutrientsDao _lunchNutrientsDaoInstance;
@@ -93,6 +95,8 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `total_nutrients_per_day` (`id` INTEGER, `date` TEXT, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, PRIMARY KEY (`id`))');
         await database.execute(
+            'CREATE TABLE IF NOT EXISTS `meal_nutrients` (`id` INTEGER, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, `type` INTEGER, `total_nutrients_per_day_id` INTEGER, PRIMARY KEY (`id`))');
+        await database.execute(
             'CREATE TABLE IF NOT EXISTS `breakfast_nutrients` (`id` INTEGER, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, `total_nutrients_per_day_id` INTEGER, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `lunch_nutrients` (`id` INTEGER, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, `total_nutrients_per_day_id` INTEGER, PRIMARY KEY (`id`))');
@@ -112,6 +116,12 @@ class _$AppDatabase extends AppDatabase {
   TotalNutrientsPerDayDao get totalNutrientsPerDayDao {
     return _totalNutrientsPerDayDaoInstance ??=
         _$TotalNutrientsPerDayDao(database, changeListener);
+  }
+
+  @override
+  MealNutrientsDao get mealNutrientsDao {
+    return _mealNutrientsDaoInstance ??=
+        _$MealNutrientsDao(database, changeListener);
   }
 
   @override
@@ -236,6 +246,109 @@ class _$TotalNutrientsPerDayDao extends TotalNutrientsPerDayDao {
   Future<int> deleteTotalNutrients(TotalNutrientsPerDay totalNutrientsPerDay) {
     return _totalNutrientsPerDayDeletionAdapter
         .deleteAndReturnChangedRows(totalNutrientsPerDay);
+  }
+}
+
+class _$MealNutrientsDao extends MealNutrientsDao {
+  _$MealNutrientsDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database),
+        _mealNutrientsInsertionAdapter = InsertionAdapter(
+            database,
+            'meal_nutrients',
+            (MealNutrients item) => <String, dynamic>{
+                  'id': item.id,
+                  'calories': item.calories,
+                  'carbs': item.carbs,
+                  'fat': item.fat,
+                  'protein': item.protein,
+                  'type': item.type,
+                  'total_nutrients_per_day_id': item.totalNutrientsPerDayId
+                }),
+        _mealNutrientsUpdateAdapter = UpdateAdapter(
+            database,
+            'meal_nutrients',
+            ['id'],
+            (MealNutrients item) => <String, dynamic>{
+                  'id': item.id,
+                  'calories': item.calories,
+                  'carbs': item.carbs,
+                  'fat': item.fat,
+                  'protein': item.protein,
+                  'type': item.type,
+                  'total_nutrients_per_day_id': item.totalNutrientsPerDayId
+                }),
+        _mealNutrientsDeletionAdapter = DeletionAdapter(
+            database,
+            'meal_nutrients',
+            ['id'],
+            (MealNutrients item) => <String, dynamic>{
+                  'id': item.id,
+                  'calories': item.calories,
+                  'carbs': item.carbs,
+                  'fat': item.fat,
+                  'protein': item.protein,
+                  'type': item.type,
+                  'total_nutrients_per_day_id': item.totalNutrientsPerDayId
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  static final _meal_nutrientsMapper = (Map<String, dynamic> row) =>
+      MealNutrients(
+          row['id'] as int,
+          row['calories'] as int,
+          row['carbs'] as double,
+          row['fat'] as double,
+          row['protein'] as double,
+          row['type'] as int,
+          row['total_nutrients_per_day_id'] as int);
+
+  final InsertionAdapter<MealNutrients> _mealNutrientsInsertionAdapter;
+
+  final UpdateAdapter<MealNutrients> _mealNutrientsUpdateAdapter;
+
+  final DeletionAdapter<MealNutrients> _mealNutrientsDeletionAdapter;
+
+  @override
+  Future<MealNutrients> findMealById(int id) async {
+    return _queryAdapter.query('SELECT * FROM meal_nutrients WHERE id = ?',
+        arguments: <dynamic>[id], mapper: _meal_nutrientsMapper);
+  }
+
+  @override
+  Future<List<MealNutrients>> findBreakfastByTotalNutrientsId(int id) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM meal_nutrients WHERE total_nutrients_per_day_id = ?',
+        arguments: <dynamic>[id],
+        mapper: _meal_nutrientsMapper);
+  }
+
+  @override
+  Future<List<MealNutrients>> getAllBreakfast() async {
+    return _queryAdapter.queryList('SELECT * FROM meal_nutrients',
+        mapper: _meal_nutrientsMapper);
+  }
+
+  @override
+  Future<int> insertBreakfast(MealNutrients breakfastNutrients) {
+    return _mealNutrientsInsertionAdapter.insertAndReturnId(
+        breakfastNutrients, sqflite.ConflictAlgorithm.ignore);
+  }
+
+  @override
+  Future<int> updateBreakfast(MealNutrients breakfastNutrients) {
+    return _mealNutrientsUpdateAdapter.updateAndReturnChangedRows(
+        breakfastNutrients, sqflite.ConflictAlgorithm.ignore);
+  }
+
+  @override
+  Future<int> deleteBreakfast(MealNutrients breakfastNutrients) {
+    return _mealNutrientsDeletionAdapter
+        .deleteAndReturnChangedRows(breakfastNutrients);
   }
 }
 
