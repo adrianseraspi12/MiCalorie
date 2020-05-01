@@ -1,7 +1,6 @@
 import 'package:calorie_counter/bloc/food_details_bloc.dart';
 import 'package:calorie_counter/data/model/client_food.dart';
 import 'package:calorie_counter/data/model/meal_summary.dart';
-import 'package:calorie_counter/ui/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:calorie_counter/util/extension/ext_nutrient_list.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -11,10 +10,6 @@ class FoodDetailsScreen extends StatelessWidget {
   final MealSummary mealSummary;
 
   const FoodDetailsScreen({Key key, this.food, this.mealSummary}) : super(key: key);
-
-  void _onAddFoodClick(FoodDetailsBloc bloc) async {
-    bloc.addFood(mealSummary, food);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +24,7 @@ class FoodDetailsScreen extends StatelessWidget {
                 icon: Icon(Icons.add),
                 color: Colors.white ,
                 onPressed: () {
-                  _onAddFoodClick(bloc); 
-                  Fluttertoast.showToast(
-                    msg: 'Food added',
-                    timeInSecForIosWeb: 2)
-                    .then( 
-                    (val) => Navigator.popUntil(context, (r) => r.settings.name == Routes.mealFoodListScreen)
-                  );
+                  _onAddFoodClick(context, bloc); 
                 }),
             )
           ]
@@ -131,6 +120,28 @@ class FoodDetailsScreen extends StatelessWidget {
         ],
       )
     );
+  }
+
+  void _onAddFoodClick(BuildContext context, FoodDetailsBloc bloc) async {
+    bloc.addFood(mealSummary, food).then((value) {
+      _popAndShowMessage(context, value);
+    });
+  }
+
+  void _popAndShowMessage(BuildContext context, MealSummary mealSummary) {
+    Fluttertoast.showToast(
+      msg: 'Food added',
+      timeInSecForIosWeb: 2)
+      .then((val) => Navigator.popUntil(
+        context,
+        (route) {
+          if (route.settings.name == '/mealFoodListScreen') {
+            (route.settings.arguments as Map) ['mealSummary'] = mealSummary;
+            return true;
+          }
+          return false;
+        })
+      );
   }
 
   void _setupRepository(FoodDetailsBloc bloc) async {

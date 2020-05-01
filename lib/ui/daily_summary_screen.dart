@@ -112,9 +112,14 @@ class DailySummaryScreen extends StatelessWidget {
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(
-                builder: (context) => MealFoodListScreen(mealSummary: mealSummary,),
-                settings: RouteSettings(name: Routes.mealFoodListScreen))
-            ).then( (val) => _setupData(bloc));
+                builder: (context) => MealFoodListScreen(mealSummary,),
+                settings: RouteSettings(name: Routes.mealFoodListScreen,
+                                        arguments: Map())
+              )
+            ).then((val) {
+                _setupData(bloc); 
+                } 
+              );
           },
           child: Container(
             child: Column(

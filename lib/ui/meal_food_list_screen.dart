@@ -6,21 +6,27 @@ import 'package:calorie_counter/ui/routes.dart';
 import 'package:calorie_counter/ui/search_food_screen.dart';
 import 'package:flutter/material.dart';
 
-class MealFoodListScreen extends StatelessWidget {
+class MealFoodListScreen extends StatefulWidget {
 
-  final MealSummary mealSummary;
-  const MealFoodListScreen({Key key, this.mealSummary}): super(key: key);
+  MealSummary mealSummary;
+  MealFoodListScreen(this.mealSummary);
+
+  @override
+  _MealFoodListScreenState createState() => _MealFoodListScreenState();
+}
+
+class _MealFoodListScreenState extends State<MealFoodListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final bloc = MealFoodListBloc(mealSummary.id); 
-    setupRepository(bloc);
+    final bloc = MealFoodListBloc(widget.mealSummary.id); 
+    _setupRepository(bloc);
 
     return BlocProvider<MealFoodListBloc>(
       bloc: bloc,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('${mealSummary.name} Food List'),
+          title: Text('${widget.mealSummary.name} Food List'),
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.add),
@@ -28,9 +34,12 @@ class MealFoodListScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => SearchFoodScreen(mealSummary),
-                    settings: RouteSettings(name: Routes.searchFoodScreen))
-                );
+                    builder: (context) => SearchFoodScreen(widget.mealSummary),
+                    settings: RouteSettings(name: Routes.searchFoodScreen)
+                  )
+                ).then((v) {
+                    _retainData(context);
+                });
               })
           ],
         ),
@@ -70,9 +79,13 @@ class MealFoodListScreen extends StatelessWidget {
     );
   }
 
-  void setupRepository(MealFoodListBloc bloc) async {
+  void _setupRepository(MealFoodListBloc bloc) async {
     //  repository here
     bloc.setupRepository();
   }
 
+  void _retainData(BuildContext context) {
+    final arguments = ModalRoute.of(context).settings.arguments as Map;
+    this.widget.mealSummary = arguments['mealSummary'];
+   }
 }
