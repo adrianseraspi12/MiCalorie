@@ -6,6 +6,8 @@ import 'package:calorie_counter/data/local/app_database.dart';
 import 'package:calorie_counter/data/local/entity/total_nutrients_per_day.dart';
 import 'package:calorie_counter/data/local/repository/total_nutrients_per_day_repository.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:calorie_counter/util/extension/ext_date_time_formatter.dart';
+
 import 'bloc.dart';
 
 class DailySummaryBloc implements Bloc {
@@ -13,14 +15,34 @@ class DailySummaryBloc implements Bloc {
   final _dailySummaryController = PublishSubject<DailySummaryResult>();
   Stream<DailySummaryResult> get dailySummaryResultStream => _dailySummaryController.stream;
 
+  final _dateTimeController = PublishSubject<String>();
+  Stream<String> get dateTimeStream => _dateTimeController.stream;
+
   TotalNutrientsPerDayRepository _totalNutrientsPerDayRepository;
   BreakfastRepository _breakfastRepository;
 
-  void setupRepository(String date) async {
+  void setupRepository() async {
     final database = await AppDatabase.getInstance();
     _totalNutrientsPerDayRepository = TotalNutrientsPerDayRepository(database.totalNutrientsPerDayDao);
     _breakfastRepository = BreakfastRepository(database.breakfastNutrientsDao);
-    changeTotalNutrients(date);
+
+    final formattedDate = DateTime.now().formatDate('MM-dd-yyyy');
+    changeTotalNutrients(formattedDate);
+  }
+
+  void updateTimeAndTotalNutrients(DateTime date) {
+    final currentDate = DateTime.now().formatDate('EEEE, MMM d, yyyy');
+    final selectedDate = date.formatDate('EEEE, MMM d, yyyy');
+
+    if (currentDate == selectedDate) {
+      _dateTimeController.sink.add('Today');
+    }
+    else {
+      _dateTimeController.sink.add(selectedDate);
+    }
+    
+    final formattedDate = date.formatDate('MM-dd-yyyy');
+    changeTotalNutrients(formattedDate);
   }
 
   void changeTotalNutrients(String date) async {
@@ -63,6 +85,7 @@ class DailySummaryBloc implements Bloc {
   @override
   void dispose() {
     _dailySummaryController.close();
+    _dateTimeController.close();
   }
 
 }

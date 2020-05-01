@@ -6,8 +6,15 @@ import 'package:calorie_counter/ui/meal_food_list_screen.dart';
 import 'package:calorie_counter/ui/routes.dart';
 import 'package:flutter/material.dart';
 
-class DailySummaryScreen extends StatelessWidget {
+class DailySummaryScreen extends StatefulWidget {
   
+  @override
+  _DailySummaryScreenState createState() => _DailySummaryScreenState();
+}
+
+class _DailySummaryScreenState extends State<DailySummaryScreen> {
+  DateTime selectedDate = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     final bloc = DailySummaryBloc();
@@ -17,34 +24,67 @@ class DailySummaryScreen extends StatelessWidget {
       bloc: bloc,
       child: Scaffold(
         appBar: AppBar(
-          title: SizedBox(
-            width: 130,
-            child: FlatButton(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                Text(
-                'Today',
-                style: TextStyle(
-                  fontSize: 24.0,
-                  color: Colors.white)
-                ),
-
-                Icon(
-                  Icons.keyboard_arrow_down, 
-                  color: Colors.white,
-                ),
-
-              ]),
-              onPressed: () {
-
-              },
-            ),
-          ) 
+          title: _buildAppBarDate(context, bloc),
         ),
         body: _buildResult(bloc)
       ),
     );
+  }
+
+  void _setupData(DailySummaryBloc bloc) async {
+    bloc.setupRepository();
+  }
+
+  Widget _buildAppBarDate(BuildContext context, DailySummaryBloc bloc) {
+    return StreamBuilder<String>(
+      stream: bloc.dateTimeStream,
+      builder: (context, snapshot) {
+
+        var date = snapshot.data;
+
+        if (date == null) {
+          date = 'Today';
+        }
+
+        return Container(
+          child: FlatButton(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+              Text(
+              '$date',
+              style: TextStyle(
+                fontSize: 24.0,
+                color: Colors.white)
+              ),
+
+              Icon(
+                Icons.keyboard_arrow_down, 
+                color: Colors.white,
+              ),
+
+            ]),
+            onPressed: () {
+              _buildDatePicker(context, bloc);
+            },
+          ),
+        );
+      }
+    );
+  }
+
+  void _buildDatePicker(BuildContext context, DailySummaryBloc bloc) async {
+    final DateTime pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate, 
+      firstDate: DateTime(1920), 
+      lastDate: DateTime(2120));
+
+    if (pickedDate != null) {
+      selectedDate = pickedDate;
+      bloc.updateTimeAndTotalNutrients(pickedDate);
+    }
+
   }
 
   Widget _buildResult(DailySummaryBloc bloc) {
@@ -134,16 +174,7 @@ class DailySummaryScreen extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: InkWell(
           onTap: () {
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => MealFoodListScreen(mealSummary,),
-                settings: RouteSettings(name: Routes.mealFoodListScreen,
-                                        arguments: Map())
-              )
-            ).then((val) {
-                _setupData(bloc); 
-                } 
-              );
+            _showMealFoodListScreen(context, mealSummary, bloc);
           },
           child: Container(
             child: Column(
@@ -236,8 +267,15 @@ class DailySummaryScreen extends StatelessWidget {
     );
   }
 
-  void _setupData(DailySummaryBloc bloc) async {
-    bloc.setupRepository("04//26/2020");
+  void _showMealFoodListScreen(BuildContext context, MealSummary mealSummary, DailySummaryBloc bloc) async {
+    var date = await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => MealFoodListScreen(mealSummary,),
+        settings: RouteSettings(name: Routes.mealFoodListScreen,
+                                arguments: Map())
+      )
+    );
+    bloc.changeTotalNutrients(date);
   }
 
 }
