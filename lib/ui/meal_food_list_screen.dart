@@ -38,7 +38,7 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
                     settings: RouteSettings(name: Routes.searchFoodScreen)
                   )
                 ).then((v) {
-                    _retainData(context);
+                    _retainData(context, bloc);
                 });
               })
           ],
@@ -55,7 +55,7 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
 
         final listOfFood = snapshot.data;
 
-        if (listOfFood == null) {
+        if (listOfFood == null || listOfFood.length == 0) {
           return Center(child: Text('NO FOODS'),);
         }
         else {
@@ -80,12 +80,12 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
   }
 
   void _setupRepository(MealFoodListBloc bloc) async {
-    //  repository here
     bloc.setupRepository();
   }
 
-  void _retainData(BuildContext context) {
+  void _retainData(BuildContext context, MealFoodListBloc bloc) {
     final arguments = ModalRoute.of(context).settings.arguments as Map;
     this.widget.mealSummary = arguments['mealSummary'];
+    bloc.setupFoodList();
    }
 }
