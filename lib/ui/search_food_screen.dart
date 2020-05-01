@@ -1,7 +1,7 @@
 import 'package:calorie_counter/data/model/client_food.dart';
 import 'package:calorie_counter/data/model/list_of_food.dart';
 import 'package:calorie_counter/data/model/meal_summary.dart';
-import 'package:calorie_counter/ui/routes.dart';
+import 'package:calorie_counter/util/constant/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:calorie_counter/bloc/bloc_provider.dart';
 import 'package:calorie_counter/bloc/search_food_query_bloc.dart';

@@ -2,8 +2,8 @@ import 'package:calorie_counter/bloc/bloc_provider.dart';
 import 'package:calorie_counter/bloc/meal_food_list_bloc.dart';
 import 'package:calorie_counter/data/local/entity/food.dart';
 import 'package:calorie_counter/data/model/meal_summary.dart';
-import 'package:calorie_counter/ui/routes.dart';
 import 'package:calorie_counter/ui/search_food_screen.dart';
+import 'package:calorie_counter/util/constant/routes.dart';
 import 'package:flutter/material.dart';
 
 class MealFoodListScreen extends StatefulWidget {

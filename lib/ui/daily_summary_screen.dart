@@ -3,7 +3,7 @@ import 'package:calorie_counter/bloc/daily_summary_bloc.dart';
 import 'package:calorie_counter/data/local/entity/total_nutrients_per_day.dart';
 import 'package:calorie_counter/data/model/meal_summary.dart';
 import 'package:calorie_counter/ui/meal_food_list_screen.dart';
-import 'package:calorie_counter/ui/routes.dart';
+import 'package:calorie_counter/util/constant/routes.dart';
 import 'package:flutter/material.dart';
 
 class DailySummaryScreen extends StatefulWidget {
