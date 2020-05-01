@@ -10,6 +10,9 @@ abstract class LunchNutrientsDao {
   @Query('SELECT * FROM lunch_nutrients WHERE total_nutrients_per_day_id = :id')
   Future<LunchNutrients> findLunchByTotalNutrientsId(int id);
 
+  @Query('SELECT * FROM lunch_nutrients')
+  Future<List<LunchNutrients>> getAllLunch();
+
   @Insert(onConflict: OnConflictStrategy.IGNORE)
   Future<int> insertLunch(LunchNutrients lunchNutrients);
 

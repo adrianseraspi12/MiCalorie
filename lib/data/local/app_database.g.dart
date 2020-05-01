@@ -414,6 +414,12 @@ class _$LunchNutrientsDao extends LunchNutrientsDao {
   }
 
   @override
+  Future<List<LunchNutrients>> getAllLunch() async {
+    return _queryAdapter.queryList('SELECT * FROM lunch_nutrients',
+        mapper: _lunch_nutrientsMapper);
+  }
+
+  @override
   Future<int> insertLunch(LunchNutrients lunchNutrients) {
     return _lunchNutrientsInsertionAdapter.insertAndReturnId(
         lunchNutrients, sqflite.ConflictAlgorithm.ignore);
