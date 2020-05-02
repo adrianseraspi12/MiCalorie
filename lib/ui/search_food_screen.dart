@@ -94,16 +94,16 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
               title: Text(commonFood.details.name),
               subtitle: Text(brandName),
               onTap: () {
-                // final food = ClientFood(name: commonFood.foodName,
-                //                   numberOfServings: commonFood.servingQty,
-                //                   servingSize: commonFood.servingUnit,
-                //                   nutrients: commonFood.nutrients);
+                final food = ClientFood(name: commonFood.details.name,
+                                  numberOfServings: 1,
+                                  brand: brandName,
+                                  nutrients: commonFood.details.nutrients);
                 
-                // Navigator.of(context).push(
-                //   MaterialPageRoute(
-                //     builder: (BuildContext context) => FoodDetailsScreen(food, widget.mealNutrients),
-                //     settings: RouteSettings(name: Routes.foodDetailsScreen))
-                // );
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => FoodDetailsScreen(food, widget.mealNutrients),
+                    settings: RouteSettings(name: Routes.foodDetailsScreen))
+                );
               },
             );
 

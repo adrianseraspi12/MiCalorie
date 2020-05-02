@@ -2,7 +2,7 @@ import 'package:calorie_counter/bloc/food_details_bloc.dart';
 import 'package:calorie_counter/data/api/model/client_food.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
 import 'package:flutter/material.dart';
-import 'package:calorie_counter/util/extension/ext_nutrient_list.dart';
+import 'package:calorie_counter/util/extension/ext_number_rounding.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class FoodDetailsScreen extends StatelessWidget {
@@ -125,7 +125,7 @@ class FoodDetailsScreen extends StatelessWidget {
               
               Column(
                 children: <Widget>[
-                Text('${food.nutrients.getNutrient(NutrientType.carbs)} g'),
+                Text('${food.nutrients.carbs.roundTo(2)} g'),
                 Text('Carbs')
               ]),
 
@@ -137,7 +137,7 @@ class FoodDetailsScreen extends StatelessWidget {
               ),
 
               Column(children: <Widget>[
-                Text('${food.nutrients.getNutrient(NutrientType.fat)} g'),
+                Text('${food.nutrients.fat.roundTo(2)} g'),
                 Text('Fat')
               ]),
 
@@ -149,7 +149,7 @@ class FoodDetailsScreen extends StatelessWidget {
               ),
 
               Column(children: <Widget>[
-                Text('${food.nutrients.getNutrient(NutrientType.protein)} g'),
+                Text('${food.nutrients.protein.roundTo(2)} g'),
                 Text('Protein'),
               ]),
 
@@ -161,7 +161,7 @@ class FoodDetailsScreen extends StatelessWidget {
               ),
 
               Column(children: <Widget>[
-                Text('${food.nutrients.getNutrient(NutrientType.calories)}'),
+                Text('${food.nutrients.calories.toInt()}'),
                 Text('Calories'),
               ]),
 

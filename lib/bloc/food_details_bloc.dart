@@ -6,7 +6,6 @@ import 'package:calorie_counter/data/local/entity/total_nutrients_per_day.dart';
 import 'package:calorie_counter/data/local/repository/food_repository.dart';
 import 'package:calorie_counter/data/local/repository/meal_nutrients_repository.dart';
 import 'package:calorie_counter/data/local/repository/total_nutrients_per_day_repository.dart';
-import 'package:calorie_counter/util/extension/ext_nutrient_list.dart';
 import 'package:calorie_counter/util/extension/ext_number_rounding.dart';
 import 'package:rxdart/subjects.dart';
 
@@ -41,10 +40,10 @@ class FoodDetailsBloc implements Bloc {
       
       final currentTotalNutrients = TotalNutrientsPerDay(mealNutrients.totalNutrientsPerDayId,
         mealNutrients.date, 
-        food.nutrients.getNutrient(NutrientType.calories).toInt(),
-        food.nutrients.getNutrient(NutrientType.carbs),
-        food.nutrients.getNutrient(NutrientType.fat),
-        food.nutrients.getNutrient(NutrientType.protein));
+        food.nutrients.calories.toInt(),
+        food.nutrients.carbs.roundTo(2),
+        food.nutrients.fat.roundTo(2),
+        food.nutrients.protein.roundTo(2));
       
       _totalNutrientsPerDayRepository.upsert(currentTotalNutrients);
     }
@@ -52,10 +51,10 @@ class FoodDetailsBloc implements Bloc {
       totalNutrientsId = totalNutrientsPerDay.id;
 
       var foodNutrients = food.nutrients;
-      var newCalories = totalNutrientsPerDay.calories + foodNutrients.getNutrient(NutrientType.calories).toInt();
-      var newCarbs = totalNutrientsPerDay.carbs + foodNutrients.getNutrient(NutrientType.carbs);
-      var newFat = totalNutrientsPerDay.fat + foodNutrients.getNutrient(NutrientType.fat);
-      var newProtein = totalNutrientsPerDay.protein + foodNutrients.getNutrient(NutrientType.protein);
+      var newCalories = totalNutrientsPerDay.calories + foodNutrients.calories.toInt();
+      var newCarbs = totalNutrientsPerDay.carbs + foodNutrients.carbs;
+      var newFat = totalNutrientsPerDay.fat + foodNutrients.fat;
+      var newProtein = totalNutrientsPerDay.protein + foodNutrients.protein;
 
       final newTotalNutrientsPerDay = TotalNutrientsPerDay(
         totalNutrientsPerDay.id, 
@@ -80,10 +79,10 @@ class FoodDetailsBloc implements Bloc {
 
       final newMealNutrients = MealNutrients(
         id, 
-        food.nutrients.getNutrient(NutrientType.calories).toInt(),
-        food.nutrients.getNutrient(NutrientType.carbs),
-        food.nutrients.getNutrient(NutrientType.fat),
-        food.nutrients.getNutrient(NutrientType.protein),
+        food.nutrients.calories.toInt(),
+        food.nutrients.carbs.roundTo(2),
+        food.nutrients.fat.roundTo(2),
+        food.nutrients.protein.roundTo(2),
         mealNutrients.type, 
         totalNutrientsPerDayId,
         date: mealNutrients.date);
@@ -93,10 +92,10 @@ class FoodDetailsBloc implements Bloc {
     }
     else {
       final foodNutrients = food.nutrients;
-      final newCalories = currentMealNutrients.calories + foodNutrients.getNutrient(NutrientType.calories).toInt();
-      final newCarbs = currentMealNutrients.carbs + foodNutrients.getNutrient(NutrientType.carbs);
-      final newFat = currentMealNutrients.fat + foodNutrients.getNutrient(NutrientType.fat);
-      final newProtein = currentMealNutrients.protein + foodNutrients.getNutrient(NutrientType.protein);
+      final newCalories = currentMealNutrients.calories + foodNutrients.calories.toInt();
+      final newCarbs = currentMealNutrients.carbs + foodNutrients.carbs;
+      final newFat = currentMealNutrients.fat + foodNutrients.fat;
+      final newProtein = currentMealNutrients.protein + foodNutrients.protein;
     
       final updateMealNutrients = MealNutrients(
         currentMealNutrients.id, 
@@ -123,10 +122,10 @@ class FoodDetailsBloc implements Bloc {
     clientFood.name, 
     clientFood.numberOfServings, 
     clientFood.brand, 
-    clientFood.nutrients.getNutrient(NutrientType.calories).toInt(),
-    clientFood.nutrients.getNutrient(NutrientType.carbs),
-    clientFood.nutrients.getNutrient(NutrientType.fat),
-    clientFood.nutrients.getNutrient(NutrientType.protein));
+    clientFood.nutrients.calories.toInt(),
+    clientFood.nutrients.carbs.roundTo(2),
+    clientFood.nutrients.fat.roundTo(2),
+    clientFood.nutrients.protein.roundTo(2));
 
     _foodRepository.upsert(food);
     _mealNutrientsController.sink.add(mealNutrients);
