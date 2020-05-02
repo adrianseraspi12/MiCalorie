@@ -88,7 +88,7 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
           itemBuilder: (context, index) {
 
             final commonFood = results.listOfFood[index];
-            var brandName = commonFood.details.brand ?? 'common';
+            var brandName = commonFood.details.brand ?? 'Generic';
         
             return ListTile(
               title: Text(commonFood.details.name),
