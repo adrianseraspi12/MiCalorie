@@ -110,7 +110,7 @@ class FoodDetailsScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text('Serving size'),
-                Text('${food.servingSize}')
+                Text('${food.brand}')
               ]
             ),
           ),

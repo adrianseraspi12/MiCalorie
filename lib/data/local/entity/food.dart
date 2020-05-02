@@ -14,8 +14,8 @@ class Food {
   @ColumnInfo(name: 'number_of_servings')
   final int numOfServings;
 
-  @ColumnInfo(name: 'serving_size')
-  final String servingSize;
+  @ColumnInfo(name: 'brand_name')
+  final String brandName;
   final int calories;
   final double carbs;
   final double fat;
@@ -25,7 +25,7 @@ class Food {
       this.mealId, 
       this.name, 
       this.numOfServings, 
-      this.servingSize, 
+      this.brandName, 
       this.calories, 
       this.carbs,
       this.fat, 

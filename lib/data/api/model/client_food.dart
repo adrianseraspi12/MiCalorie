@@ -5,9 +5,9 @@ class ClientFood {
 
   String name;
   int numberOfServings;
-  String servingSize;
+  String brand;
   List<Nutrients> nutrients;
 
-  ClientFood({this.name, this.numberOfServings, this.servingSize, this.nutrients});
+  ClientFood({this.name, this.numberOfServings, this.brand, this.nutrients});
 
 }

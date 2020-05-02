@@ -122,7 +122,7 @@ class FoodDetailsBloc implements Bloc {
     mealNutrients.id, 
     clientFood.name, 
     clientFood.numberOfServings, 
-    clientFood.servingSize, 
+    clientFood.brand, 
     clientFood.nutrients.getNutrient(NutrientType.calories).toInt(),
     clientFood.nutrients.getNutrient(NutrientType.carbs),
     clientFood.nutrients.getNutrient(NutrientType.fat),

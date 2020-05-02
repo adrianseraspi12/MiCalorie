@@ -89,7 +89,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `meal_nutrients` (`id` INTEGER, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, `type` INTEGER, `total_nutrients_per_day_id` INTEGER, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `food` (`id` INTEGER, `meal_id` INTEGER, `name` TEXT, `number_of_servings` INTEGER, `serving_size` TEXT, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `food` (`id` INTEGER, `meal_id` INTEGER, `name` TEXT, `number_of_servings` INTEGER, `brand_name` TEXT, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -323,7 +323,7 @@ class _$FoodDao extends FoodDao {
                   'meal_id': item.mealId,
                   'name': item.name,
                   'number_of_servings': item.numOfServings,
-                  'serving_size': item.servingSize,
+                  'brand_name': item.brandName,
                   'calories': item.calories,
                   'carbs': item.carbs,
                   'fat': item.fat,
@@ -338,7 +338,7 @@ class _$FoodDao extends FoodDao {
                   'meal_id': item.mealId,
                   'name': item.name,
                   'number_of_servings': item.numOfServings,
-                  'serving_size': item.servingSize,
+                  'brand_name': item.brandName,
                   'calories': item.calories,
                   'carbs': item.carbs,
                   'fat': item.fat,
@@ -353,7 +353,7 @@ class _$FoodDao extends FoodDao {
                   'meal_id': item.mealId,
                   'name': item.name,
                   'number_of_servings': item.numOfServings,
-                  'serving_size': item.servingSize,
+                  'brand_name': item.brandName,
                   'calories': item.calories,
                   'carbs': item.carbs,
                   'fat': item.fat,
@@ -371,7 +371,7 @@ class _$FoodDao extends FoodDao {
       row['meal_id'] as int,
       row['name'] as String,
       row['number_of_servings'] as int,
-      row['serving_size'] as String,
+      row['brand_name'] as String,
       row['calories'] as int,
       row['carbs'] as double,
       row['fat'] as double,

@@ -74,7 +74,7 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
 
               return ListTile(
                 title: Text('${food.name}'),
-                subtitle: Text('${food.servingSize}'),
+                subtitle: Text('${food.brandName}'),
                 trailing: Text('${food.numOfServings}'),
               );
 
