@@ -8,6 +8,15 @@ class MealNutrientsRepository implements Repository<MealNutrients> {
 
   MealNutrientsRepository(this._mealNutrientsDao);
 
+  Future<MealNutrients> getMeal(int id) {
+    return _mealNutrientsDao.findMealById(id);
+  }
+
+  Future<int> getAllMealCount() async {
+    final allMeals = await _mealNutrientsDao.getAlldMeal();
+    return allMeals.length;
+  }
+
   @override
   Future<List<MealNutrients>> findAllDataWith(int id) {
     return _mealNutrientsDao.finddMealByTotalNutrientsId(id);
