@@ -1,6 +1,6 @@
+import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
 import 'package:calorie_counter/data/model/client_food.dart';
 import 'package:calorie_counter/data/model/list_of_food.dart';
-import 'package:calorie_counter/data/model/meal_summary.dart';
 import 'package:calorie_counter/util/constant/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:calorie_counter/bloc/bloc_provider.dart';
@@ -10,8 +10,8 @@ import 'food_details_screen.dart';
 
 class SearchFoodScreen extends StatefulWidget {
   
-  final MealSummary mealSummary;
-  SearchFoodScreen(this.mealSummary);
+  final MealNutrients mealNutrients;
+  SearchFoodScreen(this.mealNutrients);
   
   @override
   _SearchFoodScreenState createState() => _SearchFoodScreenState();
@@ -120,8 +120,7 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
                 
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (BuildContext context) => FoodDetailsScreen(
-                    food: food, mealSummary: widget.mealSummary,),
+                    builder: (BuildContext context) => FoodDetailsScreen(food, widget.mealNutrients),
                     settings: RouteSettings(name: Routes.foodDetailsScreen))
                 );
               },
@@ -164,8 +163,7 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
                 
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (BuildContext context) => FoodDetailsScreen(
-                    food: food, mealSummary: widget.mealSummary,),
+                    builder: (BuildContext context) => FoodDetailsScreen(food, widget.mealNutrients),
                     settings: RouteSettings(name: Routes.foodDetailsScreen))
                 );
               },

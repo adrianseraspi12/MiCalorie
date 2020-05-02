@@ -1,4 +1,5 @@
 import 'package:calorie_counter/bloc/food_details_bloc.dart';
+import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
 import 'package:calorie_counter/data/model/client_food.dart';
 import 'package:calorie_counter/data/model/meal_summary.dart';
 import 'package:flutter/material.dart';
@@ -7,9 +8,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 class FoodDetailsScreen extends StatelessWidget {
   final ClientFood food;
-  final MealSummary mealSummary;
+  final MealNutrients _mealNutrients;
 
-  const FoodDetailsScreen({Key key, this.food, this.mealSummary}) : super(key: key);
+  FoodDetailsScreen(this.food, this._mealNutrients);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class FoodDetailsScreen extends StatelessWidget {
   }
 
   void _onAddFoodClick(BuildContext context, FoodDetailsBloc bloc) async {
-    bloc.addFood(mealSummary, food);
+    bloc.addFood(_mealNutrients, food);
   }
 
   void _setupRepository(FoodDetailsBloc bloc) async {
@@ -43,8 +44,8 @@ class FoodDetailsScreen extends StatelessWidget {
 
   Widget _buildResult(BuildContext context, FoodDetailsBloc bloc) {
 
-    return StreamBuilder<MealSummary>(
-      stream: bloc.mealSummaryStream,
+    return StreamBuilder<MealNutrients>(
+      stream: bloc.mealNutrientsStream,
       builder: (context, snapshot) {
 
         final mealSummary = snapshot.data;
@@ -64,7 +65,7 @@ class FoodDetailsScreen extends StatelessWidget {
 
   }
 
-  void _popAndShowMessage(BuildContext context, MealSummary mealSummary) {
+  void _popAndShowMessage(BuildContext context, MealNutrients mealNutrients) {
     Fluttertoast.showToast(
       msg: 'Food added',
       timeInSecForIosWeb: 2)
@@ -72,7 +73,7 @@ class FoodDetailsScreen extends StatelessWidget {
         context,
         (route) {
           if (route.settings.name == '/mealFoodListScreen') {
-            (route.settings.arguments as Map) ['mealSummary'] = mealSummary;
+            (route.settings.arguments as Map) ['mealNutrients'] = mealNutrients;
             return true;
           }
           return false;

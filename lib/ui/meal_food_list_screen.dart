@@ -38,14 +38,14 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
               icon: Icon(Icons.add),
               color: Colors.white ,
               onPressed: () {
-                // Navigator.of(context).push(
-                //   MaterialPageRoute(
-                //     builder: (context) => SearchFoodScreen(widget.mealSummary),
-                //     settings: RouteSettings(name: Routes.searchFoodScreen)
-                //   )
-                // ).then((v) {
-                //     _retainData(context, bloc);
-                // });
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => SearchFoodScreen(widget.mealNutrients),
+                    settings: RouteSettings(name: Routes.searchFoodScreen)
+                  )
+                ).then((v) {
+                    _retainData(context, bloc);
+                });
               })
           ],
         ),
@@ -90,8 +90,13 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
   }
 
   void _retainData(BuildContext context, MealFoodListBloc bloc) {
-    // final arguments = ModalRoute.of(context).settings.arguments as Map;
-    // this.widget.mealSummary = arguments['mealSummary'];
-    // bloc.setupFoodList();
+    final arguments = ModalRoute.of(context).settings.arguments as Map;
+    final mealNutrients = arguments['mealNutrients'];
+    
+    if (mealNutrients != null) {
+      widget.mealNutrients = mealNutrients;
+      bloc.setupFoodList();
+    }
+    
    }
 }
