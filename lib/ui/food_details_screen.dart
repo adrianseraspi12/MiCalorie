@@ -1,7 +1,6 @@
 import 'package:calorie_counter/bloc/food_details_bloc.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
 import 'package:calorie_counter/data/model/client_food.dart';
-import 'package:calorie_counter/data/model/meal_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:calorie_counter/util/extension/ext_nutrient_list.dart';
 import 'package:fluttertoast/fluttertoast.dart';

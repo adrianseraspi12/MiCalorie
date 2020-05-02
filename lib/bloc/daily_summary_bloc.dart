@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
-import 'package:calorie_counter/data/local/repository/breakfast_repository.dart';
-import 'package:calorie_counter/data/local/repository/lunch_repository.dart';
 import 'package:calorie_counter/data/local/repository/meal_nutrients_repository.dart';
 
 import 'package:calorie_counter/data/local/app_database.dart';
@@ -23,15 +21,11 @@ class DailySummaryBloc implements Bloc {
   Stream<String> get dateTimeStream => _dateTimeController.stream;
 
   TotalNutrientsPerDayRepository _totalNutrientsPerDayRepository;
-  BreakfastRepository _breakfastRepository;
-  LunchRepository _lunchRepository;
   MealNutrientsRepository _mealNutrientsRepository;
 
   void setupRepository() async {
     final database = await AppDatabase.getInstance();
     _totalNutrientsPerDayRepository = TotalNutrientsPerDayRepository(database.totalNutrientsPerDayDao);
-    _breakfastRepository = BreakfastRepository(database.breakfastNutrientsDao);
-    _lunchRepository = LunchRepository(database.lunchNutrientsDao);
     _mealNutrientsRepository = MealNutrientsRepository(database.mealNutrientsDao);
 
     final formattedDate = DateTime.now().formatDate('MM-dd-yyyy');
