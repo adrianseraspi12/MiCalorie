@@ -5,13 +5,10 @@ part 'list_of_food.g.dart';
 @JsonSerializable()
 class ListOfFood {
 
-  @JsonKey(name: 'common')
+  @JsonKey(name: 'hints')
   List<CommonFood> commonFood;
 
-  @JsonKey(name: 'branded')
-  List<BrandedFood> brandedFood;
-
-  ListOfFood(this.commonFood, this.brandedFood);
+  ListOfFood(this.commonFood);
 
   factory ListOfFood.fromJson(Map<String, dynamic> json) => _$ListOfFoodFromJson(json);
 
@@ -22,21 +19,10 @@ class ListOfFood {
 @JsonSerializable()
 class CommonFood {
 
-  @JsonKey(name: 'food_name')
-  String foodName;
-    
-  @JsonKey(name: 'serving_unit')
-  String servingUnit;
+  @JsonKey(name: 'food')
+  FoodDetails details;
 
-  @JsonKey(name: 'serving_qty')
-  int servingQty;
-
-  Photo photo;
-
-  @JsonKey(name: 'full_nutrients')
-  List<Nutrients> nutrients;
-
-  CommonFood(this.foodName, this.servingUnit, this.servingQty, this.photo, this.nutrients);
+  CommonFood(this.details);
 
   factory CommonFood.fromJson(Map<String, dynamic> json) => _$CommonFoodFromJson(json);
 
@@ -45,60 +31,39 @@ class CommonFood {
 }
 
 @JsonSerializable()
-class BrandedFood {
+class FoodDetails {
 
-  @JsonKey(name: 'nix_item_id')
-  String nixItemId;
+  @JsonKey(name: 'label')
+  String name;
 
-  @JsonKey(name: 'food_name')
-  String foodName;
+  String brand;
 
-  @JsonKey(name: 'brand_name')
-  String brandName;
+  Nutrients nutrients;
 
-  @JsonKey(name: 'serving_unit')
-  String servingUnit;
+  FoodDetails(this.name, this.brand, this.nutrients);
 
-  @JsonKey(name: 'serving_qty')
-  int servingQty;
+  factory FoodDetails.fromJson(Map<String, dynamic> json) => _$FoodDetailsFromJson(json);
 
-  Photo photo;
-
-  @JsonKey(name: 'full_nutrients')
-  List<Nutrients> nutrients;
-
-  BrandedFood(this.nixItemId, this.foodName, this.brandName, this.servingUnit, this.servingQty, this.photo, this.nutrients);
-
-  factory BrandedFood.fromJson(Map<String, dynamic> json) => _$BrandedFoodFromJson(json);
-
-  Map<String, dynamic> toJson() => _$BrandedFoodToJson(this);
-
-}
-
-@JsonSerializable()
-class Photo {
-
-  @JsonKey(name: 'thumb')
-  String url;
-
-  Photo(this.url);
-
-  factory Photo.fromJson(Map<String, dynamic> json) => _$PhotoFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PhotoToJson(this);
+  Map<String, dynamic> toJson() => _$FoodDetailsToJson(this);
 
 }
 
 @JsonSerializable()
 class Nutrients {
 
-  @JsonKey(name: 'attr_id')
-  int attrId;
+  @JsonKey(name: 'ENERC_KCAL')
+  double calories;
 
-  @JsonKey(name: 'value')
-  double value;
+  @JsonKey(name: 'CHOCDF')
+  double carbs;
 
-  Nutrients(this.attrId, this.value);
+  @JsonKey(name: 'FAT')
+  double fat;
+
+  @JsonKey(name: 'PROCNT')
+  double protein;
+
+  Nutrients(this.calories, this.carbs, this.fat, this.protein);
 
   factory Nutrients.fromJson(Map<String, dynamic> json) => _$NutrientsFromJson(json);
 

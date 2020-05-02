@@ -8,93 +8,60 @@ part of 'list_of_food.dart';
 
 ListOfFood _$ListOfFoodFromJson(Map<String, dynamic> json) {
   return ListOfFood(
-    (json['common'] as List)
+    (json['hints'] as List)
         ?.map((e) =>
             e == null ? null : CommonFood.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
-    (json['branded'] as List)
-        ?.map((e) =>
-            e == null ? null : BrandedFood.fromJson(e as Map<String, dynamic>))
         ?.toList(),
   );
 }
 
 Map<String, dynamic> _$ListOfFoodToJson(ListOfFood instance) =>
     <String, dynamic>{
-      'common': instance.commonFood,
-      'branded': instance.brandedFood,
+      'hints': instance.commonFood,
     };
 
 CommonFood _$CommonFoodFromJson(Map<String, dynamic> json) {
   return CommonFood(
-    json['food_name'] as String,
-    json['serving_unit'] as String,
-    json['serving_qty'] as int,
-    json['photo'] == null
+    json['food'] == null
         ? null
-        : Photo.fromJson(json['photo'] as Map<String, dynamic>),
-    (json['full_nutrients'] as List)
-        ?.map((e) =>
-            e == null ? null : Nutrients.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+        : FoodDetails.fromJson(json['food'] as Map<String, dynamic>),
   );
 }
 
 Map<String, dynamic> _$CommonFoodToJson(CommonFood instance) =>
     <String, dynamic>{
-      'food_name': instance.foodName,
-      'serving_unit': instance.servingUnit,
-      'serving_qty': instance.servingQty,
-      'photo': instance.photo,
-      'full_nutrients': instance.nutrients,
+      'food': instance.details,
     };
 
-BrandedFood _$BrandedFoodFromJson(Map<String, dynamic> json) {
-  return BrandedFood(
-    json['nix_item_id'] as String,
-    json['food_name'] as String,
-    json['brand_name'] as String,
-    json['serving_unit'] as String,
-    json['serving_qty'] as int,
-    json['photo'] == null
+FoodDetails _$FoodDetailsFromJson(Map<String, dynamic> json) {
+  return FoodDetails(
+    json['label'] as String,
+    json['brand'] as String,
+    json['nutrients'] == null
         ? null
-        : Photo.fromJson(json['photo'] as Map<String, dynamic>),
-    (json['full_nutrients'] as List)
-        ?.map((e) =>
-            e == null ? null : Nutrients.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+        : Nutrients.fromJson(json['nutrients'] as Map<String, dynamic>),
   );
 }
 
-Map<String, dynamic> _$BrandedFoodToJson(BrandedFood instance) =>
+Map<String, dynamic> _$FoodDetailsToJson(FoodDetails instance) =>
     <String, dynamic>{
-      'nix_item_id': instance.nixItemId,
-      'food_name': instance.foodName,
-      'brand_name': instance.brandName,
-      'serving_unit': instance.servingUnit,
-      'serving_qty': instance.servingQty,
-      'photo': instance.photo,
-      'full_nutrients': instance.nutrients,
-    };
-
-Photo _$PhotoFromJson(Map<String, dynamic> json) {
-  return Photo(
-    json['thumb'] as String,
-  );
-}
-
-Map<String, dynamic> _$PhotoToJson(Photo instance) => <String, dynamic>{
-      'thumb': instance.url,
+      'label': instance.name,
+      'brand': instance.brand,
+      'nutrients': instance.nutrients,
     };
 
 Nutrients _$NutrientsFromJson(Map<String, dynamic> json) {
   return Nutrients(
-    json['attr_id'] as int,
-    (json['value'] as num)?.toDouble(),
+    (json['ENERC_KCAL'] as num)?.toDouble(),
+    (json['CHOCDF'] as num)?.toDouble(),
+    (json['FAT'] as num)?.toDouble(),
+    (json['PROCNT'] as num)?.toDouble(),
   );
 }
 
 Map<String, dynamic> _$NutrientsToJson(Nutrients instance) => <String, dynamic>{
-      'attr_id': instance.attrId,
-      'value': instance.value,
+      'ENERC_KCAL': instance.calories,
+      'CHOCDF': instance.carbs,
+      'FAT': instance.fat,
+      'PROCNT': instance.protein,
     };

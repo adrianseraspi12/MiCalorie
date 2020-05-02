@@ -12,13 +12,13 @@ extension NutrientList on List<Nutrients> {
   };
 
   double getNutrient(NutrientType type) {
-    final attrId = _nutrientTypeAttrId[type];
-    final nutrient =  this.firstWhere((element) {
-      return element.attrId == attrId;
-    });
+    // final attrId = _nutrientTypeAttrId[type];
+    // final nutrient =  this.firstWhere((element) {
+    //   return element.attrId == attrId;
+    // });
 
-    var value = nutrient.value;
-    return value.roundTo(2);
+    // var value = nutrient.value;
+    // return value.roundTo(2);
   }
     
 }

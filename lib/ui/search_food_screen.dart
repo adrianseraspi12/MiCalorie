@@ -1,5 +1,4 @@
 import 'package:calorie_counter/data/api/model/client_food.dart';
-import 'package:calorie_counter/data/api/model/list_of_food.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
 import 'package:calorie_counter/util/constant/routes.dart';
 import 'package:flutter/material.dart';
@@ -21,11 +20,9 @@ class SearchFoodScreen extends StatefulWidget {
 class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerProviderStateMixin {
 
   TextEditingController _textEditingController = TextEditingController();
-  TabController _tabController;
 
   @override
   void initState() {
-    _tabController = TabController(length: 2, vsync: this);
     super.initState();
   }
 
@@ -63,33 +60,15 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
               ),
             ),
 
-          bottom: TabBar(
-            controller: _tabController,
-            indicatorColor: Colors.white,
-            unselectedLabelColor: Colors.grey,
-            labelColor: Colors.white,
-            tabs: <Widget>[
-              Tab(text: 'Common Foods',),
-              Tab(text: 'Branded Foods',)
-            ],
-            
-            ),
-
         ),
-        body: TabBarView(
-          controller: _tabController,
-          children: <Widget> [
-            _buildCommonFoodResults(bloc),
-            _buildBrandedFoodResults(bloc),
-          ],
-          )
+        body: _buildCommonFoodResults(bloc),
 
       ),
     );
   }
 
   Widget _buildCommonFoodResults(SearchFoodQueryBloc bloc) {
-    return StreamBuilder<List<CommonFood>>(
+    return StreamBuilder<SearchResult>(
       stream: bloc.commonFoodStream,
       builder: (context, snapshot) {
 
@@ -99,30 +78,32 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
           return Center(child: Text('Search A Food'));
         }
 
-        if (results.isEmpty) {
-          return Center(child: Text('No Food Found'));
+        if (results.listOfFood == null) {
+          return Center(child: Text('${results.errorMessage}'));
         }
 
         return ListView.separated(
           separatorBuilder: (BuildContext context, int index) => Divider(), 
-          itemCount: results.length,
+          itemCount: results.listOfFood.length,
           itemBuilder: (context, index) {
 
-            final commonFood = results[index];
+            final commonFood = results.listOfFood[index];
+            var brandName = commonFood.details.brand ?? '';
         
             return ListTile(
-              title: Text(commonFood.foodName),
+              title: Text(commonFood.details.name),
+              subtitle: Text(brandName),
               onTap: () {
-                final food = ClientFood(name: commonFood.foodName,
-                                  numberOfServings: commonFood.servingQty,
-                                  servingSize: commonFood.servingUnit,
-                                  nutrients: commonFood.nutrients);
+                // final food = ClientFood(name: commonFood.foodName,
+                //                   numberOfServings: commonFood.servingQty,
+                //                   servingSize: commonFood.servingUnit,
+                //                   nutrients: commonFood.nutrients);
                 
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => FoodDetailsScreen(food, widget.mealNutrients),
-                    settings: RouteSettings(name: Routes.foodDetailsScreen))
-                );
+                // Navigator.of(context).push(
+                //   MaterialPageRoute(
+                //     builder: (BuildContext context) => FoodDetailsScreen(food, widget.mealNutrients),
+                //     settings: RouteSettings(name: Routes.foodDetailsScreen))
+                // );
               },
             );
 
@@ -131,54 +112,9 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
       });
   }
 
-  Widget _buildBrandedFoodResults(SearchFoodQueryBloc bloc) {
-    return StreamBuilder<List<BrandedFood>>(
-      stream: bloc.brandedFoodStream,
-      builder: (context, snapshot) {
-
-        final results = snapshot.data;
-
-        if (results == null) {
-          return Center(child: Text('Search A Food'));
-        }
-
-        if (results.isEmpty) {
-          return Center(child: Text('No Food Found'));
-        }
-
-        return ListView.separated(
-          separatorBuilder: (BuildContext context, int index) => Divider(), 
-          itemCount: results.length,
-          itemBuilder: (context, index) {
-
-            final brandedFood = results[index];
-        
-            return ListTile(
-              title: Text(brandedFood.foodName),
-              onTap: () {
-                final food = ClientFood(name: brandedFood.foodName,
-                                  numberOfServings: brandedFood.servingQty,
-                                  servingSize: brandedFood.servingUnit,
-                                  nutrients: brandedFood.nutrients);
-                
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (BuildContext context) => FoodDetailsScreen(food, widget.mealNutrients),
-                    settings: RouteSettings(name: Routes.foodDetailsScreen))
-                );
-              },
-            );
-
-        }, 
-        );
-
-      });
-  }
-
   @override
   void dispose() {
     _textEditingController.dispose();
-    _tabController.dispose();
     super.dispose();
   }
 
