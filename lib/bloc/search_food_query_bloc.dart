@@ -1,8 +1,8 @@
 import 'dart:async';
+import 'package:calorie_counter/data/api/client/nutritionx_client.dart';
+import 'package:calorie_counter/data/api/model/list_of_food.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'package:calorie_counter/data/model/list_of_food.dart';
-import 'package:calorie_counter/data/nutritionx_client.dart';
 
 import 'bloc.dart';
 

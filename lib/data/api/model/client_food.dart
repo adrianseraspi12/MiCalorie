@@ -1,4 +1,5 @@
-import 'package:calorie_counter/data/model/list_of_food.dart';
+
+import 'list_of_food.dart';
 
 class ClientFood {
 

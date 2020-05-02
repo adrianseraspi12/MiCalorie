@@ -1,4 +1,5 @@
-import 'package:calorie_counter/data/model/list_of_food.dart';
+import 'package:calorie_counter/data/api/model/list_of_food.dart';
+
 import 'ext_number_rounding.dart';
 
 extension NutrientList on List<Nutrients> {

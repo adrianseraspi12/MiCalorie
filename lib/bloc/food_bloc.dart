@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:calorie_counter/bloc/bloc.dart';
-import 'package:calorie_counter/data/model/list_of_food.dart';
+import 'package:calorie_counter/data/api/model/list_of_food.dart';
+
 
 class FoodBloc implements Bloc {
 

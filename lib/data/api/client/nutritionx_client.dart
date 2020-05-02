@@ -1,9 +1,10 @@
 import 'dart:convert';
 
 import 'package:calorie_counter/config/app_config.dart';
-import 'package:calorie_counter/data/model/list_of_food.dart';
-import 'package:calorie_counter/data/nutrionx_service.dart';
+import 'package:calorie_counter/data/api/model/list_of_food.dart';
 import 'package:chopper/chopper.dart';
+
+import 'nutrionx_service.dart';
 
 class NutritionxClient {
 

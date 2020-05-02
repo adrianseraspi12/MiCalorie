@@ -1,3 +1,4 @@
+import 'package:calorie_counter/data/api/model/client_food.dart';
 import 'package:calorie_counter/data/local/app_database.dart';
 import 'package:calorie_counter/data/local/entity/food.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
@@ -5,7 +6,6 @@ import 'package:calorie_counter/data/local/entity/total_nutrients_per_day.dart';
 import 'package:calorie_counter/data/local/repository/food_repository.dart';
 import 'package:calorie_counter/data/local/repository/meal_nutrients_repository.dart';
 import 'package:calorie_counter/data/local/repository/total_nutrients_per_day_repository.dart';
-import 'package:calorie_counter/data/model/client_food.dart';
 import 'package:calorie_counter/util/extension/ext_nutrient_list.dart';
 import 'package:calorie_counter/util/extension/ext_number_rounding.dart';
 import 'package:rxdart/subjects.dart';

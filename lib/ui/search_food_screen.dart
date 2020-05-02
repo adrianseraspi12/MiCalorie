@@ -1,6 +1,6 @@
+import 'package:calorie_counter/data/api/model/client_food.dart';
+import 'package:calorie_counter/data/api/model/list_of_food.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
-import 'package:calorie_counter/data/model/client_food.dart';
-import 'package:calorie_counter/data/model/list_of_food.dart';
 import 'package:calorie_counter/util/constant/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:calorie_counter/bloc/bloc_provider.dart';
