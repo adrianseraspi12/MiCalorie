@@ -7,9 +7,9 @@ class TotalNutrientsPerDay {
   final int id;
   final String date;
   final int calories;
-  final double carbs;
-  final double fat;
-  final double protein;
+  final int carbs;
+  final int fat;
+  final int protein;
 
   TotalNutrientsPerDay(this.id,
                       this.date, 

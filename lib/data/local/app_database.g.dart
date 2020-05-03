@@ -85,11 +85,11 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `total_nutrients_per_day` (`id` INTEGER, `date` TEXT, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `total_nutrients_per_day` (`id` INTEGER, `date` TEXT, `calories` INTEGER, `carbs` INTEGER, `fat` INTEGER, `protein` INTEGER, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `meal_nutrients` (`id` INTEGER, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, `type` INTEGER, `total_nutrients_per_day_id` INTEGER, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `meal_nutrients` (`id` INTEGER, `calories` INTEGER, `carbs` INTEGER, `fat` INTEGER, `protein` INTEGER, `type` INTEGER, `total_nutrients_per_day_id` INTEGER, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `food` (`id` INTEGER, `meal_id` INTEGER, `name` TEXT, `number_of_servings` INTEGER, `brand_name` TEXT, `calories` INTEGER, `carbs` REAL, `fat` REAL, `protein` REAL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `food` (`id` INTEGER, `meal_id` INTEGER, `name` TEXT, `number_of_servings` INTEGER, `brand_name` TEXT, `calories` INTEGER, `carbs` INTEGER, `fat` INTEGER, `protein` INTEGER, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -164,9 +164,9 @@ class _$TotalNutrientsPerDayDao extends TotalNutrientsPerDayDao {
           row['id'] as int,
           row['date'] as String,
           row['calories'] as int,
-          row['carbs'] as double,
-          row['fat'] as double,
-          row['protein'] as double);
+          row['carbs'] as int,
+          row['fat'] as int,
+          row['protein'] as int);
 
   final InsertionAdapter<TotalNutrientsPerDay>
       _totalNutrientsPerDayInsertionAdapter;
@@ -261,9 +261,9 @@ class _$MealNutrientsDao extends MealNutrientsDao {
       MealNutrients(
           row['id'] as int,
           row['calories'] as int,
-          row['carbs'] as double,
-          row['fat'] as double,
-          row['protein'] as double,
+          row['carbs'] as int,
+          row['fat'] as int,
+          row['protein'] as int,
           row['type'] as int,
           row['total_nutrients_per_day_id'] as int);
 
@@ -373,9 +373,9 @@ class _$FoodDao extends FoodDao {
       row['number_of_servings'] as int,
       row['brand_name'] as String,
       row['calories'] as int,
-      row['carbs'] as double,
-      row['fat'] as double,
-      row['protein'] as double);
+      row['carbs'] as int,
+      row['fat'] as int,
+      row['protein'] as int);
 
   final InsertionAdapter<Food> _foodInsertionAdapter;
 

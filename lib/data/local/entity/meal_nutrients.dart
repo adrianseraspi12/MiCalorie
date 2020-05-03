@@ -6,9 +6,9 @@ class MealNutrients {
   @primaryKey
   final int id;
   final int calories;
-  final double carbs;
-  final double fat;
-  final double protein;
+  final int carbs;
+  final int fat;
+  final int protein;
   final int type;
 
   @ColumnInfo(name: 'total_nutrients_per_day_id')

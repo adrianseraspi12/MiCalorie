@@ -17,9 +17,9 @@ class Food {
   @ColumnInfo(name: 'brand_name')
   final String brandName;
   final int calories;
-  final double carbs;
-  final double fat;
-  final double protein;
+  final int carbs;
+  final int fat;
+  final int protein;
 
   Food(this.id, 
       this.mealId, 
