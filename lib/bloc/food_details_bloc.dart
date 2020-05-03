@@ -14,6 +14,7 @@ import 'bloc.dart';
 class FoodDetailsBloc implements Bloc {
 
   final ClientFood _clientFood;
+  var currentCount = 1;
   
   FoodDetailsBloc(this._clientFood);
 
@@ -38,24 +39,73 @@ class FoodDetailsBloc implements Bloc {
     _updateTotalNutrientsAndMeal(mealSummary, food);
   }
     
-  void increment(int currentCount) {
+  void increment() {
     currentCount += 1;
     if (currentCount > 0) {
-      final newCalories = _clientFood.nutrients.calories * currentCount;
-      final newCarbs = _clientFood.nutrients.carbs * currentCount;
-      final newFat = _clientFood.nutrients.fat * currentCount;
-      final newProtein = _clientFood.nutrients.protein * currentCount;     
-
-      // FoodDetailsCountResult(newCalories, newCarbs, newFat, newProtein, currentCount); 
+      _foodDetailsCountController.sink.add(_calculateTheFoodDetails(currentCount));
     }
 
   }
 
-  void decrement(int currentCount) {
+  void decrement() {
     currentCount -= 1;
     if (currentCount > 0) {
-
+      _foodDetailsCountController.sink.add(_calculateTheFoodDetails(currentCount));
     }
+    else {
+      currentCount = 1;
+    }
+  }
+
+  Map<NutrientDataType ,Map<String, double>> getNutrientPercentage() {
+    final carbs = _clientFood.nutrients.carbs.roundTo(0) * 4;
+    final fat = _clientFood.nutrients.fat.roundTo(0) * 9;
+    final protein = _clientFood.nutrients.protein.roundTo(0) * 4;
+    final totalNutrient = carbs + fat + protein;
+
+    final carbPercentage = (carbs / totalNutrient) * 100;
+    final fatPercentage = (fat / totalNutrient) * 100;
+    final proteinPercentage = (protein / totalNutrient) * 100;
+
+    Map<String, double> calorieData = Map();
+    calorieData.putIfAbsent('Carbs', () => carbPercentage);
+    calorieData.putIfAbsent('Fat', () => fatPercentage);
+    calorieData.putIfAbsent('Protein', () => proteinPercentage);
+
+    Map<String, double> carbsData = Map();
+    carbsData.putIfAbsent('Carbs', () => carbPercentage);
+    carbsData.putIfAbsent('Other', () => (100 - carbPercentage));
+
+    Map<String, double> fatData = Map();
+    fatData.putIfAbsent('Fat', () => fatPercentage);
+    fatData.putIfAbsent('Other', () => (100 - fatPercentage));
+
+    Map<String, double> proteinData = Map();
+    proteinData.putIfAbsent('Protein', () => proteinPercentage);
+    proteinData.putIfAbsent('Other', () => (100 - proteinPercentage));
+
+    Map<NutrientDataType, Map<String, double>> fullNutrientsData = Map();
+    fullNutrientsData.putIfAbsent(NutrientDataType.CALORIES, () => calorieData);
+    fullNutrientsData.putIfAbsent(NutrientDataType.CARBS, () => carbsData);
+    fullNutrientsData.putIfAbsent(NutrientDataType.FAT, () => fatData);
+    fullNutrientsData.putIfAbsent(NutrientDataType.PROTEIN, () => proteinData);
+
+    return fullNutrientsData;
+  }
+
+  FoodDetailsCountResult _calculateTheFoodDetails(int count) {
+    final newCalories = _clientFood.nutrients.calories.roundTo(0) * count;
+    final newCarbs = _clientFood.nutrients.carbs.roundTo(0) * count;
+    final newFat = _clientFood.nutrients.fat.roundTo(0) * count;
+    final newProtein = _clientFood.nutrients.protein.roundTo(0) * count;     
+
+    return FoodDetailsCountResult(
+      newCalories, 
+      newCarbs, 
+      newFat, 
+      newProtein, 
+      count
+    );
   }
 
   void _updateTotalNutrientsAndMeal(MealNutrients mealNutrients, ClientFood food) async {
@@ -78,7 +128,7 @@ class FoodDetailsBloc implements Bloc {
       totalNutrientsId = totalNutrientsPerDay.id;
 
       var foodNutrients = food.nutrients;
-      var newCalories = totalNutrientsPerDay.calories + foodNutrients.calories.toInt();
+      var newCalories = totalNutrientsPerDay.calories + foodNutrients.calories.roundTo(0);
       var newCarbs = totalNutrientsPerDay.carbs + foodNutrients.carbs;
       var newFat = totalNutrientsPerDay.fat + foodNutrients.fat;
       var newProtein = totalNutrientsPerDay.protein + foodNutrients.protein;
@@ -146,8 +196,8 @@ class FoodDetailsBloc implements Bloc {
 
     final food = Food(currentFoodId,
     mealNutrients.id, 
-    clientFood.name, 
-    clientFood.numberOfServings, 
+    clientFood.name,
+    currentCount, 
     clientFood.brand, 
     clientFood.nutrients.calories.toInt(),
     clientFood.nutrients.carbs.roundTo(0),
@@ -163,6 +213,15 @@ class FoodDetailsBloc implements Bloc {
     _mealNutrientsController.close();
     _foodDetailsCountController.close();
   }
+
+}
+
+enum NutrientDataType {
+
+  CALORIES,
+  CARBS,
+  FAT,
+  PROTEIN
 
 }
 

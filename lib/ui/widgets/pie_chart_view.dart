@@ -4,10 +4,14 @@ import 'package:pie_chart/pie_chart.dart';
 
 class PieChartView extends StatefulWidget {
 
+  final Map<String, double> data;
+  final List<Color> listOfColor;
   final Widget child;
 
   PieChartView({
     Key key, 
+    this.data,
+    this.listOfColor,
     this.child
   }): super(key: key);
 
@@ -18,13 +22,6 @@ class PieChartView extends StatefulWidget {
 class _PieChartViewState extends State<PieChartView> {
   @override
   Widget build(BuildContext context) {
-    Map<String, double> dataMap = Map();
-    dataMap.putIfAbsent('Carbs', () => 40);
-    dataMap.putIfAbsent('Fats', () => 50);
-    dataMap.putIfAbsent('Protein', () => 10);
-
-    final listOfColors = [Colors.green, Colors.transparent, Colors.black];
-
     return LayoutBuilder(
       builder: (scontext, constraints) => Neumorphic(
           boxShape: NeumorphicBoxShape.circle(),
@@ -38,9 +35,9 @@ class _PieChartViewState extends State<PieChartView> {
             child: Stack(
               children: <Widget> [
                 PieChart(
-                  dataMap: dataMap,
+                  dataMap: widget.data,
                   showLegends: false,
-                  colorList: listOfColors,
+                  colorList: widget.listOfColor,
                   chartRadius: MediaQuery.of(context).size.width,
                   chartValueStyle: defaultChartValueStyle.copyWith(
                   color: Colors.black.withOpacity(0),
