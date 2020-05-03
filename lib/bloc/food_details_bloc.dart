@@ -13,7 +13,14 @@ import 'bloc.dart';
 
 class FoodDetailsBloc implements Bloc {
 
+  final ClientFood _clientFood;
+  
+  FoodDetailsBloc(this._clientFood);
+
   final _mealNutrientsController = PublishSubject<MealNutrients>();
+  final _foodDetailsCountController = PublishSubject<FoodDetailsCountResult>();
+
+  Stream<FoodDetailsCountResult> get foodDetailsCountStream => _foodDetailsCountController.stream;
   Stream<MealNutrients> get mealNutrientsStream => _mealNutrientsController.stream;
 
   MealNutrientsRepository _mealNutrientsRepository;
@@ -31,6 +38,26 @@ class FoodDetailsBloc implements Bloc {
     _updateTotalNutrientsAndMeal(mealSummary, food);
   }
     
+  void increment(int currentCount) {
+    currentCount += 1;
+    if (currentCount > 0) {
+      final newCalories = _clientFood.nutrients.calories * currentCount;
+      final newCarbs = _clientFood.nutrients.carbs * currentCount;
+      final newFat = _clientFood.nutrients.fat * currentCount;
+      final newProtein = _clientFood.nutrients.protein * currentCount;     
+
+      // FoodDetailsCountResult(newCalories, newCarbs, newFat, newProtein, currentCount); 
+    }
+
+  }
+
+  void decrement(int currentCount) {
+    currentCount -= 1;
+    if (currentCount > 0) {
+
+    }
+  }
+
   void _updateTotalNutrientsAndMeal(MealNutrients mealNutrients, ClientFood food) async {
     var totalNutrientsPerDay = await _totalNutrientsPerDayRepository.getTotalNutrientsByDate(mealNutrients.date);
     var totalNutrientsId;
@@ -41,9 +68,9 @@ class FoodDetailsBloc implements Bloc {
       final currentTotalNutrients = TotalNutrientsPerDay(mealNutrients.totalNutrientsPerDayId,
         mealNutrients.date, 
         food.nutrients.calories.toInt(),
-        food.nutrients.carbs.roundTo(2),
-        food.nutrients.fat.roundTo(2),
-        food.nutrients.protein.roundTo(2));
+        food.nutrients.carbs.roundTo(0),
+        food.nutrients.fat.roundTo(0),
+        food.nutrients.protein.roundTo(0));
       
       _totalNutrientsPerDayRepository.upsert(currentTotalNutrients);
     }
@@ -60,9 +87,9 @@ class FoodDetailsBloc implements Bloc {
         totalNutrientsPerDay.id, 
         totalNutrientsPerDay.date, 
         newCalories,
-        newCarbs.roundTo(2), 
-        newFat.roundTo(2), 
-        newProtein.roundTo(2));
+        newCarbs.roundTo(0), 
+        newFat.roundTo(0), 
+        newProtein.roundTo(0));
 
       _totalNutrientsPerDayRepository.upsert(newTotalNutrientsPerDay);
     }
@@ -80,9 +107,9 @@ class FoodDetailsBloc implements Bloc {
       final newMealNutrients = MealNutrients(
         id, 
         food.nutrients.calories.toInt(),
-        food.nutrients.carbs.roundTo(2),
-        food.nutrients.fat.roundTo(2),
-        food.nutrients.protein.roundTo(2),
+        food.nutrients.carbs.roundTo(0),
+        food.nutrients.fat.roundTo(0),
+        food.nutrients.protein.roundTo(0),
         mealNutrients.type, 
         totalNutrientsPerDayId,
         date: mealNutrients.date);
@@ -100,9 +127,9 @@ class FoodDetailsBloc implements Bloc {
       final updateMealNutrients = MealNutrients(
         currentMealNutrients.id, 
         newCalories, 
-        newCarbs.roundTo(2), 
-        newFat.roundTo(2), 
-        newProtein.roundTo(2), 
+        newCarbs.roundTo(0), 
+        newFat.roundTo(0), 
+        newProtein.roundTo(0), 
         currentMealNutrients.type, 
         totalNutrientsPerDayId,
         date: mealNutrients.date);
@@ -123,9 +150,9 @@ class FoodDetailsBloc implements Bloc {
     clientFood.numberOfServings, 
     clientFood.brand, 
     clientFood.nutrients.calories.toInt(),
-    clientFood.nutrients.carbs.roundTo(2),
-    clientFood.nutrients.fat.roundTo(2),
-    clientFood.nutrients.protein.roundTo(2));
+    clientFood.nutrients.carbs.roundTo(0),
+    clientFood.nutrients.fat.roundTo(0),
+    clientFood.nutrients.protein.roundTo(0));
 
     _foodRepository.upsert(food);
     _mealNutrientsController.sink.add(mealNutrients);
@@ -134,6 +161,19 @@ class FoodDetailsBloc implements Bloc {
   @override
   void dispose() {
     _mealNutrientsController.close();
+    _foodDetailsCountController.close();
   }
+
+}
+
+class FoodDetailsCountResult {
+
+  int calories;
+  int carbs;
+  int fat;
+  int protein;
+  int count;
+
+  FoodDetailsCountResult(this.calories, this.carbs, this.fat, this.protein, this.count);
 
 }
