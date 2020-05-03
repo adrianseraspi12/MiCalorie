@@ -12,7 +12,7 @@ class CircularButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return NeumorphicButton(
         boxShape: NeumorphicBoxShape.circle(),
-        child: Icon(Icons.chevron_left),
+        child: icon,
         style: NeumorphicStyle(
         shape: NeumorphicShape.convex,
         shadowDarkColorEmboss: Color.fromRGBO(163,177,198, 1),
