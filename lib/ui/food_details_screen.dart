@@ -1,6 +1,7 @@
 import 'package:calorie_counter/bloc/food_details_bloc.dart';
 import 'package:calorie_counter/data/api/model/client_food.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
+import 'package:calorie_counter/ui/widgets/circular_button.dart';
 import 'package:calorie_counter/ui/widgets/circular_emboss_view.dart';
 import 'package:calorie_counter/ui/widgets/pie_chart_view.dart';
 import 'package:flutter/material.dart';
@@ -118,33 +119,15 @@ class FoodDetailsScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        NeumorphicButton(
-                          boxShape: NeumorphicBoxShape.circle(),
-                          child: Icon(Icons.chevron_left),
-                          style: NeumorphicStyle(
-                            shape: NeumorphicShape.convex,
-                            shadowDarkColorEmboss: Color.fromRGBO(163,177,198, 1),
-                            shadowLightColorEmboss: Colors.white,
-                            color: Color.fromRGBO(193,214,233, 1),
-                          ),
-                          onClick: () {
-                            Navigator.pop(context);
-                          },
+                        CircularButton(
+                          icon: Icon(Icons.chevron_left),
+                          onPressed: () => Navigator.pop(context),
                         ),
 
-                        NeumorphicButton(
-                          boxShape: NeumorphicBoxShape.circle(),
-                          child: Icon(Icons.add),
-                          style: NeumorphicStyle(
-                            shape: NeumorphicShape.convex,
-                            shadowDarkColorEmboss: Color.fromRGBO(163,177,198, 1),
-                            shadowLightColorEmboss: Colors.white,
-                            color: Color.fromRGBO(193,214,233, 1),
-                          ),
-                          onClick: () {
-                            _onAddFoodClick(context, bloc); 
-                          },
-                        )
+                        CircularButton(
+                          icon: Icon(Icons.add),
+                          onPressed: () => _onAddFoodClick(context, bloc),
+                        ),
                       ],
                     ),
                   ),
@@ -357,18 +340,9 @@ class FoodDetailsScreen extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        NeumorphicButton(
-                          boxShape: NeumorphicBoxShape.circle(),
-                          child: Icon(Icons.add),
-                          style: NeumorphicStyle(
-                            shape: NeumorphicShape.convex,
-                            shadowDarkColorEmboss: Color.fromRGBO(163,177,198, 1),
-                            shadowLightColorEmboss: Colors.white,
-                            color: Color.fromRGBO(193,214,233, 1),
-                          ),
-                          onClick: () {
-                            bloc.increment();
-                          },
+                        CircularButton(
+                          icon: Icon(Icons.add),
+                          onPressed: () => bloc.increment(),
                         ),
 
                         Neumorphic(
@@ -390,20 +364,10 @@ class FoodDetailsScreen extends StatelessWidget {
                             ),)
                         ),
 
-                        NeumorphicButton(
-                          boxShape: NeumorphicBoxShape.circle(),
-                          child: Icon(Icons.remove),
-                          style: NeumorphicStyle(
-                            shape: NeumorphicShape.convex,
-                            shadowDarkColorEmboss: Color.fromRGBO(163,177,198, 1),
-                            shadowLightColorEmboss: Colors.white,
-                            color: Color.fromRGBO(193,214,233, 1),
-                          ),
-                          onClick: () {
-                            bloc.decrement();
-                          },
+                        CircularButton(
+                          icon: Icon(Icons.remove),
+                          onPressed: () => bloc.decrement(),
                         ),
-
                       ],
                     ),
 
