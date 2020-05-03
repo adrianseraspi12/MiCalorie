@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:calorie_counter/util/extension/ext_number_rounding.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:pie_chart/pie_chart.dart';
 
 class FoodDetailsScreen extends StatelessWidget {
   final ClientFood food;
@@ -123,6 +122,7 @@ class FoodDetailsScreen extends StatelessWidget {
                           boxShape: NeumorphicBoxShape.circle(),
                           child: Icon(Icons.chevron_left),
                           style: NeumorphicStyle(
+                            shape: NeumorphicShape.convex,
                             shadowDarkColorEmboss: Color.fromRGBO(163,177,198, 1),
                             shadowLightColorEmboss: Colors.white,
                             color: Color.fromRGBO(193,214,233, 1),
@@ -136,6 +136,7 @@ class FoodDetailsScreen extends StatelessWidget {
                           boxShape: NeumorphicBoxShape.circle(),
                           child: Icon(Icons.add),
                           style: NeumorphicStyle(
+                            shape: NeumorphicShape.convex,
                             shadowDarkColorEmboss: Color.fromRGBO(163,177,198, 1),
                             shadowLightColorEmboss: Colors.white,
                             color: Color.fromRGBO(193,214,233, 1),
@@ -360,6 +361,7 @@ class FoodDetailsScreen extends StatelessWidget {
                           boxShape: NeumorphicBoxShape.circle(),
                           child: Icon(Icons.add),
                           style: NeumorphicStyle(
+                            shape: NeumorphicShape.convex,
                             shadowDarkColorEmboss: Color.fromRGBO(163,177,198, 1),
                             shadowLightColorEmboss: Colors.white,
                             color: Color.fromRGBO(193,214,233, 1),
@@ -374,7 +376,7 @@ class FoodDetailsScreen extends StatelessWidget {
                           padding: EdgeInsets.all(16.0),
                           boxShape: NeumorphicBoxShape.roundRect(borderRadius: BorderRadius.circular(4.0)),
                           style: NeumorphicStyle(
-                            depth: -10,
+                            depth: -15,
                             shadowDarkColorEmboss: Color.fromRGBO(163,177,198, 1),
                             shadowLightColorEmboss: Colors.white,
                             color: Color.fromRGBO(193,214,233, 1),
@@ -392,6 +394,7 @@ class FoodDetailsScreen extends StatelessWidget {
                           boxShape: NeumorphicBoxShape.circle(),
                           child: Icon(Icons.remove),
                           style: NeumorphicStyle(
+                            shape: NeumorphicShape.convex,
                             shadowDarkColorEmboss: Color.fromRGBO(163,177,198, 1),
                             shadowLightColorEmboss: Colors.white,
                             color: Color.fromRGBO(193,214,233, 1),

@@ -26,7 +26,7 @@ class _PieChartViewState extends State<PieChartView> {
       builder: (scontext, constraints) => Neumorphic(
           boxShape: NeumorphicBoxShape.circle(),
           style: NeumorphicStyle(
-            depth: -20,
+            depth: -15,
             shadowDarkColorEmboss: Color.fromRGBO(163,177,198, 1),
             shadowLightColorEmboss: Colors.white,
             color: Color.fromRGBO(193,214,233, 1),
