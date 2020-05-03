@@ -37,6 +37,7 @@ class _PieChartViewState extends State<PieChartView> {
                 PieChart(
                   dataMap: widget.data,
                   showLegends: false,
+                  initialAngle: 11,
                   colorList: widget.listOfColor,
                   chartRadius: MediaQuery.of(context).size.width,
                   chartValueStyle: defaultChartValueStyle.copyWith(
