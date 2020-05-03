@@ -172,7 +172,7 @@ class FoodDetailsScreen extends StatelessWidget {
                         child: FittedBox(
                           fit: BoxFit.contain,
                           child: Text(
-                            food.name,
+                            food.brand,
                             style: TextStyle(
                               fontFamily: 'Roboto',
                               fontSize: 16,
