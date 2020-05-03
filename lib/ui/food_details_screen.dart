@@ -1,9 +1,13 @@
 import 'package:calorie_counter/bloc/food_details_bloc.dart';
 import 'package:calorie_counter/data/api/model/client_food.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
+import 'package:calorie_counter/ui/widgets/circular_emboss_view.dart';
+import 'package:calorie_counter/ui/widgets/pie_chart_view.dart';
 import 'package:flutter/material.dart';
 import 'package:calorie_counter/util/extension/ext_number_rounding.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pie_chart/pie_chart.dart';
 
 class FoodDetailsScreen extends StatelessWidget {
   final ClientFood food;
@@ -17,18 +21,7 @@ class FoodDetailsScreen extends StatelessWidget {
     _setupRepository(bloc);
 
     return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[
-            Builder(
-              builder: (context) => IconButton(
-                icon: Icon(Icons.add),
-                color: Colors.white ,
-                onPressed: () {
-                  _onAddFoodClick(context, bloc); 
-                }),
-            )
-          ]
-      ),
+      backgroundColor: Color.fromRGBO(193,214,233, 1),
       body: _buildResult(context, bloc)
     );
   }
@@ -54,7 +47,7 @@ class FoodDetailsScreen extends StatelessWidget {
           return Container();
         }
         else {
-          return _buildFoodDetails();
+          return _buildFoodDetails(context, bloc);
         }
 
 
@@ -80,97 +73,308 @@ class FoodDetailsScreen extends StatelessWidget {
       );
   }
 
-  Widget _buildFoodDetails() {
-    return ListView(
-        shrinkWrap: true,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 8.0),  
-            child: Text('${food.name}')
-          ),
+  Widget _buildFoodDetails(BuildContext context, FoodDetailsBloc bloc) {
+    Map<String, double> dataMap = Map();
+    dataMap.putIfAbsent('Carbs', () => 40);
+    dataMap.putIfAbsent('Fats', () => 50);
+    dataMap.putIfAbsent('Protein', () => 10);
 
-          Divider(),
+    final height = MediaQuery.of(context).size.height;
 
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text('Number of servings'),
-                Text('${food.numberOfServings}')
-              ]
+    return SafeArea(
+      child: Container(
+        child: Column(
+          children: <Widget> [
+            SizedBox(
+              height: height * 0.1,
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    NeumorphicButton(
+                      boxShape: NeumorphicBoxShape.circle(),
+                      child: Icon(Icons.chevron_left),
+                      style: NeumorphicStyle(
+                        shadowDarkColorEmboss: Color.fromRGBO(163,177,198, 1),
+                        shadowLightColorEmboss: Colors.white,
+                        color: Color.fromRGBO(193,214,233, 1),
+                      ),
+                      onClick: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+
+                    NeumorphicButton(
+                      boxShape: NeumorphicBoxShape.circle(),
+                      child: Icon(Icons.add),
+                      style: NeumorphicStyle(
+                        shadowDarkColorEmboss: Color.fromRGBO(163,177,198, 1),
+                        shadowLightColorEmboss: Colors.white,
+                        color: Color.fromRGBO(193,214,233, 1),
+                      ),
+                      onClick: () {
+                        _onAddFoodClick(context, bloc); 
+                      },
+                    )
+                  ],
+                ),
+              ),
             ),
-          ),
 
-          Divider(),
-
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text('Serving size'),
-                Text('${food.brand}')
-              ]
-            ),
-          ),
-
-          Divider(),
-
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-              
-              Column(
+            Container(
+              margin: EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
+              child: Column(
                 children: <Widget>[
-                Text('${food.nutrients.carbs.roundTo(2)} g'),
-                Text('Carbs')
-              ]),
+                   Align(
+                    alignment: Alignment.centerLeft,
+                    child: FittedBox(
+                      fit: BoxFit.contain,
+                      child: Text(
+                        food.name,
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: 48,
+                          fontWeight: FontWeight.w700)
+                      ),
+                    ),
+                  ),
 
-              Container(
-                height: 20.0,
-                child: VerticalDivider(
-                  color: Colors.black,
-                  width: 5.0,),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: FittedBox(
+                      fit: BoxFit.contain,
+                      child: Text(
+                        food.name,
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400)
+                      ),
+                    ),
+                  ),
+
+                ],
+              )
+            ),
+
+            SizedBox(
+              height: height * 0.35,
+              child: PieChartView(
+                child: CircularEmbossView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        '170',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: 48,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      Text(
+                        'Calories',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                    ]
+                  ),
+                )
               ),
+            ),
 
-              Column(children: <Widget>[
-                Text('${food.nutrients.fat.roundTo(2)} g'),
-                Text('Fat')
-              ]),
+            SizedBox(
+              height: height * 0.25,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.0),  
+                              child: PieChartView(
+                                child: CircularEmbossView(
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: FittedBox(
+                                      child: Text(
+                                        '4g',
+                                        style: TextStyle(
+                                          fontFamily: 'Roboto',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    )
+                                  )
+                                ),
+                              ),
+                            ),
+                          ),
 
-              Container(
-                height: 20.0,
-                child: VerticalDivider(
-                  color: Colors.black,
-                  width: 5.0,),
+                          Text(
+                            'Carbs',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            )
+                          )
+                        ]
+                      )
+                    ),
+
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.0),  
+                              child: PieChartView(
+                                child: CircularEmbossView(
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: FittedBox(
+                                      child: Text(
+                                        '4g',
+                                        style: TextStyle(
+                                          fontFamily: 'Roboto',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    )
+                                  )
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          Text(
+                            'Fat',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            )
+                          )
+                        ]
+                      )
+                    ),
+
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 8.0),  
+                              child: PieChartView(
+                                child: CircularEmbossView(
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: FittedBox(
+                                      child: Text(
+                                        '4g',
+                                        style: TextStyle(
+                                          fontFamily: 'Roboto',
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    )
+                                  )
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          Text(
+                            'Protein',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            )
+                          )
+                        ]
+                      )
+                    ),
+                  ],
+                ),
               ),
+            ),
 
-              Column(children: <Widget>[
-                Text('${food.nutrients.protein.roundTo(2)} g'),
-                Text('Protein'),
-              ]),
+            SizedBox(
+              height: height * 0.1,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    NeumorphicButton(
+                      boxShape: NeumorphicBoxShape.circle(),
+                      child: Icon(Icons.add),
+                      style: NeumorphicStyle(
+                        shadowDarkColorEmboss: Color.fromRGBO(163,177,198, 1),
+                        shadowLightColorEmboss: Colors.white,
+                        color: Color.fromRGBO(193,214,233, 1),
+                      ),
+                      onClick: () {
 
-              Container(
-                height: 20.0,
-                child: VerticalDivider(
-                  color: Colors.black,
-                  width: 5.0,),
+                      },
+                    ),
+
+                    Neumorphic(
+                      margin: EdgeInsets.symmetric(horizontal: 16.0),
+                      padding: EdgeInsets.all(16.0),
+                      boxShape: NeumorphicBoxShape.roundRect(borderRadius: BorderRadius.circular(4.0)),
+                      style: NeumorphicStyle(
+                        depth: -10,
+                        shadowDarkColorEmboss: Color.fromRGBO(163,177,198, 1),
+                        shadowLightColorEmboss: Colors.white,
+                        color: Color.fromRGBO(193,214,233, 1),
+                      ),
+                      child: Text(
+                        '22',
+                        style: TextStyle(
+                          fontFamily: 'Roboto',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),)
+                    ),
+
+                    NeumorphicButton(
+                      boxShape: NeumorphicBoxShape.circle(),
+                      child: Icon(Icons.remove),
+                      style: NeumorphicStyle(
+                        shadowDarkColorEmboss: Color.fromRGBO(163,177,198, 1),
+                        shadowLightColorEmboss: Colors.white,
+                        color: Color.fromRGBO(193,214,233, 1),
+                      ),
+                      onClick: () {
+
+                      },
+                    ),
+
+                  ],
+                ),
+
               ),
+            ),
 
-              Column(children: <Widget>[
-                Text('${food.nutrients.calories.toInt()}'),
-                Text('Calories'),
-              ]),
-
-            ]),
-          ),
-
-          Divider(),
-        ],
-      );
+        ]),
+      ),
+    );
   }
 
 }
