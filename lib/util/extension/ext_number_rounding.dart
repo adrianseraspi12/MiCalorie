@@ -1,7 +1,7 @@
 extension NumberRounding on double {
 
-  double roundTo(int number) {
-    return double.parse((this).toStringAsFixed(2));
+  int roundTo(int number) {
+    return double.parse((this).toStringAsFixed(number)).toInt();
   } 
 
 }
