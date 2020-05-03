@@ -19,6 +19,10 @@ class SearchFoodQueryBloc implements Bloc {
   }
 
   void submitQuery(String query) async {
+    if (query == null || query.isEmpty) {
+      return;
+    }
+
     final results = await _edamanClient.searchFood(query);
     SearchResult searchResult; 
   
