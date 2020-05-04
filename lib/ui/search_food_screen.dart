@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:calorie_counter/bloc/bloc_provider.dart';
 import 'package:calorie_counter/bloc/search_food_query_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
 
@@ -145,8 +146,21 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
 
         final results = snapshot.data;
 
+
         if (results == null) {
-          return Center(child: Text('Search A Food'));
+          final String assetName = 'assets/images/search.svg';
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(bottom: 16.0),
+                  child: _loadSVGImage(assetName, 100, 100)
+                ),
+                Text('Search food now')
+              ],
+            ),
+          );
         }
 
         if(results.isLoading) {
@@ -159,7 +173,20 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
         }
 
         if (results.listOfFood == null) {
-          return Center(child: Text('${results.errorMessage}'));
+          final String assetName = 'assets/images/signs.svg';
+
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(bottom: 16.0),
+                  child: _loadSVGImage(assetName, 100, 100)
+                ),
+                Text('${results.errorMessage}')
+              ],
+            ),
+          );
         }
 
         return ListView.builder(
@@ -197,6 +224,16 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
         );
 
       });
+  }
+
+  Widget _loadSVGImage(String assetName, int height, int width) {
+    return SizedBox(
+      height: 100,
+      width: 100,
+      child: SvgPicture.asset(
+        assetName,
+      ),
+    );
   }
 
   @override
