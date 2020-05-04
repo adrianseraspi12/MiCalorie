@@ -19,6 +19,8 @@ class SearchFoodQueryBloc implements Bloc {
   }
 
   void submitQuery(String query) async {
+    _commonFoodController.sink.add(SearchResult(null, null, true));
+    
     if (query == null || query.isEmpty) {
       return;
     }
@@ -27,13 +29,13 @@ class SearchFoodQueryBloc implements Bloc {
     SearchResult searchResult; 
   
     if (results.data == null || results.data.commonFood == null) {
-      searchResult = SearchResult(null, results.errorMessage);
+      searchResult = SearchResult(null, results.errorMessage, false);
     }
     else if (results.data.commonFood.length == 0) {
-      searchResult = SearchResult(null, 'No food found');
+      searchResult = SearchResult(null, 'No food found', false);
     }
     else {
-      searchResult = SearchResult(results.data.commonFood, null);
+      searchResult = SearchResult(results.data.commonFood, null, false);
     }
 
     _commonFoodController.sink.add(searchResult);
@@ -49,8 +51,9 @@ class SearchFoodQueryBloc implements Bloc {
 class SearchResult {
 
   List<CommonFood> listOfFood;
+  bool isLoading;
   String errorMessage;
 
-  SearchResult(this.listOfFood, this.errorMessage);
+  SearchResult(this.listOfFood, this.errorMessage, this.isLoading);
 
 }

@@ -113,7 +113,7 @@ class FoodDetailsScreen extends StatelessWidget {
             child: Column(
               children: <Widget> [
                 Container(
-                  margin: EdgeInsets.symmetric(horizontal: 16.0),
+                  margin: EdgeInsets.all(16.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
@@ -131,7 +131,7 @@ class FoodDetailsScreen extends StatelessWidget {
                 ),
 
                 Container(
-                  margin: EdgeInsets.fromLTRB(16.0, 0, 16.0, 16.0),
+                  margin: EdgeInsets.fromLTRB(16.0, 0, 16.0, 0),
                   child: Column(
                     children: <Widget>[
                        Align(

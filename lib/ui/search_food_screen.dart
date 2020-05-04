@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:calorie_counter/bloc/bloc_provider.dart';
 import 'package:calorie_counter/bloc/search_food_query_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:loading/indicator/ball_pulse_indicator.dart';
+import 'package:loading/loading.dart';
 
 import 'food_details_screen.dart';
 
@@ -145,6 +147,15 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
 
         if (results == null) {
           return Center(child: Text('Search A Food'));
+        }
+
+        if(results.isLoading) {
+          return Center(
+            child: Loading(
+              indicator: BallPulseIndicator(), 
+              size: 50.0
+            )
+          );
         }
 
         if (results.listOfFood == null) {
