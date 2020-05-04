@@ -157,7 +157,14 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
                   margin: EdgeInsets.only(bottom: 16.0),
                   child: _loadSVGImage(assetName, 100, 100)
                 ),
-                Text('Search food now')
+                Text(
+                  'Search food now',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                )
               ],
             ),
           );
@@ -183,7 +190,14 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
                   margin: EdgeInsets.only(bottom: 16.0),
                   child: _loadSVGImage(assetName, 100, 100)
                 ),
-                Text('${results.errorMessage}')
+                Text(
+                  '${results.errorMessage}',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                )
               ],
             ),
           );
@@ -216,8 +230,18 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
                 color: Color.fromRGBO(193,214,233, 1),
               ),
               child: ListTile(
-                title: Text(commonFood.details.name),
-                subtitle: Text(brandName),
+                title: Text(
+                  commonFood.details.name,
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                  ),
+                ),
+                subtitle: Text(
+                  brandName,
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                  ),  
+                ),
               ),
             );
           }
