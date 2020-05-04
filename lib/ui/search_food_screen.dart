@@ -22,6 +22,7 @@ class SearchFoodScreen extends StatefulWidget {
 class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerProviderStateMixin {
 
   TextEditingController _textEditingController = TextEditingController();
+  double _textfieldDepth = 5;
 
   @override
   void initState() {
@@ -37,98 +38,99 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
       bloc: bloc,
       child: Scaffold(
         backgroundColor: Color.fromRGBO(193,214,233, 1),
-        appBar: AppBar(
-          title: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(4.0)),
-            ),
-            child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12.0),
-                child: TextFormField(
-                  textInputAction: TextInputAction.search,
-                  controller: _textEditingController,
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintText: 'Search Food',
-                    labelStyle: TextStyle(color: Colors.black),
-                    suffixIcon: Icon(Icons.search, color: Colors.black),
-                  ),
-                  onEditingComplete: () {
-                    final query = _textEditingController.text;
-                    bloc.submitQuery(query);
-                    FocusScope.of(context).requestFocus(FocusNode());
-                  },
-                ),
-              ),
-            ),
-
-        ),
-        body: _buildCommonFoodResults(bloc),
-        // body: _buildSearchScreen(context, bloc),
+        body: _buildSearchScreen(context, bloc),
       ),
     );
   }
 
   Widget _buildSearchScreen(BuildContext context, SearchFoodQueryBloc bloc) {
-    final height = MediaQuery.of(context).size.height;
-
     return SafeArea(
-      child: Container(
-        child: Column(
-         
-          children: <Widget> [
-            SizedBox(
-              height: height * 0.1,
-              child: Container(
-                padding: EdgeInsets.all(16.0),
-                child: Row(
-                  children: <Widget>[
-                    CircularButton(
-                      icon: Icon(Icons.chevron_left),
-                      onPressed: () => Navigator.pop(context),
-                    ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget> [
+          Neumorphic(
+            margin: EdgeInsets.only(bottom: 4.0),
+            padding: EdgeInsets.all(16.0),
+            style: NeumorphicStyle(
+              shadowLightColor: Color.fromRGBO(193,214,233, 1),
+              color: Color.fromRGBO(193,214,233, 1),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                CircularButton(
+                  icon: Icon(Icons.chevron_left),
+                  onPressed: () => Navigator.pop(context),
+                ),
 
-                    Expanded(
+                Expanded(
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 150),
+                    child: Neumorphic(
+                      margin: EdgeInsets.symmetric(horizontal: 8.0),
+                      boxShape: NeumorphicBoxShape.roundRect(borderRadius: BorderRadius.circular(4.0)),
+                      style: NeumorphicStyle(
+                        depth: _textfieldDepth,
+                        shadowDarkColorEmboss: Color.fromRGBO(163,177,198, 1),
+                        shadowLightColorEmboss: Colors.white,
+                        color: Color.fromRGBO(193,214,233, 1),
+                      ),
                       child: Container(
-                        child: Neumorphic(
-                          margin: EdgeInsets.symmetric(horizontal: 16.0),
-                          // padding: EdgeInsets.symmetric(horizontal: 16.0),
-                          boxShape: NeumorphicBoxShape.roundRect(borderRadius: BorderRadius.circular(4.0)),
-                          style: NeumorphicStyle(
-                            depth: -15,
-                            shadowDarkColorEmboss: Color.fromRGBO(163,177,198, 1),
-                            shadowLightColorEmboss: Colors.white,
-                            color: Color.fromRGBO(193,214,233, 1),
-                          ),
-                          child: TextFormField(
-                            textInputAction: TextInputAction.search,
-                            controller: _textEditingController,
-                            decoration: InputDecoration(
-                              border: InputBorder.none,
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black, width: 1.0)
-                              ),
-                              contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
-                              suffixIcon: Icon(Icons.search, color: Colors.black),
+                        margin: EdgeInsets.symmetric(horizontal: 16.0),
+                        child: TextFormField(
+                          textAlign: TextAlign.left,
+                          textInputAction: TextInputAction.search,
+                          controller: _textEditingController,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Search Food',
+                            suffixIcon: Icon(Icons.search, color: Colors.black),
+                            hintStyle: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
                             ),
-                            onEditingComplete: () {
-                              final query = _textEditingController.text;
-                              bloc.submitQuery(query);
-                              FocusScope.of(context).requestFocus(FocusNode());
-                            },
                           ),
+                          onTap: () {
+                            if (_textfieldDepth.toInt() != -5) {
+                              setState(() {
+                                _textfieldDepth = -5;
+                              });
+                            }
+                          },
+                          onChanged: (string) {
+                            if (_textfieldDepth.toInt() != -5) {
+                              setState(() {
+                                _textfieldDepth = -5;
+                              });
+                            }
+                          },
+                          onEditingComplete: () {
+                            final query = _textEditingController.text;
+                            if (query == null || query.isEmpty) {
+                              if (_textfieldDepth.toInt() != 5) {
+                                setState(() {
+                                  _textfieldDepth = 5;
+                                });
+                              }
+                            }
+                            bloc.submitQuery(query);
+                            FocusScope.of(context).requestFocus(FocusNode());
+                          },
                         ),
                       ),
-                    )
+                    ),
+                  ),
+                )
 
-                  ],
-                ),
-              ),
-            )
-          ],
-
-        ),
+              ],
+            ),
+          ),
+          
+          Expanded(
+            child: _buildCommonFoodResults(bloc)
+          )
+        ],
       ),
     );
     
@@ -149,18 +151,15 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
           return Center(child: Text('${results.errorMessage}'));
         }
 
-        return ListView.separated(
-          separatorBuilder: (BuildContext context, int index) => Divider(), 
+        return ListView.builder(
           itemCount: results.listOfFood.length,
           itemBuilder: (context, index) {
-
             final commonFood = results.listOfFood[index];
             var brandName = commonFood.details.brand ?? 'Generic';
         
-            return ListTile(
-              title: Text(commonFood.details.name),
-              subtitle: Text(brandName),
-              onTap: () {
+            return NeumorphicButton(
+              margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              onClick: () {
                 final food = ClientFood(name: commonFood.details.name,
                                   numberOfServings: 1,
                                   brand: brandName,
@@ -172,10 +171,20 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
                     settings: RouteSettings(name: Routes.foodDetailsScreen))
                 );
               },
+              style: NeumorphicStyle(
+                depth: 2,
+                shadowLightColor: Colors.white,
+                shadowDarkColor: Color.fromRGBO(163,177,198, 1),
+                color: Color.fromRGBO(193,214,233, 1),
+              ),
+              child: ListTile(
+                title: Text(commonFood.details.name),
+                subtitle: Text(brandName),
+              ),
             );
-
-        },
+          }
         );
+
       });
   }
 
