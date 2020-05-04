@@ -112,24 +112,21 @@ class FoodDetailsScreen extends StatelessWidget {
           child: Container(
             child: Column(
               children: <Widget> [
-                SizedBox(
-                  height: height * 0.1,
-                  child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        CircularButton(
-                          icon: Icon(Icons.chevron_left),
-                          onPressed: () => Navigator.pop(context),
-                        ),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      CircularButton(
+                        icon: Icon(Icons.chevron_left),
+                        onPressed: () => Navigator.pop(context),
+                      ),
 
-                        CircularButton(
-                          icon: Icon(Icons.add),
-                          onPressed: () => _onAddFoodClick(context, bloc),
-                        ),
-                      ],
-                    ),
+                      CircularButton(
+                        icon: Icon(Icons.add),
+                        onPressed: () => _onAddFoodClick(context, bloc),
+                      ),
+                    ],
                   ),
                 ),
 
