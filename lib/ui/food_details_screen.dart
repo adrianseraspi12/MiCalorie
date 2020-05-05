@@ -219,12 +219,15 @@ class FoodDetailsScreen extends StatelessWidget {
                                     child: Align(
                                       alignment: Alignment.center,
                                       child: FittedBox(
-                                        child: Text(
-                                          '${carbs}g',
-                                          style: TextStyle(
-                                            fontFamily: 'Roboto',
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700,
+                                        child: Container(
+                                          margin: EdgeInsets.all(4.0),
+                                          child: Text(
+                                            '${carbs}g',
+                                            style: TextStyle(
+                                              fontFamily: 'Roboto',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700,
+                                            ),
                                           ),
                                         ),
                                       )
@@ -261,12 +264,15 @@ class FoodDetailsScreen extends StatelessWidget {
                                     child: Align(
                                       alignment: Alignment.center,
                                       child: FittedBox(
-                                        child: Text(
-                                          '${fat}g',
-                                          style: TextStyle(
-                                            fontFamily: 'Roboto',
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700,
+                                        child: Container(
+                                          margin: EdgeInsets.all(4.0),                                          
+                                          child: Text(
+                                            '${fat}g',
+                                            style: TextStyle(
+                                              fontFamily: 'Roboto',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700,
+                                            ),
                                           ),
                                         ),
                                       )
@@ -303,12 +309,15 @@ class FoodDetailsScreen extends StatelessWidget {
                                     child: Align(
                                       alignment: Alignment.center,
                                       child: FittedBox(
-                                        child: Text(
-                                          '${protein}g',
-                                          style: TextStyle(
-                                            fontFamily: 'Roboto',
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w700,
+                                        child: Container(
+                                          margin: EdgeInsets.all(4.0),
+                                          child: Text(
+                                            '${protein}g',
+                                            style: TextStyle(
+                                              fontFamily: 'Roboto',
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w700,
+                                            ),
                                           ),
                                         ),
                                       )
