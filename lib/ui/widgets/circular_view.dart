@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
-class CircularEmbossView extends StatelessWidget {
+class CircularView extends StatelessWidget {
   
   final Widget child;
 
-  CircularEmbossView({Key key, this.child}): super(key: key);
+  CircularView({Key key, this.child}): super(key: key);
 
   @override
   Widget build(BuildContext context) {

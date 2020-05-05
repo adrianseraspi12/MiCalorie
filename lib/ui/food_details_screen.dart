@@ -2,7 +2,7 @@ import 'package:calorie_counter/bloc/food_details_bloc.dart';
 import 'package:calorie_counter/data/api/model/client_food.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
 import 'package:calorie_counter/ui/widgets/circular_button.dart';
-import 'package:calorie_counter/ui/widgets/circular_emboss_view.dart';
+import 'package:calorie_counter/ui/widgets/circular_view.dart';
 import 'package:calorie_counter/ui/widgets/pie_chart_view.dart';
 import 'package:flutter/material.dart';
 import 'package:calorie_counter/util/extension/ext_number_rounding.dart';
@@ -171,7 +171,7 @@ class FoodDetailsScreen extends StatelessWidget {
                   child: PieChartView(
                     listOfColor: calorieColors,
                     data: fullNutrientsData[NutrientDataType.CALORIES],
-                    child: CircularEmbossView(
+                    child: CircularView(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
@@ -213,7 +213,7 @@ class FoodDetailsScreen extends StatelessWidget {
                                   child: PieChartView(
                                     listOfColor: carbsColor,
                                     data: fullNutrientsData[NutrientDataType.CARBS],
-                                    child: CircularEmbossView(
+                                    child: CircularView(
                                       child: Align(
                                         alignment: Alignment.center,
                                         child: FittedBox(
@@ -254,7 +254,7 @@ class FoodDetailsScreen extends StatelessWidget {
                                   child: PieChartView(
                                     listOfColor: fatColor,
                                     data: fullNutrientsData[NutrientDataType.FAT],
-                                    child: CircularEmbossView(
+                                    child: CircularView(
                                       child: Align(
                                         alignment: Alignment.center,
                                         child: FittedBox(
@@ -295,7 +295,7 @@ class FoodDetailsScreen extends StatelessWidget {
                                   child: PieChartView(
                                     listOfColor: proteinColor,
                                     data: fullNutrientsData[NutrientDataType.PROTEIN],
-                                    child: CircularEmbossView(
+                                    child: CircularView(
                                       child: Align(
                                         alignment: Alignment.center,
                                         child: FittedBox(
