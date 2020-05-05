@@ -13,9 +13,8 @@ class CircularEmbossView extends StatelessWidget {
       margin: EdgeInsets.all(24.0),
       boxShape: NeumorphicBoxShape.circle(),
       style: NeumorphicStyle(
-        depth: -15,
-        shadowDarkColorEmboss: Color.fromRGBO(163,177,198, 1),
-        shadowLightColorEmboss: Colors.white,
+        shadowLightColor: Colors.white,
+        shadowDarkColor: Color.fromRGBO(163,177,198, 1),
         color: Color.fromRGBO(193,214,233, 1),
       ),
       child: child
