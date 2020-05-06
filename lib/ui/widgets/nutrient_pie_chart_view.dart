@@ -16,7 +16,7 @@ class NutrientPieChartView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var fullNutrientsData = _getNutrientPercentage();
-    final height = MediaQuery.of(context).size.height;
+    var height = MediaQuery.of(context).size.height;
     final calorieColors = [Colors.green, Colors.red, Colors.blue];
     final carbsColor =[Colors.green, Colors.transparent];
     final fatColor =[Colors.red, Colors.transparent];
@@ -63,9 +63,11 @@ class NutrientPieChartView extends StatelessWidget {
           height: height * 0.25,
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
+            child: Flex(
+              direction: Axis.horizontal,
               children: <Widget>[
                 Expanded(
+                  flex: 1,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -111,6 +113,7 @@ class NutrientPieChartView extends StatelessWidget {
                 ),
 
                 Expanded(
+                  flex: 1,                  
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -156,6 +159,7 @@ class NutrientPieChartView extends StatelessWidget {
                 ),
 
                 Expanded(
+                  flex: 1,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -209,10 +213,19 @@ class NutrientPieChartView extends StatelessWidget {
   }
 
 Map<NutrientDataType ,Map<String, double>> _getNutrientPercentage() {
+    if (calories == 0) {
+      Map<NutrientDataType, Map<String, double>> fullNutrientsData = Map();
+      fullNutrientsData.putIfAbsent(NutrientDataType.CALORIES, () => null);
+      fullNutrientsData.putIfAbsent(NutrientDataType.CARBS, () => null);
+      fullNutrientsData.putIfAbsent(NutrientDataType.FAT, () => null);
+      fullNutrientsData.putIfAbsent(NutrientDataType.PROTEIN, () => null);
+      return fullNutrientsData;
+    }
+
     final computedCarbs = carbs * 4;
     final computedFat = fat * 9;
     final computedProtein = protein * 4;
-    final totalNutrient = computedCarbs + computedFat + computedProtein;
+    final totalNutrient = computedCarbs + computedFat + protein;
 
     final carbPercentage = (computedCarbs / totalNutrient) * 100;
     final fatPercentage = (computedFat / totalNutrient) * 100;

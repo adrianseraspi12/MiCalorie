@@ -20,8 +20,18 @@ class PieChartView extends StatefulWidget {
 }
 
 class _PieChartViewState extends State<PieChartView> {
+
   @override
   Widget build(BuildContext context) {
+    var colors;
+
+    if (widget.data == null) {
+      colors = [Colors.black, Colors.transparent];
+    }
+    else if (widget.data == null){
+      colors = widget.listOfColor;
+    }
+
     return LayoutBuilder(
       builder: (scontext, constraints) => Neumorphic(
           boxShape: NeumorphicBoxShape.circle(),
@@ -34,16 +44,7 @@ class _PieChartViewState extends State<PieChartView> {
           child: Container(
             child: Stack(
               children: <Widget> [
-                PieChart(
-                  dataMap: widget.data,
-                  showLegends: false,
-                  initialAngle: 11,
-                  colorList: widget.listOfColor,
-                  chartRadius: MediaQuery.of(context).size.width,
-                  chartValueStyle: defaultChartValueStyle.copyWith(
-                  color: Colors.black.withOpacity(0),
-                  ),
-                ),
+                _buildPieChart(colors),
 
                 Positioned.fill(
                   child: widget.child,
@@ -54,4 +55,36 @@ class _PieChartViewState extends State<PieChartView> {
         )
     );
   }
+
+  Widget _buildPieChart(List<Color> colors) {
+    if (widget.data == null) {
+      final Map<String, double> mapData = Map();
+      mapData.putIfAbsent('Placeholder', () => 0);
+      mapData.putIfAbsent('Empty', () => 100);
+
+      return PieChart(
+        dataMap: mapData,
+        showLegends: false,
+        initialAngle: 11,
+        colorList: colors,
+        chartRadius: MediaQuery.of(context).size.width,
+        chartValueStyle: defaultChartValueStyle.copyWith(
+        color: Colors.black.withOpacity(0),
+        ),
+      );
+    }
+    else {
+      return PieChart(
+        dataMap: widget.data,
+        showLegends: false,
+        initialAngle: 11,
+        colorList: widget.listOfColor,
+        chartRadius: MediaQuery.of(context).size.width,
+        chartValueStyle: defaultChartValueStyle.copyWith(
+        color: Colors.black.withOpacity(0),
+        ),
+      );
+    }
+  }
+
 }
