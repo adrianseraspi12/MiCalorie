@@ -74,6 +74,7 @@ class FoodDetailsBloc implements Bloc {
   }
 
   void _updateTotalNutrientsAndMeal(MealNutrients mealNutrients, ClientFood food) async {
+    final foodDetailsCountResult = _calculateTheFoodDetails(currentCount);
     var totalNutrientsPerDay = await _totalNutrientsPerDayRepository.getTotalNutrientsByDate(mealNutrients.date);
     var totalNutrientsId;
 
@@ -82,29 +83,28 @@ class FoodDetailsBloc implements Bloc {
       
       final currentTotalNutrients = TotalNutrientsPerDay(mealNutrients.totalNutrientsPerDayId,
         mealNutrients.date, 
-        food.nutrients.calories.toInt(),
-        food.nutrients.carbs.roundTo(0),
-        food.nutrients.fat.roundTo(0),
-        food.nutrients.protein.roundTo(0));
+        foodDetailsCountResult.calories,
+        foodDetailsCountResult.carbs,
+        foodDetailsCountResult.fat,
+        foodDetailsCountResult.protein);
       
       _totalNutrientsPerDayRepository.upsert(currentTotalNutrients);
     }
     else {
       totalNutrientsId = totalNutrientsPerDay.id;
 
-      var foodNutrients = food.nutrients;
-      var newCalories = totalNutrientsPerDay.calories + foodNutrients.calories.roundTo(0);
-      var newCarbs = totalNutrientsPerDay.carbs + foodNutrients.carbs;
-      var newFat = totalNutrientsPerDay.fat + foodNutrients.fat;
-      var newProtein = totalNutrientsPerDay.protein + foodNutrients.protein;
+      var newCalories = totalNutrientsPerDay.calories + foodDetailsCountResult.calories;
+      var newCarbs = totalNutrientsPerDay.carbs + foodDetailsCountResult.carbs;
+      var newFat = totalNutrientsPerDay.fat + foodDetailsCountResult.fat;
+      var newProtein = totalNutrientsPerDay.protein + foodDetailsCountResult.protein;
 
       final newTotalNutrientsPerDay = TotalNutrientsPerDay(
         totalNutrientsPerDay.id, 
         totalNutrientsPerDay.date, 
         newCalories,
-        newCarbs.roundTo(0), 
-        newFat.roundTo(0), 
-        newProtein.roundTo(0));
+        newCarbs, 
+        newFat, 
+        newProtein);
 
       _totalNutrientsPerDayRepository.upsert(newTotalNutrientsPerDay);
     }
@@ -114,6 +114,7 @@ class FoodDetailsBloc implements Bloc {
 
   void _updateMeal(int totalNutrientsPerDayId, MealNutrients mealNutrients, ClientFood food) async {
     final currentMealNutrients = await _mealNutrientsRepository.getMeal(mealNutrients.id);
+    final foodDetailsCountResult = _calculateTheFoodDetails(currentCount);
 
     if (currentMealNutrients == null) {
       var id = await _mealNutrientsRepository.getAllMealCount();
@@ -121,10 +122,10 @@ class FoodDetailsBloc implements Bloc {
 
       final newMealNutrients = MealNutrients(
         id, 
-        food.nutrients.calories.toInt(),
-        food.nutrients.carbs.roundTo(0),
-        food.nutrients.fat.roundTo(0),
-        food.nutrients.protein.roundTo(0),
+        foodDetailsCountResult.calories,
+        foodDetailsCountResult.carbs,
+        foodDetailsCountResult.fat,
+        foodDetailsCountResult.protein,
         mealNutrients.type, 
         totalNutrientsPerDayId,
         date: mealNutrients.date);
@@ -133,18 +134,17 @@ class FoodDetailsBloc implements Bloc {
       _insertFood(newMealNutrients, food);
     }
     else {
-      final foodNutrients = food.nutrients;
-      final newCalories = currentMealNutrients.calories + foodNutrients.calories.toInt();
-      final newCarbs = currentMealNutrients.carbs + foodNutrients.carbs;
-      final newFat = currentMealNutrients.fat + foodNutrients.fat;
-      final newProtein = currentMealNutrients.protein + foodNutrients.protein;
+      final newCalories = currentMealNutrients.calories + foodDetailsCountResult.calories;
+      final newCarbs = currentMealNutrients.carbs + foodDetailsCountResult.carbs;
+      final newFat = currentMealNutrients.fat + foodDetailsCountResult.fat;
+      final newProtein = currentMealNutrients.protein + foodDetailsCountResult.protein;
     
       final updateMealNutrients = MealNutrients(
         currentMealNutrients.id, 
         newCalories, 
-        newCarbs.roundTo(0), 
-        newFat.roundTo(0), 
-        newProtein.roundTo(0), 
+        newCarbs, 
+        newFat, 
+        newProtein, 
         currentMealNutrients.type, 
         totalNutrientsPerDayId,
         date: mealNutrients.date);
@@ -164,7 +164,7 @@ class FoodDetailsBloc implements Bloc {
     clientFood.name,
     currentCount, 
     clientFood.brand, 
-    clientFood.nutrients.calories.toInt(),
+    clientFood.nutrients.calories.roundTo(0),
     clientFood.nutrients.carbs.roundTo(0),
     clientFood.nutrients.fat.roundTo(0),
     clientFood.nutrients.protein.roundTo(0));
