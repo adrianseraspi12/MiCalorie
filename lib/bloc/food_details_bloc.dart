@@ -57,42 +57,7 @@ class FoodDetailsBloc implements Bloc {
     }
   }
 
-  Map<NutrientDataType ,Map<String, double>> getNutrientPercentage() {
-    final carbs = _clientFood.nutrients.carbs.roundTo(0) * 4;
-    final fat = _clientFood.nutrients.fat.roundTo(0) * 9;
-    final protein = _clientFood.nutrients.protein.roundTo(0) * 4;
-    final totalNutrient = carbs + fat + protein;
-
-    final carbPercentage = (carbs / totalNutrient) * 100;
-    final fatPercentage = (fat / totalNutrient) * 100;
-    final proteinPercentage = (protein / totalNutrient) * 100;
-
-    Map<String, double> calorieData = Map();
-    calorieData.putIfAbsent('Carbs', () => carbPercentage);
-    calorieData.putIfAbsent('Fat', () => fatPercentage);
-    calorieData.putIfAbsent('Protein', () => proteinPercentage);
-
-    Map<String, double> carbsData = Map();
-    carbsData.putIfAbsent('Carbs', () => carbPercentage);
-    carbsData.putIfAbsent('Other', () => (100 - carbPercentage));
-
-    Map<String, double> fatData = Map();
-    fatData.putIfAbsent('Fat', () => fatPercentage);
-    fatData.putIfAbsent('Other', () => (100 - fatPercentage));
-
-    Map<String, double> proteinData = Map();
-    proteinData.putIfAbsent('Protein', () => proteinPercentage);
-    proteinData.putIfAbsent('Other', () => (100 - proteinPercentage));
-
-    Map<NutrientDataType, Map<String, double>> fullNutrientsData = Map();
-    fullNutrientsData.putIfAbsent(NutrientDataType.CALORIES, () => calorieData);
-    fullNutrientsData.putIfAbsent(NutrientDataType.CARBS, () => carbsData);
-    fullNutrientsData.putIfAbsent(NutrientDataType.FAT, () => fatData);
-    fullNutrientsData.putIfAbsent(NutrientDataType.PROTEIN, () => proteinData);
-
-    return fullNutrientsData;
-  }
-
+  
   FoodDetailsCountResult _calculateTheFoodDetails(int count) {
     final newCalories = _clientFood.nutrients.calories.roundTo(0) * count;
     final newCarbs = _clientFood.nutrients.carbs.roundTo(0) * count;

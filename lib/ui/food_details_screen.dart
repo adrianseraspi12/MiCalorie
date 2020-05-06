@@ -3,6 +3,7 @@ import 'package:calorie_counter/data/api/model/client_food.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
 import 'package:calorie_counter/ui/widgets/circular_button.dart';
 import 'package:calorie_counter/ui/widgets/circular_view.dart';
+import 'package:calorie_counter/ui/widgets/nutrient_pie_chart_view.dart';
 import 'package:calorie_counter/ui/widgets/pie_chart_view.dart';
 import 'package:flutter/material.dart';
 import 'package:calorie_counter/util/extension/ext_number_rounding.dart';
@@ -73,11 +74,11 @@ class FoodDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildFoodDetails(BuildContext context, FoodDetailsBloc bloc) {
-    var fullNutrientsData = bloc.getNutrientPercentage();
-    final calorieColors = [Colors.green, Colors.red, Colors.blue];
-    final carbsColor =[Colors.green, Colors.transparent];
-    final fatColor =[Colors.red, Colors.transparent];
-    final proteinColor =[Colors.blue, Colors.transparent];
+    // var fullNutrientsData = bloc.getNutrientPercentage();
+    // final calorieColors = [Colors.green, Colors.red, Colors.blue];
+    // final carbsColor =[Colors.green, Colors.transparent];
+    // final fatColor =[Colors.red, Colors.transparent];
+    // final proteinColor =[Colors.blue, Colors.transparent];
 
 
     final height = MediaQuery.of(context).size.height;
@@ -166,183 +167,11 @@ class FoodDetailsScreen extends StatelessWidget {
                   )
                 ),
 
-                SizedBox(
-                  height: height * 0.35,
-                  child: Container(
-                    margin: EdgeInsets.only(top: 16.0),
-                    child: PieChartView(
-                      listOfColor: calorieColors,
-                      data: fullNutrientsData[NutrientDataType.CALORIES],
-                      child: CircularView(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              '$calories',
-                              style: TextStyle(
-                                fontFamily: 'Roboto',
-                                fontSize: 48,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            Text(
-                              'Calories',
-                              style: TextStyle(
-                                fontFamily: 'Roboto',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                          ]
-                        ),
-                      )
-                    ),
-                  ),
-                ),
-
-                SizedBox(
-                  height: height * 0.25,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 8.0),  
-                                child: PieChartView(
-                                  listOfColor: carbsColor,
-                                  data: fullNutrientsData[NutrientDataType.CARBS],
-                                  child: CircularView(
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: FittedBox(
-                                        child: Container(
-                                          margin: EdgeInsets.all(4.0),
-                                          child: Text(
-                                            '${carbs}g',
-                                            style: TextStyle(
-                                              fontFamily: 'Roboto',
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    )
-                                  ),
-                                ),
-                              ),
-
-                              Container(
-                                margin: EdgeInsetsDirectional.only(top: 16.0),
-                                child: Text(
-                                  'Carbs',
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                  )
-                                ),
-                              )
-                            ]
-                          )
-                        ),
-
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 8.0),  
-                                child: PieChartView(
-                                  listOfColor: fatColor,
-                                  data: fullNutrientsData[NutrientDataType.FAT],
-                                  child: CircularView(
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: FittedBox(
-                                        child: Container(
-                                          margin: EdgeInsets.all(4.0),                                          
-                                          child: Text(
-                                            '${fat}g',
-                                            style: TextStyle(
-                                              fontFamily: 'Roboto',
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    )
-                                  ),
-                                ),
-                              ),
-
-                              Container(
-                                margin: EdgeInsetsDirectional.only(top: 16.0),
-                                child: Text(
-                                  'Fat',
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                  )
-                                ),
-                              )
-                            ]
-                          )
-                        ),
-
-                        Expanded(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 8.0),  
-                                child: PieChartView(
-                                  listOfColor: proteinColor,
-                                  data: fullNutrientsData[NutrientDataType.PROTEIN],
-                                  child: CircularView(
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: FittedBox(
-                                        child: Container(
-                                          margin: EdgeInsets.all(4.0),
-                                          child: Text(
-                                            '${protein}g',
-                                            style: TextStyle(
-                                              fontFamily: 'Roboto',
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                        ),
-                                      )
-                                    )
-                                  ),
-                                ),
-                              ),
-
-                              Container(
-                                margin: EdgeInsets.only(top: 16.0),
-                                child: Text(
-                                  'Protein',
-                                  style: TextStyle(
-                                    fontFamily: 'Roboto',
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w700,
-                                  )
-                                ),
-                              )
-                            ]
-                          )
-                        ),
-                      ],
-                    ),
-                  ),
+                NutrientPieChartView(
+                  calories: calories, 
+                  carbs: carbs,
+                  fat: fat,
+                  protein: protein,
                 ),
 
                 SizedBox(
