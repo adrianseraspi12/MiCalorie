@@ -4,6 +4,7 @@ import 'package:calorie_counter/data/local/entity/food.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
 import 'package:calorie_counter/ui/search_food_screen.dart';
 import 'package:calorie_counter/ui/widgets/circular_button.dart';
+import 'package:calorie_counter/ui/widgets/modal.dart';
 import 'package:calorie_counter/util/constant/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:calorie_counter/util/extension/ext_meal_type_description.dart';
@@ -19,6 +20,7 @@ class MealFoodListScreen extends StatefulWidget {
 }
 
 class _MealFoodListScreenState extends State<MealFoodListScreen> {
+  final modal = Modal();
 
   @override
   Widget build(BuildContext context) {
@@ -29,29 +31,6 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
       bloc: bloc,
       child: Scaffold(
         backgroundColor: Color.fromRGBO(193,214,233, 1),
-        // appBar: AppBar(
-        //   leading: IconButton(
-        //     icon: Icon(Icons.chevron_left), 
-        //     onPressed: () {
-        //       Navigator.pop(context, this.widget.mealNutrients.date);
-        //     }),
-        //   title: Text('${widget.mealNutrients.type.description()} Food List'),
-        //   actions: <Widget>[
-        //     IconButton(
-        //       icon: Icon(Icons.add),
-        //       color: Colors.white ,
-        //       onPressed: () {
-        //         Navigator.of(context).push(
-        //           MaterialPageRoute(
-        //             builder: (context) => SearchFoodScreen(widget.mealNutrients),
-        //             settings: RouteSettings(name: Routes.searchFoodScreen)
-        //           )
-        //         ).then((v) {
-        //             _retainData(context, bloc);
-        //         });
-        //       })
-        //   ],
-        // ),
         body: _buildMealFoodListScreen(context, bloc),
       ),
     );
@@ -140,11 +119,20 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
             itemBuilder: (context, index) {
 
               final food = listOfFood[index];
-
               return NeumorphicButton(
                 margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 onClick: () {
+                  final icons = [Icons.fastfood, Icons.delete];
+                  final titles = ['View food', 'Remove food'];
+                  final actions = [
+                    () {
 
+                    }, 
+                    () {
+                      bloc.tempRemoveFood(food);
+                    }
+                  ];
+                  modal.bottomSheet(context, icons, titles, actions);
                 },              
                 style: NeumorphicStyle(
                   depth: 2,

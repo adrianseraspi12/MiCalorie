@@ -10,6 +10,8 @@ class MealFoodListBloc implements Bloc {
   final _foodListController = PublishSubject<List<Food>>();
   Stream<List<Food>> get foodListStream => _foodListController.stream;
   final int mealId;
+  List<Food> listOfFood;
+  Food tempFood;
 
   FoodRepository _foodRepository;
 
@@ -22,8 +24,23 @@ class MealFoodListBloc implements Bloc {
   }
 
   void setupFoodList() async {
-    final listOfFood = await _foodRepository.findAllDataWith(mealId);
+    listOfFood = await _foodRepository.findAllDataWith(mealId);
+
+    if (tempRemoveFood != null) {
+      listOfFood.remove(tempRemoveFood);
+    }
+
     _foodListController.sink.add(listOfFood);
+  }
+
+  void tempRemoveFood(Food food) {
+    this.tempFood = food;
+    listOfFood.remove(food);
+    _foodListController.sink.add(listOfFood);
+  }
+
+  void removeFood() {
+
   }
 
   @override
