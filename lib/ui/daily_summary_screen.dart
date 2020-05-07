@@ -1,10 +1,7 @@
 import 'package:calorie_counter/bloc/bloc_provider.dart';
 import 'package:calorie_counter/bloc/daily_summary_bloc.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
-import 'package:calorie_counter/data/local/entity/total_nutrients_per_day.dart';
-import 'package:calorie_counter/ui/widgets/circular_view.dart';
 import 'package:calorie_counter/ui/widgets/nutrient_pie_chart_view.dart';
-import 'package:calorie_counter/ui/widgets/pie_chart_view.dart';
 import 'package:calorie_counter/util/extension/ext_meal_type_description.dart';
 import 'package:calorie_counter/ui/meal_food_list_screen.dart';
 import 'package:calorie_counter/util/constant/routes.dart';
