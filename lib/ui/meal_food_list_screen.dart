@@ -21,6 +21,7 @@ class MealFoodListScreen extends StatefulWidget {
 
 class _MealFoodListScreenState extends State<MealFoodListScreen> {
   final modal = Modal();
+  SnackBar snackbar;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,8 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
       bloc: bloc,
       child: Scaffold(
         backgroundColor: Color.fromRGBO(193,214,233, 1),
-        body: _buildMealFoodListScreen(context, bloc),
+        body: Builder(
+          builder: (rootContext) => _buildMealFoodListScreen(rootContext, bloc),)
       ),
     );
   }
@@ -42,7 +44,7 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
         children: <Widget> [
           _buildAppbar(context, bloc),
           Expanded(
-            child: _buildResult(bloc)
+            child: _buildResult(context, bloc)
           )
         ]
       )
@@ -62,7 +64,10 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
         children: <Widget>[
           CircularButton(
             icon: Icon(Icons.chevron_left),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () { 
+              _removeSnackbar(context);
+              Navigator.pop(context);
+             },
           ),
 
           Expanded(
@@ -87,6 +92,7 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
           CircularButton(
             icon: Icon(Icons.add),
             onPressed: () {
+              _removeSnackbar(context);
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => SearchFoodScreen(widget.mealNutrients),
@@ -103,7 +109,7 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
     );
   }
 
-  Widget _buildResult(MealFoodListBloc bloc) {
+  Widget _buildResult(BuildContext rootContext, MealFoodListBloc bloc) {
     return StreamBuilder<List<Food>>(
       stream: bloc.foodListStream,
       builder: (context, snapshot) {
@@ -129,10 +135,10 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
 
                     }, 
                     () {
-                      bloc.tempRemoveFood(food);
+                      _showSnackbar(rootContext, bloc, food, index);
                     }
                   ];
-                  modal.bottomSheet(context, icons, titles, actions);
+                  modal.bottomSheet(rootContext, icons, titles, actions);
                 },              
                 style: NeumorphicStyle(
                   depth: 2,
@@ -157,6 +163,42 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
 
   void _setupRepository(MealFoodListBloc bloc) async {
     bloc.setupRepository();
+  }
+
+  void _showSnackbar(BuildContext context, MealFoodListBloc bloc, Food food, int index) {
+    _removeSnackbar(context);
+
+    snackbar = SnackBar(
+      content: Text('Food removed'),
+      action: SnackBarAction(
+        label: 'Undo', 
+        onPressed: () {
+          bloc.retainFoodList(index, food);
+        }
+      ),
+    );
+
+    Scaffold.of(context).showSnackBar(snackbar)
+      .closed
+      .then((reason) {
+        if (reason == SnackBarClosedReason.dismiss ||
+            reason == SnackBarClosedReason.hide ||
+            reason == SnackBarClosedReason.remove ||
+            reason == SnackBarClosedReason.swipe ||
+            reason == SnackBarClosedReason.timeout) {
+
+          bloc.removeFood(food);
+        }
+      }
+    );
+
+    bloc.tempRemoveFood(food);
+  }
+
+  void _removeSnackbar(BuildContext context) {
+    if (snackbar != null) {
+      Scaffold.of(context).removeCurrentSnackBar();
+    }
   }
 
   void _retainData(BuildContext context, MealFoodListBloc bloc) {

@@ -25,22 +25,21 @@ class MealFoodListBloc implements Bloc {
 
   void setupFoodList() async {
     listOfFood = await _foodRepository.findAllDataWith(mealId);
+    _foodListController.sink.add(listOfFood);
+  }
 
-    if (tempRemoveFood != null) {
-      listOfFood.remove(tempRemoveFood);
-    }
-
+  void retainFoodList(int index, Food food) {
+    listOfFood.insert(index, food);
     _foodListController.sink.add(listOfFood);
   }
 
   void tempRemoveFood(Food food) {
-    this.tempFood = food;
     listOfFood.remove(food);
     _foodListController.sink.add(listOfFood);
   }
 
-  void removeFood() {
-
+  void removeFood(Food food) {
+    _foodRepository.remove(food);
   }
 
   @override
