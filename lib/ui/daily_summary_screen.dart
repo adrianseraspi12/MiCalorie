@@ -151,15 +151,12 @@ class _DailySummaryScreenState extends State<DailySummaryScreen> {
 
         final dailySummaryResult = snapshot.data;
 
-        final calories = dailySummaryResult.totalNutrientsPerDay.calories;
-        final carbs = dailySummaryResult.totalNutrientsPerDay.carbs;
-        final fat = dailySummaryResult.totalNutrientsPerDay.fat;
-        final protein = dailySummaryResult.totalNutrientsPerDay.protein;
+        if (dailySummaryResult != null) {
+          final calories = dailySummaryResult.totalNutrientsPerDay.calories;
+          final carbs = dailySummaryResult.totalNutrientsPerDay.carbs;
+          final fat = dailySummaryResult.totalNutrientsPerDay.fat;
+          final protein = dailySummaryResult.totalNutrientsPerDay.protein;
 
-        if (dailySummaryResult == null) {
-          return Center(child: Text('DATA UNAVAILABLE'));
-        }
-        else {
           return ListView.builder(
             itemCount: dailySummaryResult.mealNutrients.length + 2,
             itemBuilder: (context, index) {
@@ -187,7 +184,11 @@ class _DailySummaryScreenState extends State<DailySummaryScreen> {
                 child: _buildMealSummary(context, bloc, mealNutrients)
               );
 
-            });
+            }
+          );
+        }        
+        else {
+          return Container();
         }
 
       });
