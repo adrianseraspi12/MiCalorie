@@ -185,6 +185,14 @@ class _$TotalNutrientsPerDayDao extends TotalNutrientsPerDayDao {
   }
 
   @override
+  Future<TotalNutrientsPerDay> findTotalNutrientsById(int id) async {
+    return _queryAdapter.query(
+        'SELECT * FROM total_nutrients_per_day WHERE id = ?',
+        arguments: <dynamic>[id],
+        mapper: _total_nutrients_per_dayMapper);
+  }
+
+  @override
   Future<List<TotalNutrientsPerDay>> getAllNutrients() async {
     return _queryAdapter.queryList('SELECT * FROM total_nutrients_per_day',
         mapper: _total_nutrients_per_dayMapper);

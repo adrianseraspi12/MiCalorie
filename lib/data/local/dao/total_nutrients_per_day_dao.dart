@@ -8,6 +8,9 @@ abstract class TotalNutrientsPerDayDao {
   @Query('SELECT * FROM total_nutrients_per_day WHERE date = :date')
   Future<TotalNutrientsPerDay> findTotalNutrientsByDate(String date);
 
+  @Query('SELECT * FROM total_nutrients_per_day WHERE id = :id')
+  Future<TotalNutrientsPerDay> findTotalNutrientsById(int id);
+
   @Query('SELECT * FROM total_nutrients_per_day')
   Future<List<TotalNutrientsPerDay>> getAllNutrients();
 

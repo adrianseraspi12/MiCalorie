@@ -17,6 +17,10 @@ class TotalNutrientsPerDayRepository implements Repository<TotalNutrientsPerDay>
     return _totalNutrientsPerDayDao.findTotalNutrientsByDate(itemId.toString());
   }
 
+  Future<TotalNutrientsPerDay> getTotalNutrientsById(int id) {
+    return _totalNutrientsPerDayDao.findTotalNutrientsById(id);
+  }
+
   @override
   void remove(TotalNutrientsPerDay data) async {
     await _totalNutrientsPerDayDao.deleteTotalNutrients(data);
