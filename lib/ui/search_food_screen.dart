@@ -1,4 +1,4 @@
-import 'package:calorie_counter/data/api/model/client_food.dart';
+import 'package:calorie_counter/data/local/entity/food.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
 import 'package:calorie_counter/ui/widgets/circular_button.dart';
 import 'package:calorie_counter/util/constant/routes.dart';
@@ -9,6 +9,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
+import 'package:calorie_counter/util/extension/ext_number_rounding.dart';
 
 import 'food_details_screen.dart';
 
@@ -212,10 +213,15 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
             return NeumorphicButton(
               margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               onClick: () {
-                final food = ClientFood(name: commonFood.details.name,
-                                  numberOfServings: 1,
-                                  brand: brandName,
-                                  nutrients: commonFood.details.nutrients);
+                final food = Food(-1, 
+                  widget.mealNutrients.id,
+                  commonFood.details.name, 
+                  1, 
+                  brandName, 
+                  commonFood.details.nutrients.calories.roundTo(0), 
+                  commonFood.details.nutrients.carbs.roundTo(0), 
+                  commonFood.details.nutrients.fat.roundTo(0), 
+                  commonFood.details.nutrients.protein.roundTo(0));
                 
                 Navigator.of(context).push(
                   MaterialPageRoute(

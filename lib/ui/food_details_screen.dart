@@ -1,17 +1,14 @@
 import 'package:calorie_counter/bloc/food_details_bloc.dart';
-import 'package:calorie_counter/data/api/model/client_food.dart';
+import 'package:calorie_counter/data/local/entity/food.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
 import 'package:calorie_counter/ui/widgets/circular_button.dart';
-import 'package:calorie_counter/ui/widgets/circular_view.dart';
 import 'package:calorie_counter/ui/widgets/nutrient_pie_chart_view.dart';
-import 'package:calorie_counter/ui/widgets/pie_chart_view.dart';
 import 'package:flutter/material.dart';
-import 'package:calorie_counter/util/extension/ext_number_rounding.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class FoodDetailsScreen extends StatelessWidget {
-  final ClientFood food;
+  final Food food;
   final MealNutrients _mealNutrients;
 
   FoodDetailsScreen(this.food, this._mealNutrients);
@@ -28,7 +25,7 @@ class FoodDetailsScreen extends StatelessWidget {
   }
 
   void _onAddFoodClick(BuildContext context, FoodDetailsBloc bloc) async {
-    bloc.addFood(_mealNutrients, food);
+    bloc.addFood(_mealNutrients);
   }
 
   void _setupRepository(FoodDetailsBloc bloc) async {
@@ -95,10 +92,10 @@ class FoodDetailsScreen extends StatelessWidget {
         var count;
 
         if (result == null) {
-          calories = food.nutrients.calories.roundTo(0);
-          carbs = food.nutrients.carbs.roundTo(0);
-          fat = food.nutrients.fat.roundTo(0);
-          protein = food.nutrients.protein.roundTo(0);
+          calories = food.calories;
+          carbs = food.carbs;
+          fat = food.fat;
+          protein = food.protein;
           count = 1;
         }
         else {
@@ -154,7 +151,7 @@ class FoodDetailsScreen extends StatelessWidget {
                         child: FittedBox(
                           fit: BoxFit.contain,
                           child: Text(
-                            food.brand,
+                            food.brandName,
                             style: TextStyle(
                               fontFamily: 'Roboto',
                               fontSize: 16,

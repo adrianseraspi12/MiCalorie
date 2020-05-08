@@ -1,4 +1,5 @@
-import 'package:calorie_counter/data/api/model/client_food.dart';
+import 'dart:math';
+
 import 'package:calorie_counter/data/local/app_database.dart';
 import 'package:calorie_counter/data/local/entity/food.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
@@ -6,17 +7,16 @@ import 'package:calorie_counter/data/local/entity/total_nutrients_per_day.dart';
 import 'package:calorie_counter/data/local/repository/food_repository.dart';
 import 'package:calorie_counter/data/local/repository/meal_nutrients_repository.dart';
 import 'package:calorie_counter/data/local/repository/total_nutrients_per_day_repository.dart';
-import 'package:calorie_counter/util/extension/ext_number_rounding.dart';
 import 'package:rxdart/subjects.dart';
 
 import 'bloc.dart';
 
 class FoodDetailsBloc implements Bloc {
 
-  final ClientFood _clientFood;
+  final Food _food;
   var currentCount = 1;
   
-  FoodDetailsBloc(this._clientFood);
+  FoodDetailsBloc(this._food);
 
   final _mealNutrientsController = PublishSubject<MealNutrients>();
   final _foodDetailsCountController = PublishSubject<FoodDetailsCountResult>();
@@ -35,8 +35,8 @@ class FoodDetailsBloc implements Bloc {
     _totalNutrientsPerDayRepository = TotalNutrientsPerDayRepository(database.totalNutrientsPerDayDao);
   }
 
-  void addFood(MealNutrients mealSummary, ClientFood food) async {
-    _updateTotalNutrientsAndMeal(mealSummary, food);
+  void addFood(MealNutrients mealSummary) async {
+    _updateTotalNutrientsAndMeal(mealSummary);
   }
     
   void increment() {
@@ -59,10 +59,10 @@ class FoodDetailsBloc implements Bloc {
 
   
   FoodDetailsCountResult _calculateTheFoodDetails(int count) {
-    final newCalories = _clientFood.nutrients.calories.roundTo(0) * count;
-    final newCarbs = _clientFood.nutrients.carbs.roundTo(0) * count;
-    final newFat = _clientFood.nutrients.fat.roundTo(0) * count;
-    final newProtein = _clientFood.nutrients.protein.roundTo(0) * count;     
+    final newCalories = _food.calories * count;
+    final newCarbs = _food.carbs * count;
+    final newFat = _food.fat * count;
+    final newProtein = _food.protein * count;     
 
     return FoodDetailsCountResult(
       newCalories, 
@@ -73,7 +73,7 @@ class FoodDetailsBloc implements Bloc {
     );
   }
 
-  void _updateTotalNutrientsAndMeal(MealNutrients mealNutrients, ClientFood food) async {
+  void _updateTotalNutrientsAndMeal(MealNutrients mealNutrients) async {
     final foodDetailsCountResult = _calculateTheFoodDetails(currentCount);
     var totalNutrientsPerDay = await _totalNutrientsPerDayRepository.getTotalNutrientsByDate(mealNutrients.date);
     var totalNutrientsId;
@@ -109,10 +109,10 @@ class FoodDetailsBloc implements Bloc {
       _totalNutrientsPerDayRepository.upsert(newTotalNutrientsPerDay);
     }
 
-    _updateMeal(totalNutrientsId, mealNutrients, food);
+    _updateMeal(totalNutrientsId, mealNutrients);
   }
 
-  void _updateMeal(int totalNutrientsPerDayId, MealNutrients mealNutrients, ClientFood food) async {
+  void _updateMeal(int totalNutrientsPerDayId, MealNutrients mealNutrients) async {
     final currentMealNutrients = await _mealNutrientsRepository.getMeal(mealNutrients.id);
     final foodDetailsCountResult = _calculateTheFoodDetails(currentCount);
 
@@ -131,7 +131,7 @@ class FoodDetailsBloc implements Bloc {
         date: mealNutrients.date);
 
       _mealNutrientsRepository.upsert(newMealNutrients);
-      _insertFood(newMealNutrients, food);
+      _insertFood(newMealNutrients);
     }
     else {
       final newCalories = currentMealNutrients.calories + foodDetailsCountResult.calories;
@@ -150,26 +150,46 @@ class FoodDetailsBloc implements Bloc {
         date: mealNutrients.date);
 
       _mealNutrientsRepository.upsert(updateMealNutrients);
-      _insertFood(updateMealNutrients, food);
+      _insertFood(updateMealNutrients);
     }
 
   }
 
-  void _insertFood(MealNutrients mealNutrients, ClientFood clientFood) async {
-    final foodId = await _foodRepository.getAllFoodCount();
-    final currentFoodId = foodId + 1;
+  void _insertFood(MealNutrients mealNutrients) async {
+    final currentFood = await _foodRepository.getFoodById(_food.id);
 
-    final food = Food(currentFoodId,
-    mealNutrients.id, 
-    clientFood.name,
-    currentCount, 
-    clientFood.brand, 
-    clientFood.nutrients.calories.roundTo(0),
-    clientFood.nutrients.carbs.roundTo(0),
-    clientFood.nutrients.fat.roundTo(0),
-    clientFood.nutrients.protein.roundTo(0));
+    if (currentFood == null) {
+      var rng = new Random();
+      var generatedId = rng.nextInt(900000) + 100000;
 
-    _foodRepository.upsert(food);
+      final food = Food(
+        generatedId,
+        mealNutrients.id, 
+        _food.name,
+        currentCount, 
+        _food.brandName, 
+        _food.calories,
+        _food.carbs,
+        _food.fat,
+        _food.protein);
+      
+      _foodRepository.upsert(food);
+    }
+    else {
+      final food = Food(
+        currentFood.id,
+        mealNutrients.id, 
+        _food.name,
+        currentCount, 
+        _food.brandName, 
+        _food.calories,
+        _food.carbs,
+        _food.fat,
+        _food.protein);
+      
+      _foodRepository.upsert(food);
+    }
+
     _mealNutrientsController.sink.add(mealNutrients);
   }
 
