@@ -18,6 +18,10 @@ class FoodRepository implements Repository<Food> {
     return _foodDao.findAllFoodByMealId(id);
   }
 
+  Future<Food> getFoodById(int id) {
+    return _foodDao.findFoodById(id);
+  }
+
   @override
   void remove(Food data) {
     _foodDao.deleteFood(data);

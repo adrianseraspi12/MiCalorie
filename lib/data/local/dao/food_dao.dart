@@ -10,6 +10,9 @@ abstract class FoodDao {
   @Query('SELECT * FROM food')
   Future<List<Food>> getAllFood();
 
+  @Query('SELECT * FROM food WHERE id = :id')
+  Future<Food> findFoodById(int id);
+
   @Insert(onConflict: OnConflictStrategy.IGNORE)
   Future<int> insertFood(Food food);
 

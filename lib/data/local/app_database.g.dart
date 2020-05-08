@@ -395,6 +395,12 @@ class _$FoodDao extends FoodDao {
   }
 
   @override
+  Future<Food> findFoodById(int id) async {
+    return _queryAdapter.query('SELECT * FROM food WHERE id = ?',
+        arguments: <dynamic>[id], mapper: _foodMapper);
+  }
+
+  @override
   Future<int> insertFood(Food food) {
     return _foodInsertionAdapter.insertAndReturnId(
         food, sqflite.ConflictAlgorithm.ignore);
