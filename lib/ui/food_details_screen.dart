@@ -71,13 +71,6 @@ class FoodDetailsScreen extends StatelessWidget {
   }
 
   Widget _buildFoodDetails(BuildContext context, FoodDetailsBloc bloc) {
-    // var fullNutrientsData = bloc.getNutrientPercentage();
-    // final calorieColors = [Colors.green, Colors.red, Colors.blue];
-    // final carbsColor =[Colors.green, Colors.transparent];
-    // final fatColor =[Colors.red, Colors.transparent];
-    // final proteinColor =[Colors.blue, Colors.transparent];
-
-
     final height = MediaQuery.of(context).size.height;
 
     return StreamBuilder<FoodDetailsCountResult>(
