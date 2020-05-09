@@ -31,7 +31,7 @@ class FoodRepository implements Repository<Food> {
   void upsert(Food data) async {
     final id = await _foodDao.insertFood(data);
 
-    if (id == -1) {
+    if (id == -1 || id == null) {
       await _foodDao.updateFood(data);
     }
   }
