@@ -28,7 +28,7 @@ class FoodRepository implements Repository<Food> {
   }
 
   @override
-  void upsert(Food data) async {
+  Future<void> upsert(Food data) async {
     final id = await _foodDao.insertFood(data);
 
     if (id == -1 || id == null) {
