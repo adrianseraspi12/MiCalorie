@@ -9,6 +9,7 @@ import 'package:calorie_counter/util/constant/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:calorie_counter/util/extension/ext_meal_type_description.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_svg/svg.dart';
 
 class MealFoodListScreen extends StatefulWidget {
 
@@ -117,7 +118,26 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
         final listOfFood = snapshot.data;
 
         if (listOfFood == null || listOfFood.length == 0) {
-          return Center(child: Text('NO FOODS'),);
+          final assetName = 'assets/images/signs.svg';
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(bottom: 16.0),
+                  child: _loadSVGImage(assetName, 100, 100)
+                ),
+                Text(
+                  'No saved foods',
+                  style: TextStyle(
+                    fontFamily: 'Roboto',
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                )
+              ],
+            ),
+          );
         }
         else {
           return ListView.builder(
@@ -211,4 +231,15 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
     }
     
    }
+
+     Widget _loadSVGImage(String assetName, int height, int width) {
+    return SizedBox(
+      height: 100,
+      width: 100,
+      child: SvgPicture.asset(
+        assetName,
+      ),
+    );
+  }
+  
 }
