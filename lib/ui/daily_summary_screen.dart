@@ -16,6 +16,7 @@ class DailySummaryScreen extends StatefulWidget {
 
 class _DailySummaryScreenState extends State<DailySummaryScreen> {
   DateTime selectedDate = DateTime.now();
+  String selectedDateString;
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +41,15 @@ class _DailySummaryScreenState extends State<DailySummaryScreen> {
       stream: bloc.dateTimeStream,
       builder: (context, snapshot) {
 
-        var date = snapshot.data;
+        final dateString = snapshot.data;
 
-        if (date == null) {
-          date = 'Today';
+        if (dateString == null) {
+          if (selectedDateString == null) {
+            selectedDateString = 'Today';
+          }
+        }
+        else {
+          selectedDateString = dateString;
         }
 
         return Container(
@@ -96,7 +102,7 @@ class _DailySummaryScreenState extends State<DailySummaryScreen> {
                           margin: EdgeInsets.symmetric(horizontal: 8.0),
                           child: FittedBox(
                             child: Text(
-                              '$date',
+                              '$selectedDateString',
                               style: TextStyle(
                                 fontFamily: 'Roboto',
                                 fontSize: 16,
