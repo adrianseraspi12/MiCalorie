@@ -96,22 +96,72 @@ class FoodDetailsBloc implements Bloc {
     else {
       totalNutrientsId = totalNutrientsPerDay.id;
 
-      var newCalories = totalNutrientsPerDay.calories + foodDetailsCountResult.calories;
-      var newCarbs = totalNutrientsPerDay.carbs + foodDetailsCountResult.carbs;
-      var newFat = totalNutrientsPerDay.fat + foodDetailsCountResult.fat;
-      var newProtein = totalNutrientsPerDay.protein + foodDetailsCountResult.protein;
+      if (_food.id == -1) {
+        // New Food
+        final newCalories = totalNutrientsPerDay.calories + foodDetailsCountResult.calories;
+        final newCarbs = totalNutrientsPerDay.carbs + foodDetailsCountResult.carbs;
+        final newFat = totalNutrientsPerDay.fat + foodDetailsCountResult.fat;
+        final newProtein = totalNutrientsPerDay.protein + foodDetailsCountResult.protein;
+      
+        final updateTotalNutrients = TotalNutrientsPerDay(
+          mealNutrients.totalNutrientsPerDayId,
+          mealNutrients.date, 
+          newCalories,
+          newCarbs,
+          newFat,
+          newProtein
+        );
 
-      final newTotalNutrientsPerDay = TotalNutrientsPerDay(
-        totalNutrientsPerDay.id, 
-        totalNutrientsPerDay.date, 
-        newCalories,
-        newCarbs, 
-        newFat, 
-        newProtein);
+          _totalNutrientsPerDayRepository.upsert(updateTotalNutrients);
+      }
+      else {
+        // Old Food
 
-      _totalNutrientsPerDayRepository.upsert(newTotalNutrientsPerDay);
+        if (currentCount > _food.numOfServings) {
+          // Add
+          final newCount = currentCount - _food.numOfServings;
+          final oldFoodDetailsCountResult = _calculateTheFoodDetails(newCount);
+          
+          final newCalories = totalNutrientsPerDay.calories + oldFoodDetailsCountResult.calories;
+          final newCarbs = totalNutrientsPerDay.carbs + oldFoodDetailsCountResult.carbs;
+          final newFat = totalNutrientsPerDay.fat + oldFoodDetailsCountResult.fat;
+          final newProtein = totalNutrientsPerDay.protein + oldFoodDetailsCountResult.protein;
+
+          final newTotalNutrientsPerDay = TotalNutrientsPerDay(
+            totalNutrientsPerDay.id, 
+            totalNutrientsPerDay.date, 
+            newCalories,
+            newCarbs, 
+            newFat, 
+            newProtein
+          );
+
+          _totalNutrientsPerDayRepository.upsert(newTotalNutrientsPerDay);
+        }
+        else if (currentCount < _food.numOfServings) {
+          //  Subtract
+          final newCount = _food.numOfServings - currentCount;
+          final oldFoodDetailsCountResult = _calculateTheFoodDetails(newCount);
+
+          final newCalories = totalNutrientsPerDay.calories - oldFoodDetailsCountResult.calories;
+          final newCarbs = totalNutrientsPerDay.carbs - oldFoodDetailsCountResult.carbs;
+          final newFat = totalNutrientsPerDay.fat - oldFoodDetailsCountResult.fat;
+          final newProtein = totalNutrientsPerDay.protein - oldFoodDetailsCountResult.protein;
+
+          final newTotalNutrientsPerDay = TotalNutrientsPerDay(
+            totalNutrientsPerDay.id, 
+            totalNutrientsPerDay.date, 
+            newCalories,
+            newCarbs, 
+            newFat, 
+            newProtein
+          );
+
+          _totalNutrientsPerDayRepository.upsert(newTotalNutrientsPerDay);
+        }
+      }
     }
-
+    
     _updateMeal(totalNutrientsId, mealNutrients);
   }
 
@@ -137,35 +187,92 @@ class FoodDetailsBloc implements Bloc {
       _insertFood(newMealNutrients);
     }
     else {
-      final newCalories = currentMealNutrients.calories + foodDetailsCountResult.calories;
-      final newCarbs = currentMealNutrients.carbs + foodDetailsCountResult.carbs;
-      final newFat = currentMealNutrients.fat + foodDetailsCountResult.fat;
-      final newProtein = currentMealNutrients.protein + foodDetailsCountResult.protein;
-    
-      final updateMealNutrients = MealNutrients(
-        currentMealNutrients.id, 
-        newCalories, 
-        newCarbs, 
-        newFat, 
-        newProtein, 
-        currentMealNutrients.type, 
-        totalNutrientsPerDayId,
-        date: mealNutrients.date);
 
-      _mealNutrientsRepository.upsert(updateMealNutrients);
-      _insertFood(updateMealNutrients);
+      if (_food.id == -1) {
+        // New Food
+        final newCalories = currentMealNutrients.calories + foodDetailsCountResult.calories;
+        final newCarbs = currentMealNutrients.carbs + foodDetailsCountResult.carbs;
+        final newFat = currentMealNutrients.fat + foodDetailsCountResult.fat;
+        final newProtein = currentMealNutrients.protein + foodDetailsCountResult.protein;
+      
+        final updateMealNutrients = MealNutrients(
+          currentMealNutrients.id, 
+          newCalories, 
+          newCarbs, 
+          newFat, 
+          newProtein, 
+          currentMealNutrients.type, 
+          totalNutrientsPerDayId,
+          date: mealNutrients.date);
+
+        _mealNutrientsRepository.upsert(updateMealNutrients);
+        _insertFood(updateMealNutrients);
+      }
+      else {
+        // Old Food
+        
+        if (currentCount > _food.numOfServings) {
+          // Add
+          final newCount = currentCount - _food.numOfServings;
+          final oldFoodDetailsCountResult = _calculateTheFoodDetails(newCount);
+
+          final newCalories = currentMealNutrients.calories + oldFoodDetailsCountResult.calories;
+          final newCarbs = currentMealNutrients.carbs + oldFoodDetailsCountResult.carbs;
+          final newFat = currentMealNutrients.fat + oldFoodDetailsCountResult.fat;
+          final newProtein = currentMealNutrients.protein + oldFoodDetailsCountResult.protein;
+
+          final updateMealNutrients = MealNutrients(
+            currentMealNutrients.id, 
+            newCalories, 
+            newCarbs, 
+            newFat, 
+            newProtein, 
+            currentMealNutrients.type, 
+            totalNutrientsPerDayId,
+            date: mealNutrients.date);
+
+          _mealNutrientsRepository.upsert(updateMealNutrients);
+          _insertFood(updateMealNutrients);
+        }
+        else if (currentCount < _food.numOfServings) {
+          //  Subtract
+          final newCount = _food.numOfServings - currentCount;
+          final oldFoodDetailsCountResult = _calculateTheFoodDetails(newCount);
+
+          final newCalories = currentMealNutrients.calories - oldFoodDetailsCountResult.calories;
+          final newCarbs = currentMealNutrients.carbs - oldFoodDetailsCountResult.carbs;
+          final newFat = currentMealNutrients.fat - oldFoodDetailsCountResult.fat;
+          final newProtein = currentMealNutrients.protein - oldFoodDetailsCountResult.protein;
+
+          final updateMealNutrients = MealNutrients(
+            currentMealNutrients.id, 
+            newCalories, 
+            newCarbs, 
+            newFat, 
+            newProtein, 
+            currentMealNutrients.type, 
+            totalNutrientsPerDayId,
+            date: mealNutrients.date);
+
+          _mealNutrientsRepository.upsert(updateMealNutrients);
+          _insertFood(updateMealNutrients);
+        }
+
+      }
+      
     }
 
   }
 
   void _insertFood(MealNutrients mealNutrients) async {
     final currentFood = await _foodRepository.getFoodById(_food.id);
+    Food updateFood;
 
     if (currentFood == null) {
       var rng = new Random();
       var generatedId = rng.nextInt(900000) + 100000;
 
-      final food = Food(
+      updateFood = Food(
         generatedId,
         mealNutrients.id, 
         _food.name,
@@ -175,11 +282,9 @@ class FoodDetailsBloc implements Bloc {
         _food.carbs,
         _food.fat,
         _food.protein);
-      
-      _foodRepository.upsert(food);
     }
     else {
-      final food = Food(
+      updateFood = Food(
         currentFood.id,
         mealNutrients.id, 
         _food.name,
@@ -189,11 +294,11 @@ class FoodDetailsBloc implements Bloc {
         _food.carbs,
         _food.fat,
         _food.protein);
-      
-      _foodRepository.upsert(food);
     }
 
-    _mealNutrientsController.sink.add(mealNutrients);
+    await _foodRepository
+      .upsert(updateFood)
+      .then( (_) => _mealNutrientsController.sink.add(mealNutrients));
   }
 
   @override
@@ -201,15 +306,6 @@ class FoodDetailsBloc implements Bloc {
     _mealNutrientsController.close();
     _foodDetailsCountController.close();
   }
-
-}
-
-enum NutrientDataType {
-
-  CALORIES,
-  CARBS,
-  FAT,
-  PROTEIN
 
 }
 

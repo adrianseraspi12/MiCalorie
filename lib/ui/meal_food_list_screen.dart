@@ -154,7 +154,7 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
                   final titles = ['View food', 'Remove food'];
                   final actions = [
                     () {
-                      _showFoodDetails(context, food);
+                      _showFoodDetails(context, bloc, food);
                     }, 
                     () {
                       _showSnackbar(rootContext, bloc, food, index);
@@ -217,13 +217,15 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
     bloc.tempRemoveFood(food);
   }
 
-  void _showFoodDetails(BuildContext context, Food food) {
+  void _showFoodDetails(BuildContext context, MealFoodListBloc bloc, Food food) {
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (BuildContext context) => FoodDetailsScreen(food, widget.mealNutrients),
         settings: RouteSettings(name: Routes.foodDetailsScreen)
       )
-    );
+    ).then((val) {
+      _retainData(context, bloc);
+    });
 
   }
 
