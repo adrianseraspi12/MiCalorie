@@ -16,7 +16,9 @@ class FoodDetailsBloc implements Bloc {
   final Food _food;
   var currentCount = 1;
   
-  FoodDetailsBloc(this._food);
+  FoodDetailsBloc(this._food) {
+    currentCount = _food.numOfServings;
+  } 
 
   final _mealNutrientsController = PublishSubject<MealNutrients>();
   final _foodDetailsCountController = PublishSubject<FoodDetailsCountResult>();
@@ -38,6 +40,7 @@ class FoodDetailsBloc implements Bloc {
   void addFood(MealNutrients mealSummary) async {
     _updateTotalNutrientsAndMeal(mealSummary);
   }
+
     
   void increment() {
     currentCount += 1;

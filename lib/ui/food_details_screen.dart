@@ -85,11 +85,11 @@ class FoodDetailsScreen extends StatelessWidget {
         var count;
 
         if (result == null) {
-          calories = food.calories;
-          carbs = food.carbs;
-          fat = food.fat;
-          protein = food.protein;
-          count = 1;
+          count = food.numOfServings;
+          calories = food.calories * count;
+          carbs = food.carbs * count;
+          fat = food.fat * count;
+          protein = food.protein * count;
         }
         else {
           calories = result.calories;

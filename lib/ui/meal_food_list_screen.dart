@@ -11,6 +11,8 @@ import 'package:calorie_counter/util/extension/ext_meal_type_description.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/svg.dart';
 
+import 'food_details_screen.dart';
+
 class MealFoodListScreen extends StatefulWidget {
 
   MealNutrients mealNutrients;
@@ -152,7 +154,7 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
                   final titles = ['View food', 'Remove food'];
                   final actions = [
                     () {
-
+                      _showFoodDetails(context, food);
                     }, 
                     () {
                       _showSnackbar(rootContext, bloc, food, index);
@@ -213,6 +215,16 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
     );
 
     bloc.tempRemoveFood(food);
+  }
+
+  void _showFoodDetails(BuildContext context, Food food) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (BuildContext context) => FoodDetailsScreen(food, widget.mealNutrients),
+        settings: RouteSettings(name: Routes.foodDetailsScreen)
+      )
+    );
+
   }
 
   void _removeSnackbar(BuildContext context) {
