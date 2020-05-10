@@ -127,7 +127,7 @@ class NutrientPieChartView extends StatelessWidget {
     double nutrientPercentage,
     String title) {
 
-      if (calories > 0 && nutrientGram == 0) {
+      if (calories >= 0 && carbs == 0 && fat == 0 && protein == 0) {
         return Expanded(
           flex: 1,
           child: Container()
