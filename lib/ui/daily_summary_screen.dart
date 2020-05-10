@@ -8,13 +8,8 @@ import 'package:calorie_counter/util/constant/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
-class DailySummaryScreen extends StatefulWidget {
-  
-  @override
-  _DailySummaryScreenState createState() => _DailySummaryScreenState();
-}
+class DailySummaryScreen extends StatelessWidget {
 
-class _DailySummaryScreenState extends State<DailySummaryScreen> {
   DateTime selectedDate = DateTime.now();
   String selectedDateString;
 
@@ -34,6 +29,31 @@ class _DailySummaryScreenState extends State<DailySummaryScreen> {
 
   void _setupData(DailySummaryBloc bloc) async {
     bloc.setupRepository();
+  }
+
+  void _showMealFoodListScreen(BuildContext context, MealNutrients mealNutrients, DailySummaryBloc bloc) async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => MealFoodListScreen(mealNutrients),
+        settings: RouteSettings(name: Routes.mealFoodListScreen,
+                                arguments: Map())
+      )
+    ).then((val) {
+      bloc.changeTotalNutrients(val);
+    });
+  }
+
+  void _buildDatePicker(BuildContext context, DailySummaryBloc bloc) async {
+    final DateTime pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate, 
+      firstDate: DateTime(1920), 
+      lastDate: DateTime(2120));
+
+    if (pickedDate != null) {
+      selectedDate = pickedDate;
+      bloc.updateTimeAndTotalNutrients(pickedDate);
+    }
   }
 
   Widget _buildAppBarDate(BuildContext context, DailySummaryBloc bloc) {
@@ -134,20 +154,6 @@ class _DailySummaryScreenState extends State<DailySummaryScreen> {
         );
       }
     );
-  }
-
-  void _buildDatePicker(BuildContext context, DailySummaryBloc bloc) async {
-    final DateTime pickedDate = await showDatePicker(
-      context: context,
-      initialDate: selectedDate, 
-      firstDate: DateTime(1920), 
-      lastDate: DateTime(2120));
-
-    if (pickedDate != null) {
-      selectedDate = pickedDate;
-      bloc.updateTimeAndTotalNutrients(pickedDate);
-    }
-
   }
 
   Widget _buildResult(BuildContext context, DailySummaryBloc bloc) {
@@ -381,17 +387,6 @@ class _DailySummaryScreenState extends State<DailySummaryScreen> {
 
       ),
     );
-  }
-
-  void _showMealFoodListScreen(BuildContext context, MealNutrients mealNutrients, DailySummaryBloc bloc) async {
-    var date = await Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => MealFoodListScreen(mealNutrients),
-        settings: RouteSettings(name: Routes.mealFoodListScreen,
-                                arguments: Map())
-      )
-    );
-    bloc.changeTotalNutrients(date);
   }
 
 }
