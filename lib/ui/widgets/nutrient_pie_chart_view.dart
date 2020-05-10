@@ -1,5 +1,6 @@
 import 'package:calorie_counter/ui/widgets/pie_chart_view.dart';
 import 'package:flutter/material.dart';
+import 'package:calorie_counter/util/extension/ext_number_rounding.dart';
 
 
 import 'circular_view.dart';
@@ -30,6 +31,21 @@ class NutrientPieChartView extends StatelessWidget {
     final carbsColor =[Colors.green, Colors.transparent];
     final fatColor =[Colors.red, Colors.transparent];
     final proteinColor =[Colors.blue, Colors.transparent];
+
+    var carbsPercentage;
+    var fatPercentage;
+    var proteinPercentage;
+
+    if (calories >= 0 && carbs == 0 && fat == 0 && protein == 0) {
+      carbsPercentage = 0;
+      fatPercentage = 0;
+      proteinPercentage = 0;
+    }
+    else {
+      carbsPercentage = fullNutrientsData[NutrientDataType.CARBS]['Carbs'].roundTo(1);
+      fatPercentage = fullNutrientsData[NutrientDataType.FAT]['Fat'].roundTo(1);
+      proteinPercentage = fullNutrientsData[NutrientDataType.PROTEIN]['Protein'].roundTo(1);
+    }
 
     return Column(
       children: <Widget>[
@@ -79,18 +95,21 @@ class NutrientPieChartView extends StatelessWidget {
                   carbsColor, 
                   fullNutrientsData[NutrientDataType.CARBS], 
                   carbs, 
+                  carbsPercentage,
                   'Carbs'),
 
                 _buildPieChart(
                   fatColor, 
                   fullNutrientsData[NutrientDataType.FAT], 
                   fat, 
+                  fatPercentage,
                   'Fat'),
     
                 _buildPieChart(
                   proteinColor, 
                   fullNutrientsData[NutrientDataType.PROTEIN], 
                   protein, 
+                  proteinPercentage,
                   'Protein')
               ],
             ),
@@ -105,6 +124,7 @@ class NutrientPieChartView extends StatelessWidget {
     List<Color> listOfColor, 
     Map<String, double> data, 
     int nutrientGram,
+    double nutrientPercentage,
     String title) {
 
       if (calories > 0 && nutrientGram == 0) {
@@ -114,6 +134,8 @@ class NutrientPieChartView extends StatelessWidget {
         );
       }
     
+      final fontColor = listOfColor[0];
+
       return Expanded(
         flex: 1,
         child: Column(
@@ -147,13 +169,28 @@ class NutrientPieChartView extends StatelessWidget {
 
             Container(
               margin: EdgeInsets.only(top: 16.0),
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                )
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 16,
+                      fontWeight: FontWeight.w700,
+                    )
+                  ),
+
+                  Text(
+                    '$nutrientPercentage%',
+                    style: TextStyle(
+                      fontFamily: 'Roboto',
+                      fontSize: 14,
+                      color: fontColor,
+                      fontWeight: FontWeight.w700,
+                    )
+                  ),
+
+                ],
               ),
             )
           ]
@@ -162,15 +199,7 @@ class NutrientPieChartView extends StatelessWidget {
   }
 
   Map<NutrientDataType ,Map<String, double>> _getNutrientPercentage() {
-    if (calories == 0) {
-      Map<NutrientDataType, Map<String, double>> fullNutrientsData = Map();
-      fullNutrientsData.putIfAbsent(NutrientDataType.CALORIES, () => null);
-      fullNutrientsData.putIfAbsent(NutrientDataType.CARBS, () => null);
-      fullNutrientsData.putIfAbsent(NutrientDataType.FAT, () => null);
-      fullNutrientsData.putIfAbsent(NutrientDataType.PROTEIN, () => null);
-      return fullNutrientsData;
-    }
-    else if (calories > 0 && carbs == 0 && fat == 0 && protein == 0) {
+    if (calories >= 0 && carbs == 0 && fat == 0 && protein == 0) {
       Map<NutrientDataType, Map<String, double>> fullNutrientsData = Map();
       fullNutrientsData.putIfAbsent(NutrientDataType.CALORIES, () => null);
       fullNutrientsData.putIfAbsent(NutrientDataType.CARBS, () => null);
@@ -182,7 +211,7 @@ class NutrientPieChartView extends StatelessWidget {
     final computedCarbs = carbs * 4;
     final computedFat = fat * 9;
     final computedProtein = protein * 4;
-    final totalNutrient = computedCarbs + computedFat + protein;
+    final totalNutrient = computedCarbs + computedFat + computedProtein;
 
     final carbPercentage = (computedCarbs / totalNutrient) * 100;
     final fatPercentage = (computedFat / totalNutrient) * 100;

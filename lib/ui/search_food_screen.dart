@@ -218,10 +218,10 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
                   commonFood.details.name, 
                   1, 
                   brandName, 
-                  commonFood.details.nutrients.calories.roundTo(0), 
-                  commonFood.details.nutrients.carbs.roundTo(0), 
-                  commonFood.details.nutrients.fat.roundTo(0), 
-                  commonFood.details.nutrients.protein.roundTo(0));
+                  commonFood.details.nutrients.calories.roundTo(0).toInt(), 
+                  commonFood.details.nutrients.carbs.roundTo(0).toInt(), 
+                  commonFood.details.nutrients.fat.roundTo(0).toInt(), 
+                  commonFood.details.nutrients.protein.roundTo(0).toInt());
                 
                 Navigator.of(context).push(
                   MaterialPageRoute(
