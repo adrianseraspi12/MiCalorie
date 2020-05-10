@@ -15,7 +15,16 @@ class NutrientPieChartView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('CALORIES = $calories');
+    print('CARBS = $carbs');
+    print('FAT = $fat');
+    print('PROTEIN = $protein');
+    
+
     var fullNutrientsData = _getNutrientPercentage();
+
+    print('FULL NUTRIENTS = $fullNutrientsData');
+
     var height = MediaQuery.of(context).size.height;
     final calorieColors = [Colors.green, Colors.red, Colors.blue];
     final carbsColor =[Colors.green, Colors.transparent];
@@ -57,7 +66,7 @@ class NutrientPieChartView extends StatelessWidget {
               )
             ),
           ),
-        ),        
+        ), 
 
         SizedBox(
           height: height * 0.25,
@@ -66,143 +75,23 @@ class NutrientPieChartView extends StatelessWidget {
             child: Flex(
               direction: Axis.horizontal,
               children: <Widget>[
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.0),  
-                        child: PieChartView(
-                          listOfColor: carbsColor,
-                          data: fullNutrientsData[NutrientDataType.CARBS],
-                          child: CircularView(
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: FittedBox(
-                                child: Container(
-                                  margin: EdgeInsets.all(4.0),
-                                  child: Text(
-                                    '${carbs}g',
-                                    style: TextStyle(
-                                      fontFamily: 'Roboto',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            )
-                          ),
-                        ),
-                      ),
+                _buildPieChart(
+                  carbsColor, 
+                  fullNutrientsData[NutrientDataType.CARBS], 
+                  carbs, 
+                  'Carbs'),
 
-                      Container(
-                        margin: EdgeInsetsDirectional.only(top: 16.0),
-                        child: Text(
-                          'Carbs',
-                          style: TextStyle(
-                            fontFamily: 'Roboto',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                          )
-                        ),
-                      )
-                    ]
-                  )
-                ),
-
-                Expanded(
-                  flex: 1,                  
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.0),  
-                        child: PieChartView(
-                          listOfColor: fatColor,
-                          data: fullNutrientsData[NutrientDataType.FAT],
-                          child: CircularView(
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: FittedBox(
-                                child: Container(
-                                  margin: EdgeInsets.all(4.0),                                          
-                                  child: Text(
-                                    '${fat}g',
-                                    style: TextStyle(
-                                      fontFamily: 'Roboto',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            )
-                          ),
-                        ),
-                      ),
-
-                      Container(
-                        margin: EdgeInsetsDirectional.only(top: 16.0),
-                        child: Text(
-                          'Fat',
-                          style: TextStyle(
-                            fontFamily: 'Roboto',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                          )
-                        ),
-                      )
-                    ]
-                  )
-                ),
-
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.0),  
-                        child: PieChartView(
-                          listOfColor: proteinColor,
-                          data: fullNutrientsData[NutrientDataType.PROTEIN],
-                          child: CircularView(
-                            child: Align(
-                              alignment: Alignment.center,
-                              child: FittedBox(
-                                child: Container(
-                                  margin: EdgeInsets.all(4.0),
-                                  child: Text(
-                                    '${protein}g',
-                                    style: TextStyle(
-                                      fontFamily: 'Roboto',
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ),
-                              )
-                            )
-                          ),
-                        ),
-                      ),
-
-                      Container(
-                        margin: EdgeInsets.only(top: 16.0),
-                        child: Text(
-                          'Protein',
-                          style: TextStyle(
-                            fontFamily: 'Roboto',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
-                          )
-                        ),
-                      )
-                    ]
-                  )
-                ),
+                _buildPieChart(
+                  fatColor, 
+                  fullNutrientsData[NutrientDataType.FAT], 
+                  fat, 
+                  'Fat'),
+    
+                _buildPieChart(
+                  proteinColor, 
+                  fullNutrientsData[NutrientDataType.PROTEIN], 
+                  protein, 
+                  'Protein')
               ],
             ),
           ),
@@ -212,8 +101,76 @@ class NutrientPieChartView extends StatelessWidget {
     );
   }
 
-Map<NutrientDataType ,Map<String, double>> _getNutrientPercentage() {
+  Widget _buildPieChart(
+    List<Color> listOfColor, 
+    Map<String, double> data, 
+    int nutrientGram,
+    String title) {
+
+      if (calories > 0 && nutrientGram == 0) {
+        return Expanded(
+          flex: 1,
+          child: Container()
+        );
+      }
+    
+      return Expanded(
+        flex: 1,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0),  
+              child: PieChartView(
+                listOfColor: listOfColor,
+                data: data,
+                child: CircularView(
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: FittedBox(
+                      child: Container(
+                        margin: EdgeInsets.all(4.0),
+                        child: Text(
+                          '${nutrientGram}g',
+                          style: TextStyle(
+                            fontFamily: 'Roboto',
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    )
+                  )
+                ),
+              ),
+            ),
+
+            Container(
+              margin: EdgeInsets.only(top: 16.0),
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontFamily: 'Roboto',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                )
+              ),
+            )
+          ]
+        )
+      );
+  }
+
+  Map<NutrientDataType ,Map<String, double>> _getNutrientPercentage() {
     if (calories == 0) {
+      Map<NutrientDataType, Map<String, double>> fullNutrientsData = Map();
+      fullNutrientsData.putIfAbsent(NutrientDataType.CALORIES, () => null);
+      fullNutrientsData.putIfAbsent(NutrientDataType.CARBS, () => null);
+      fullNutrientsData.putIfAbsent(NutrientDataType.FAT, () => null);
+      fullNutrientsData.putIfAbsent(NutrientDataType.PROTEIN, () => null);
+      return fullNutrientsData;
+    }
+    else if (calories > 0 && carbs == 0 && fat == 0 && protein == 0) {
       Map<NutrientDataType, Map<String, double>> fullNutrientsData = Map();
       fullNutrientsData.putIfAbsent(NutrientDataType.CALORIES, () => null);
       fullNutrientsData.putIfAbsent(NutrientDataType.CARBS, () => null);

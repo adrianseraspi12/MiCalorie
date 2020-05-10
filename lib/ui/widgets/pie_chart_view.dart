@@ -28,7 +28,7 @@ class _PieChartViewState extends State<PieChartView> {
     if (widget.data == null) {
       colors = [Colors.black, Colors.transparent];
     }
-    else if (widget.data == null){
+    else if (widget.data != null){
       colors = widget.listOfColor;
     }
 
