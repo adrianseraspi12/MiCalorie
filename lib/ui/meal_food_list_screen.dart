@@ -166,6 +166,7 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
                   final titles = ['View food', 'Remove food'];
                   final actions = [
                     () {
+                      _removeSnackbar(context, bloc);
                       _showFoodDetails(context, bloc, food);
                     }, 
                     () {

@@ -39,6 +39,7 @@ class DailySummaryScreen extends StatelessWidget {
                                 arguments: Map())
       )
     ).then((val) {
+      print('DATE = $val');
       bloc.changeTotalNutrients(val);
     });
   }
