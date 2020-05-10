@@ -11,21 +11,13 @@ class NutrientPieChartView extends StatelessWidget {
   final int carbs;
   final int fat;
   final int protein;
+  final isShowChartIfEmpty;
 
-  NutrientPieChartView({Key key, this.calories, this.carbs, this.fat, this.protein}): super(key: key);
+  NutrientPieChartView({Key key, this.calories, this.carbs, this.fat, this.protein, this.isShowChartIfEmpty = false}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    print('CALORIES = $calories');
-    print('CARBS = $carbs');
-    print('FAT = $fat');
-    print('PROTEIN = $protein');
-    
-
     var fullNutrientsData = _getNutrientPercentage();
-
-    print('FULL NUTRIENTS = $fullNutrientsData');
-
     var height = MediaQuery.of(context).size.height;
     final calorieColors = [Colors.green, Colors.red, Colors.blue];
     final carbsColor =[Colors.green, Colors.transparent];
@@ -127,7 +119,7 @@ class NutrientPieChartView extends StatelessWidget {
     double nutrientPercentage,
     String title) {
 
-      if (calories >= 0 && carbs == 0 && fat == 0 && protein == 0) {
+      if (calories >= 0 && carbs == 0 && fat == 0 && protein == 0 && !isShowChartIfEmpty) {
         return Expanded(
           flex: 1,
           child: Container()

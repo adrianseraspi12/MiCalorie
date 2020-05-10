@@ -183,7 +183,8 @@ class DailySummaryScreen extends StatelessWidget {
                     calories: calories,
                     carbs: carbs, 
                     fat: fat, 
-                    protein: protein)
+                    protein: protein,
+                    isShowChartIfEmpty: true)
                 );
               }
 
