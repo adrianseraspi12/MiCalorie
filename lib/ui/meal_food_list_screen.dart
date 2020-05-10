@@ -44,7 +44,6 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
   Widget _buildMealFoodListScreen(BuildContext context, MealFoodListBloc bloc) {
     bloc.updateNutrientsOnPopStream.listen((isPop) {
 
-      print('POPING = $isPop');
       if (isPop) {
         _removeSnackbar(context, bloc);
         Navigator.pop(context, widget.mealNutrients.date);
