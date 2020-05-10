@@ -33,13 +33,14 @@ class TotalNutrientsPerDayRepository implements Repository<TotalNutrientsPerDay>
   }
 
   @override
-  void upsert(TotalNutrientsPerDay data) async {
+  Future<int> upsert(TotalNutrientsPerDay data) async {
     final id = await _totalNutrientsPerDayDao.insertTotalNutrients(data);
   
     if (id == -1 || id == null) {
-      await _totalNutrientsPerDayDao.updateTotalNutrients(data);
+      return _totalNutrientsPerDayDao.updateTotalNutrients(data);
     }
 
+    return id;
   }
 
 }

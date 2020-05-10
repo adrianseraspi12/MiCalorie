@@ -42,6 +42,15 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
   }
 
   Widget _buildMealFoodListScreen(BuildContext context, MealFoodListBloc bloc) {
+    bloc.updateNutrientsOnPopStream.listen((isPop) {
+
+      print('POPING = $isPop');
+      if (isPop) {
+        _removeSnackbar(context, bloc);
+        Navigator.pop(context, widget.mealNutrients.date);
+      }
+    });
+
     return SafeArea(
       child: Column(
         children: <Widget> [
@@ -52,6 +61,7 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
         ]
       )
     );
+    
   }
 
   Widget _buildAppbar(BuildContext context, MealFoodListBloc bloc) {
@@ -67,9 +77,8 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
         children: <Widget>[
           CircularButton(
             icon: Icon(Icons.chevron_left),
-            onPressed: () { 
-              _removeSnackbar(context);
-              Navigator.pop(context);
+            onPressed: () {
+              bloc.removeFoodOnPop();
              },
           ),
 
@@ -95,15 +104,19 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
           CircularButton(
             icon: Icon(Icons.add),
             onPressed: () {
-              _removeSnackbar(context);
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => SearchFoodScreen(widget.mealNutrients),
-                  settings: RouteSettings(name: Routes.searchFoodScreen)
-                )
-              ).then((v) {
-                  _retainData(context, bloc);
-              });
+              _removeSnackbar(context, bloc)
+                .then((_) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => SearchFoodScreen(widget.mealNutrients),
+                      settings: RouteSettings(name: Routes.searchFoodScreen)
+                    )
+                  ).then((v) {
+                      _retainData(context, bloc);
+                  });
+                }
+              );
+            
             },
           ),
 
@@ -188,33 +201,35 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
   }
 
   void _showSnackbar(BuildContext context, MealFoodListBloc bloc, Food food, int index) {
-    _removeSnackbar(context);
+    _removeSnackbar(context, bloc)
+      .then((_) {
+        snackbar = SnackBar(
+          content: Text('Food removed'),
+          action: SnackBarAction(
+            label: 'Undo',
+            onPressed: () {
+              bloc.retainFoodList(index, food);
+            }
+          ),
+        );
 
-    snackbar = SnackBar(
-      content: Text('Food removed'),
-      action: SnackBarAction(
-        label: 'Undo', 
-        onPressed: () {
-          bloc.retainFoodList(index, food);
-        }
-      ),
-    );
+        Scaffold.of(context).showSnackBar(snackbar)
+          .closed
+          .then((reason) {
+            if (reason == SnackBarClosedReason.dismiss ||
+                reason == SnackBarClosedReason.hide ||
+                reason == SnackBarClosedReason.swipe ||
+                reason == SnackBarClosedReason.timeout) {
 
-    Scaffold.of(context).showSnackBar(snackbar)
-      .closed
-      .then((reason) {
-        if (reason == SnackBarClosedReason.dismiss ||
-            reason == SnackBarClosedReason.hide ||
-            reason == SnackBarClosedReason.remove ||
-            reason == SnackBarClosedReason.swipe ||
-            reason == SnackBarClosedReason.timeout) {
+              bloc.removeFood();
+            }
+          }
+        );
 
-          bloc.removeFood(food);
-        }
+        bloc.tempRemoveFood(food);
       }
     );
 
-    bloc.tempRemoveFood(food);
   }
 
   void _showFoodDetails(BuildContext context, MealFoodListBloc bloc, Food food) {
@@ -229,8 +244,9 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
 
   }
 
-  void _removeSnackbar(BuildContext context) {
+  Future<void> _removeSnackbar(BuildContext context, MealFoodListBloc bloc) async {
     if (snackbar != null) {
+      bloc.removeFood();
       Scaffold.of(context).removeCurrentSnackBar();
     }
   }
@@ -246,7 +262,7 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
     
    }
 
-     Widget _loadSVGImage(String assetName, int height, int width) {
+    Widget _loadSVGImage(String assetName, int height, int width) {
     return SizedBox(
       height: 100,
       width: 100,

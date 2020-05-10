@@ -12,9 +12,13 @@ import 'bloc.dart';
 class MealFoodListBloc implements Bloc {
 
   final _foodListController = PublishSubject<List<Food>>();
+  final _updateNutrientsOnPopController = PublishSubject<bool>();
+
+  Stream<bool> get updateNutrientsOnPopStream => _updateNutrientsOnPopController.stream;
   Stream<List<Food>> get foodListStream => _foodListController.stream;
   final int mealId;
   List<Food> listOfFood;
+  Food tempFood;
 
   TotalNutrientsPerDayRepository _dayRepository;
   MealNutrientsRepository _mealNutrientsRepository;
@@ -41,16 +45,34 @@ class MealFoodListBloc implements Bloc {
   }
 
   void tempRemoveFood(Food food) {
+    tempFood = food;
     listOfFood.remove(food);
     _foodListController.sink.add(listOfFood);
   }
 
-  void removeFood(Food food) {
-    _updateNutrients(food);
-    _foodRepository.remove(food);
+  void removeFood() {
+    _removeFoodWithCallback(null);
   }
 
-  void _updateNutrients(Food food) async {
+  void removeFoodOnPop() {
+    if (tempFood == null) {
+      _updateNutrientsOnPopController.sink.add(true);
+    }
+    else {
+      
+    }
+    _removeFoodWithCallback(() => _updateNutrientsOnPopController.sink.add(true));
+  }
+
+  void _removeFoodWithCallback(Function callback) {
+    if (tempFood != null) {
+      _updateNutrients(tempFood, callback);
+      _foodRepository.remove(tempFood);
+      tempFood = null;
+    }
+  }
+
+  void _updateNutrients(Food food, Function onDelete) async {
     final numberOfServings = food.numOfServings;
 
     final calories = food.calories * numberOfServings;
@@ -61,11 +83,25 @@ class MealFoodListBloc implements Bloc {
     final currentMeal = await _mealNutrientsRepository.getMeal(mealId);
     final totalNutrientsPerDayId = currentMeal.totalNutrientsPerDayId;
 
-    _updateMeal(currentMeal, calories, carbs, fat, protein);
-    _updateTotalNutrients(totalNutrientsPerDayId, calories, carbs, fat, protein);
+    _updateTotalNutrients(
+      totalNutrientsPerDayId, 
+      currentMeal, 
+      calories,
+      carbs, 
+      fat, 
+      protein,
+      onDelete);
   }
 
-  void _updateTotalNutrients(int totalNutrientsId, int calories, int carbs, int fat, int protein) async {
+  void _updateTotalNutrients(
+    int totalNutrientsId,
+    MealNutrients meal, 
+    int calories, 
+    int carbs, 
+    int fat, 
+    int protein,
+    Function callback) async {
+
     final totalNutrientsPerDay = await _dayRepository.getTotalNutrientsById(totalNutrientsId);
 
     final updatedTotalNutrients = TotalNutrientsPerDay(
@@ -76,10 +112,14 @@ class MealFoodListBloc implements Bloc {
       totalNutrientsPerDay.fat - fat,
       totalNutrientsPerDay.protein - protein);
 
-    _dayRepository.upsert(updatedTotalNutrients);
+    _dayRepository.upsert(updatedTotalNutrients)
+      .then( (val) {
+        _updateMeal(meal, calories, carbs, fat, protein, callback);
+      }
+    );
   }
 
-  void _updateMeal(MealNutrients meal, int calories, int carbs, int fat, int protein) async {
+  void _updateMeal(MealNutrients meal, int calories, int carbs, int fat, int protein, Function callback) async {
     final mealNutrients = MealNutrients(
       meal.id, 
       meal.calories - calories, 
@@ -90,11 +130,16 @@ class MealFoodListBloc implements Bloc {
       meal.totalNutrientsPerDayId);
 
     _mealNutrientsRepository.upsert(mealNutrients);
+
+    if (callback != null) {
+      callback();
+    }
   }
 
   @override
   void dispose() {
     _foodListController.close();
+    _updateNutrientsOnPopController.close();
   }
 
 }
