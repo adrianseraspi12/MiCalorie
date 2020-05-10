@@ -146,8 +146,7 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
       builder: (context, snapshot) {
 
         final results = snapshot.data;
-
-
+        
         if (results == null) {
           final String assetName = 'assets/images/search.svg';
           return Center(
@@ -193,6 +192,7 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
                 ),
                 Text(
                   '${results.errorMessage}',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontFamily: 'Roboto',
                     fontSize: 14,

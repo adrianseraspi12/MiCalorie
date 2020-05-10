@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:calorie_counter/data/api/client/edaman_client.dart';
+import 'package:calorie_counter/data/api/interceptor/connection_interceptor.dart';
 import 'package:calorie_counter/data/api/model/list_of_food.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -25,20 +27,29 @@ class SearchFoodQueryBloc implements Bloc {
       return;
     }
 
-    final results = await _edamanClient.searchFood(query);
-    SearchResult searchResult; 
-  
-    if (results.data == null || results.data.commonFood == null) {
-      searchResult = SearchResult(null, results.errorMessage, false);
-    }
-    else if (results.data.commonFood.length == 0) {
-      searchResult = SearchResult(null, 'No food found', false);
-    }
-    else {
-      searchResult = SearchResult(results.data.commonFood, null, false);
+    try {
+
+      final results = await _edamanClient.searchFood(query);
+      SearchResult searchResult; 
+
+      if (results.data == null || results.data.commonFood == null) {
+        searchResult = SearchResult(null, results.errorMessage, false);
+      }
+      else if (results.data.commonFood.length == 0) {
+        searchResult = SearchResult(null, 'No food found', false);
+      }
+      else {
+        searchResult = SearchResult(results.data.commonFood, null, false);
+      }
+      _commonFoodController.sink.add(searchResult);
+    } on NoInternetConnectionException catch(error) {
+      var searchResult = SearchResult(null, error.message, false);
+      _commonFoodController.sink.add(searchResult);
+    } on SocketException catch(_) {
+      var searchResult = SearchResult(null, 'Something went wrong.\nPlease try again', false);
+      _commonFoodController.sink.add(searchResult);
     }
 
-    _commonFoodController.sink.add(searchResult);
   }
 
   @override
