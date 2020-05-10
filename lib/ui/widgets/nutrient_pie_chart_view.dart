@@ -32,9 +32,9 @@ class NutrientPieChartView extends StatelessWidget {
     final fatColor =[Colors.red, Colors.transparent];
     final proteinColor =[Colors.blue, Colors.transparent];
 
-    var carbsPercentage;
-    var fatPercentage;
-    var proteinPercentage;
+    double carbsPercentage;
+    double fatPercentage;
+    double proteinPercentage;
 
     if (calories >= 0 && carbs == 0 && fat == 0 && protein == 0) {
       carbsPercentage = 0;
