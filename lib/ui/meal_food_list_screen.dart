@@ -103,20 +103,31 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
           CircularButton(
             icon: Icon(Icons.add),
             onPressed: () {
-              //  show add food options
-              _removeSnackbar(context, bloc)
-                .then((_) {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => SearchFoodScreen(widget.mealNutrients),
-                      settings: RouteSettings(name: Routes.searchFoodScreen)
-                    )
-                  ).then((v) {
-                      _retainData(context, bloc);
-                  });
+              
+              final titles = ['Quick Add', 'Search Food'];
+              final actions = [
+                () {
+                  _removeSnackbar(context, bloc);
+                }, 
+                () {
+
+                  _removeSnackbar(context, bloc)
+                    .then((_) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => SearchFoodScreen(widget.mealNutrients),
+                          settings: RouteSettings(name: Routes.searchFoodScreen)
+                        )
+                      ).then((v) {
+                          _retainData(context, bloc);
+                      });
+                    }
+                  );
+
                 }
-              );
-            
+              ];
+
+              modal.bottomSheet(context, titles, actions);
             },
           ),
 
@@ -163,7 +174,7 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
               return NeumorphicButton(
                 margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 onClick: () {
-                  final titles = ['View food', 'Remove food'];
+                  final titles = ['View Food', 'Remove Food'];
                   final actions = [
                     () {
                       _removeSnackbar(context, bloc);
