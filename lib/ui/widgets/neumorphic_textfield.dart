@@ -7,8 +7,9 @@ class NeumorphicTextfield extends StatefulWidget {
   final Function(String) onEditingComplete;
   final Function onChanged;
   final Function onTap;
+  final Widget leading;
 
-  NeumorphicTextfield({Key key,this.decoration, this.onEditingComplete, this.onChanged, this.onTap}): super(key:key);
+  NeumorphicTextfield({Key key,this.leading, this.decoration, this.onEditingComplete, this.onChanged, this.onTap}): super(key:key);
   
   @override
   _NeumorphicTextfieldState createState() => _NeumorphicTextfieldState();
@@ -31,54 +32,63 @@ class _NeumorphicTextfieldState extends State<NeumorphicTextfield> {
           shadowLightColorEmboss: Colors.white,
           color: Color.fromRGBO(193,214,233, 1),
         ),
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 16.0),
-          child: TextFormField(
-            textAlign: TextAlign.left,
-            textInputAction: TextInputAction.search,
-            controller: _textEditingController,
-            decoration: this.widget.decoration,
-            onTap: () {
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            this.widget.leading == null ? Container() : this.widget.leading,
 
-              if (this.widget.onTap != null) {
-                this.widget.onTap();
-              }
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 8.0),
+                child: TextFormField(
+                  textAlign: TextAlign.left,
+                  textInputAction: TextInputAction.search,
+                  controller: _textEditingController,
+                  decoration: this.widget.decoration,
+                  onTap: () {
 
-              if (_textfieldDepth.toInt() != -5) {
-                setState(() {
-                  _textfieldDepth = -5;
-                });
-              }
-            },
-            onChanged: (string) {
+                    if (this.widget.onTap != null) {
+                      this.widget.onTap();
+                    }
 
-              if (this.widget.onChanged != null) {
-                this.widget.onChanged();
-              }
+                    if (_textfieldDepth.toInt() != -5) {
+                      setState(() {
+                        _textfieldDepth = -5;
+                      });
+                    }
+                  },
+                  onChanged: (string) {
 
-              if (_textfieldDepth.toInt() != -5) {
-                setState(() {
-                  _textfieldDepth = -5;
-                });
-              }
-            },
-            onEditingComplete: () {
-              final text = _textEditingController.text;
-              if (text == null || text.isEmpty) {
-                if (_textfieldDepth.toInt() != 5) {
-                  setState(() {
-                    _textfieldDepth = 5;
-                  });
-                }
-              }
+                    if (this.widget.onChanged != null) {
+                      this.widget.onChanged();
+                    }
 
-              if (this.widget.onEditingComplete != null) {
-                this.widget.onEditingComplete(text);
-              }
+                    if (_textfieldDepth.toInt() != -5) {
+                      setState(() {
+                        _textfieldDepth = -5;
+                      });
+                    }
+                  },
+                  onEditingComplete: () {
+                    final text = _textEditingController.text;
+                    if (text == null || text.isEmpty) {
+                      if (_textfieldDepth.toInt() != 5) {
+                        setState(() {
+                          _textfieldDepth = 5;
+                        });
+                      }
+                    }
 
-              FocusScope.of(context).requestFocus(FocusNode());
-            },
-          ),
+                    if (this.widget.onEditingComplete != null) {
+                      this.widget.onEditingComplete(text);
+                    }
+
+                    FocusScope.of(context).requestFocus(FocusNode());
+                  },
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
