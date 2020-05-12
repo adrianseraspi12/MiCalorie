@@ -1,6 +1,7 @@
 import 'package:calorie_counter/data/local/entity/food.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
 import 'package:calorie_counter/ui/widgets/circular_button.dart';
+import 'package:calorie_counter/ui/widgets/neumorphic_textfield.dart';
 import 'package:calorie_counter/util/constant/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:calorie_counter/bloc/bloc_provider.dart';
@@ -68,63 +69,21 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
                 ),
 
                 Expanded(
-                  child: AnimatedContainer(
-                    duration: Duration(milliseconds: 150),
-                    child: Neumorphic(
-                      margin: EdgeInsets.symmetric(horizontal: 8.0),
-                      boxShape: NeumorphicBoxShape.roundRect(borderRadius: BorderRadius.circular(4.0)),
-                      style: NeumorphicStyle(
-                        depth: _textfieldDepth,
-                        shadowDarkColorEmboss: Color.fromRGBO(163,177,198, 1),
-                        shadowLightColorEmboss: Colors.white,
-                        color: Color.fromRGBO(193,214,233, 1),
-                      ),
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 16.0),
-                        child: TextFormField(
-                          textAlign: TextAlign.left,
-                          textInputAction: TextInputAction.search,
-                          controller: _textEditingController,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Search Food',
-                            suffixIcon: Icon(Icons.search, color: Colors.black),
-                            hintStyle: TextStyle(
-                              fontFamily: 'Roboto',
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
-                          onTap: () {
-                            if (_textfieldDepth.toInt() != -5) {
-                              setState(() {
-                                _textfieldDepth = -5;
-                              });
-                            }
-                          },
-                          onChanged: (string) {
-                            if (_textfieldDepth.toInt() != -5) {
-                              setState(() {
-                                _textfieldDepth = -5;
-                              });
-                            }
-                          },
-                          onEditingComplete: () {
-                            final query = _textEditingController.text;
-                            if (query == null || query.isEmpty) {
-                              if (_textfieldDepth.toInt() != 5) {
-                                setState(() {
-                                  _textfieldDepth = 5;
-                                });
-                              }
-                            }
-                            bloc.submitQuery(query);
-                            FocusScope.of(context).requestFocus(FocusNode());
-                          },
-                        ),
+                  child: NeumorphicTextfield(
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hintText: 'Search Food',
+                      suffixIcon: Icon(Icons.search, color: Colors.black),
+                      hintStyle: TextStyle(
+                        fontFamily: 'Roboto',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
                       ),
                     ),
-                  ),
+                    onEditingComplete: (query) {
+                      bloc.submitQuery(query);
+                    },
+                  )
                 )
 
               ],
