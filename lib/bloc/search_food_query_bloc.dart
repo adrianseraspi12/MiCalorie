@@ -21,11 +21,11 @@ class SearchFoodQueryBloc implements Bloc {
   }
 
   void submitQuery(String query) async {
-    _commonFoodController.sink.add(SearchResult(null, null, true));
-    
     if (query == null || query.isEmpty) {
       return;
     }
+
+    _commonFoodController.sink.add(SearchResult(null, null, true));
 
     try {
 
