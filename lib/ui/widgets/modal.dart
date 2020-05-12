@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class Modal{
 
-  bottomSheet(BuildContext context, List<IconData> icons, List<String> titles, List<Function> actions) {
+  bottomSheet(BuildContext context, List<String> titles, List<Function> actions) {
     
 
     showModalBottomSheet(
@@ -14,8 +14,8 @@ class Modal{
             padding: EdgeInsets.symmetric(vertical: 8.0),
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: List.generate(icons.length, (index) {
-                  return _createTile(context, titles[index], icons[index], actions[index]);
+              children: List.generate(titles.length, (index) {
+                  return _createTile(context, titles[index], actions[index]);
                 }
               )
             ),
@@ -26,9 +26,8 @@ class Modal{
     );
   }
 
-  ListTile _createTile(BuildContext context, String title, IconData icon, Function action) {
+  ListTile _createTile(BuildContext context, String title, Function action) {
     return ListTile(
-      leading: Icon(icon),
       title: Text(
         title,
         style: TextStyle(

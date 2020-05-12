@@ -103,6 +103,7 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
           CircularButton(
             icon: Icon(Icons.add),
             onPressed: () {
+              //  show add food options
               _removeSnackbar(context, bloc)
                 .then((_) {
                   Navigator.of(context).push(
@@ -162,7 +163,6 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
               return NeumorphicButton(
                 margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 onClick: () {
-                  final icons = [Icons.fastfood, Icons.delete];
                   final titles = ['View food', 'Remove food'];
                   final actions = [
                     () {
@@ -173,7 +173,7 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
                       _showSnackbar(rootContext, bloc, food, index);
                     }
                   ];
-                  modal.bottomSheet(rootContext, icons, titles, actions);
+                  modal.bottomSheet(rootContext, titles, actions);
                 },              
                 style: NeumorphicStyle(
                   depth: 2,
