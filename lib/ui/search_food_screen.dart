@@ -26,9 +26,6 @@ class SearchFoodScreen extends StatefulWidget {
 
 class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerProviderStateMixin {
 
-  TextEditingController _textEditingController = TextEditingController();
-  double _textfieldDepth = 5;
-
   @override
   void initState() {
     super.initState();
@@ -223,12 +220,6 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
         assetName,
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _textEditingController.dispose();
-    super.dispose();
   }
 
 }
