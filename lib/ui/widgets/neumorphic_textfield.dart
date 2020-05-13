@@ -37,6 +37,16 @@ class _NeumorphicTextfieldState extends State<NeumorphicTextfield> {
   void initState() {
     super.initState();
     _textEditingController = TextEditingController(text: this.widget.text);
+
+    if (this.widget.text.isEmpty) {
+      if (_textfieldDepth.toInt() != 5) {
+          _textfieldDepth = 5;
+      }
+    }
+    else {
+      _textfieldDepth = -5;
+    }
+
   }
 
   @override
@@ -61,52 +71,69 @@ class _NeumorphicTextfieldState extends State<NeumorphicTextfield> {
               child: Container(
                 padding: this.widget.padding,
                 margin: EdgeInsets.symmetric(horizontal: 8.0),
-                child: TextFormField(
-                  keyboardType: this.widget.textInputType,
-                  textAlign: TextAlign.left,
-                  textInputAction: this.widget.textInputAction,
-                  controller: _textEditingController,
-                  decoration: this.widget.decoration,
-                  onTap: () {
+                child: Focus(
+                  onFocusChange: (hasFocus) {
 
-                    if (this.widget.onTap != null) {
-                      this.widget.onTap();
-                    }
-
-                    if (_textfieldDepth.toInt() != -5) {
-                      setState(() {
-                        _textfieldDepth = -5;
-                      });
-                    }
-                  },
-                  onChanged: (string) {
-
-                    if (this.widget.onChanged != null) {
-                      this.widget.onChanged();
-                    }
-
-                    if (_textfieldDepth.toInt() != -5) {
-                      setState(() {
-                        _textfieldDepth = -5;
-                      });
-                    }
-                  },
-                  onEditingComplete: () {
-                    final text = _textEditingController.text;
-                    if (text == null || text.isEmpty) {
-                      if (_textfieldDepth.toInt() != 5) {
-                        setState(() {
-                          _textfieldDepth = 5;
-                        });
+                    if (!hasFocus) {
+                      final text = _textEditingController.text;
+                      if (text == null || text.isEmpty) {
+                        if (_textfieldDepth.toInt() != 5) {
+                          setState(() {
+                            _textfieldDepth = 5;
+                          });
+                        }
                       }
                     }
 
-                    if (this.widget.onEditingComplete != null) {
-                      this.widget.onEditingComplete(text);
-                    }
-
-                    FocusScope.of(context).requestFocus(FocusNode());
                   },
+                  child: TextFormField(
+                    keyboardType: this.widget.textInputType,
+                    textAlign: TextAlign.left,
+                    textInputAction: this.widget.textInputAction,
+                    controller: _textEditingController,
+                    decoration: this.widget.decoration,
+                    onTap: () {
+
+                      if (this.widget.onTap != null) {
+                        this.widget.onTap();
+                      }
+
+                      if (_textfieldDepth.toInt() != -5) {
+                        setState(() {
+                          _textfieldDepth = -5;
+                        });
+                      }
+                    },
+
+                    onChanged: (string) {
+
+                      if (this.widget.onChanged != null) {
+                        this.widget.onChanged();
+                      }
+
+                      if (_textfieldDepth.toInt() != -5) {
+                        setState(() {
+                          _textfieldDepth = -5;
+                        });
+                      }
+                    },
+                    onEditingComplete: () {
+                      final text = _textEditingController.text;
+                      if (text == null || text.isEmpty) {
+                        if (_textfieldDepth.toInt() != 5) {
+                          setState(() {
+                            _textfieldDepth = 5;
+                          });
+                        }
+                      }
+
+                      if (this.widget.onEditingComplete != null) {
+                        this.widget.onEditingComplete(text);
+                      }
+
+                      FocusScope.of(context).requestFocus(FocusNode());
+                    },
+                  ),
                 ),
               ),
             ),
