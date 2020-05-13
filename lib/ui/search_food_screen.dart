@@ -67,6 +67,7 @@ class _SearchFoodScreenState extends State<SearchFoodScreen> with SingleTickerPr
 
                 Expanded(
                   child: NeumorphicTextfield(
+                    textInputAction: TextInputAction.search,
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       hintText: 'Search Food',
