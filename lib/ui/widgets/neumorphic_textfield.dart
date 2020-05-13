@@ -8,16 +8,36 @@ class NeumorphicTextfield extends StatefulWidget {
   final Function onChanged;
   final Function onTap;
   final Widget leading;
+  final EdgeInsets padding;
+  final String text;
+  final TextInputAction textInputAction;
+  final TextInputType textInputType;
 
-  NeumorphicTextfield({Key key,this.leading, this.decoration, this.onEditingComplete, this.onChanged, this.onTap}): super(key:key);
+  NeumorphicTextfield({
+    Key key,
+    this.leading, 
+    this.decoration, 
+    this.padding = const EdgeInsets.all(0), 
+    this.text = '',
+    this.textInputAction,
+    this.textInputType,
+    this.onEditingComplete, 
+    this.onChanged, 
+    this.onTap}): super(key:key);
   
   @override
   _NeumorphicTextfieldState createState() => _NeumorphicTextfieldState();
 }
 
 class _NeumorphicTextfieldState extends State<NeumorphicTextfield> {
-  TextEditingController _textEditingController = TextEditingController();
+  TextEditingController _textEditingController;
   double _textfieldDepth = 5;
+
+  @override
+  void initState() {
+    super.initState();
+    _textEditingController = TextEditingController(text: this.widget.text);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,10 +59,12 @@ class _NeumorphicTextfieldState extends State<NeumorphicTextfield> {
 
             Expanded(
               child: Container(
+                padding: this.widget.padding,
                 margin: EdgeInsets.symmetric(horizontal: 8.0),
                 child: TextFormField(
+                  keyboardType: this.widget.textInputType,
                   textAlign: TextAlign.left,
-                  textInputAction: TextInputAction.search,
+                  textInputAction: this.widget.textInputAction,
                   controller: _textEditingController,
                   decoration: this.widget.decoration,
                   onTap: () {
@@ -93,4 +115,11 @@ class _NeumorphicTextfieldState extends State<NeumorphicTextfield> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _textEditingController.dispose();
+  }
+
 }
