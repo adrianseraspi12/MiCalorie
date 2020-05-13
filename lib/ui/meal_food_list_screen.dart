@@ -2,6 +2,7 @@ import 'package:calorie_counter/bloc/bloc_provider.dart';
 import 'package:calorie_counter/bloc/meal_food_list_bloc.dart';
 import 'package:calorie_counter/data/local/entity/food.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
+import 'package:calorie_counter/ui/quick_add_food_screen.dart';
 import 'package:calorie_counter/ui/search_food_screen.dart';
 import 'package:calorie_counter/ui/widgets/circular_button.dart';
 import 'package:calorie_counter/ui/widgets/modal.dart';
@@ -107,7 +108,16 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
               final titles = ['Quick Add', 'Search Food'];
               final actions = [
                 () {
-                  _removeSnackbar(context, bloc);
+                  _removeSnackbar(context, bloc)
+                    .then((value) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => QuickAddFoodScreen(),
+                          settings: RouteSettings(name: Routes.quickAddFoodScreen)
+                        )
+                      );
+                    }
+                  );
                 }, 
                 () {
 
