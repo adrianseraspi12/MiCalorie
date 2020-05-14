@@ -5,7 +5,7 @@ class NeumorphicTextfield extends StatefulWidget {
   
   final InputDecoration decoration;
   final Function(String) onEditingComplete;
-  final Function onChanged;
+  final Function(String) onChanged;
   final Function onTap;
   final Widget leading;
   final EdgeInsets padding;
@@ -108,7 +108,7 @@ class _NeumorphicTextfieldState extends State<NeumorphicTextfield> {
                     onChanged: (string) {
 
                       if (this.widget.onChanged != null) {
-                        this.widget.onChanged();
+                        this.widget.onChanged(string);
                       }
 
                       if (_textfieldDepth.toInt() != -5) {
