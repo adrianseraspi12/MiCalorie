@@ -9,7 +9,7 @@ class NeumorphicTextfield extends StatefulWidget {
   final Function onTap;
   final Widget leading;
   final EdgeInsets padding;
-  final String text;
+  String text;
   final TextInputAction textInputAction;
   final TextInputType textInputType;
 
@@ -73,7 +73,7 @@ class _NeumorphicTextfieldState extends State<NeumorphicTextfield> {
                 margin: EdgeInsets.symmetric(horizontal: 8.0),
                 child: Focus(
                   onFocusChange: (hasFocus) {
-
+                    this.widget.text = _textEditingController.text;
                     if (!hasFocus) {
                       final text = _textEditingController.text;
                       if (text == null || text.isEmpty) {
@@ -106,7 +106,7 @@ class _NeumorphicTextfieldState extends State<NeumorphicTextfield> {
                     },
 
                     onChanged: (string) {
-
+                      this.widget.text = _textEditingController.text;
                       if (this.widget.onChanged != null) {
                         this.widget.onChanged(string);
                       }
@@ -118,6 +118,7 @@ class _NeumorphicTextfieldState extends State<NeumorphicTextfield> {
                       }
                     },
                     onEditingComplete: () {
+                      this.widget.text = _textEditingController.text;
                       final text = _textEditingController.text;
                       if (text == null || text.isEmpty) {
                         if (_textfieldDepth.toInt() != 5) {
