@@ -1,3 +1,4 @@
+import 'package:calorie_counter/bloc/quick_add_food_bloc.dart';
 import 'package:calorie_counter/ui/widgets/circular_button.dart';
 import 'package:calorie_counter/ui/widgets/neumorphic_textfield.dart';
 import 'package:flutter/material.dart';
@@ -5,9 +6,32 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class QuickAddFoodScreen extends StatelessWidget {
 
+  NeumorphicTextfield _nameTextfield;
+  NeumorphicTextfield _brandTextfield;
+  NeumorphicTextfield _quantityTextfield;
+  NeumorphicTextfield _calorieTextfield;
+  NeumorphicTextfield _carbsTextfield;
+  NeumorphicTextfield _fatTextfield;
+  NeumorphicTextfield _proteinTextfield;
+
   @override
   Widget build(BuildContext context) {
+    final bloc = QuickAddFoodBloc();
 
+    bloc.resultStream.listen((event) {
+      final result = event.result;
+
+      switch (result) {
+
+        case Result.onSuccess:
+          // TODO: Handle this case.
+          break;
+        case Result.onFailed:
+          _showAlertDialog(context, 'Error', '${event.errorMessage}');
+          break;
+      }
+
+    });
 
     return Scaffold(
       backgroundColor: Color.fromRGBO(193,214,233, 1),
@@ -15,9 +39,9 @@ class QuickAddFoodScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            _buildActionButtons(context),
+            _buildActionButtons(context, bloc),
             Expanded(
-              child: _buildTextfields()
+              child: _buildTextfields(bloc)
             )
           ],
         )
@@ -26,7 +50,7 @@ class QuickAddFoodScreen extends StatelessWidget {
   }
 
 
-  Widget _buildActionButtons(BuildContext context) {
+  Widget _buildActionButtons(BuildContext context, QuickAddFoodBloc bloc) {
     return Neumorphic(
       margin: EdgeInsets.only(bottom: 4.0),
       padding: EdgeInsets.all(16.0),
@@ -44,62 +68,80 @@ class QuickAddFoodScreen extends StatelessWidget {
 
           CircularButton(
             icon: Icon(Icons.add),
-            onPressed: () {},
+            onPressed: () {
+              bloc.addFood(
+                _nameTextfield.text, 
+                _brandTextfield.text, 
+                _quantityTextfield.text, 
+                _calorieTextfield.text, 
+                _carbsTextfield.text, 
+                _fatTextfield.text, 
+                _proteinTextfield.text
+              );
+            },
           ),
         ],
       ),
     );
   }
 
-  Widget _buildTextfields() {
+  Widget _buildTextfields(QuickAddFoodBloc bloc) {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
 
           _buildTextfield(
             title: 'Name :', 
-            textHint: 'Food'
+            textfield: _nameTextfield = _buildNeumorphicTextfield(
+              textHint: 'Food'
+            ),
           ),
 
           _buildTextfield(
             title: 'Brand :', 
-            textHint: '(Optional)'
+            textfield: _brandTextfield = _buildNeumorphicTextfield(
+              textHint: '(Optional)'
+            ),
           ),
 
           _buildTextfield(
             title: 'Quantity :', 
-            text: '1', 
-            textInputType: TextInputType.number,
-            onChanged: (quantity) {
-              //  add bloc here to compute quantity
-            },
-            onEditingComplete: (quantity) {
-              //  add bloc here to compute quantity
-            }
+            textfield: _quantityTextfield = _buildNeumorphicTextfield(
+              text: '1', 
+              textInputType: TextInputType.number
+            )
           ),
 
           _buildTextfield(
             title: 'Calories :', 
-            text: '0', 
-            textInputType: TextInputType.number
+            textfield: _calorieTextfield = _buildNeumorphicTextfield(
+              text: '0', 
+              textInputType: TextInputType.number,
+            ),
           ),
 
           _buildTextfield(
             title: 'Carbs :', 
-            text: '0', 
-            textInputType: TextInputType.number
+            textfield: _carbsTextfield = _buildNeumorphicTextfield(
+              text: '0', 
+              textInputType: TextInputType.number
+            ),
           ),
 
           _buildTextfield(
             title: 'Fat :', 
-            text: '0', 
-            textInputType: TextInputType.number
+            textfield: _fatTextfield = _buildNeumorphicTextfield(
+              text: '0', 
+              textInputType: TextInputType.number
+            ),
           ),
 
           _buildTextfield(
             title: 'Protein :', 
-            text: '0', 
-            textInputType: TextInputType.number
+            textfield: _proteinTextfield = _buildNeumorphicTextfield(
+              text: '0',
+              textInputType: TextInputType.number
+            ),
           ),
 
         ],
@@ -109,13 +151,12 @@ class QuickAddFoodScreen extends StatelessWidget {
 
   Widget _buildTextfield({
     Key key,
+    NeumorphicTextfield textfield,
     String title, 
-    String text = '', 
-    TextInputType textInputType,
-    String textHint,
     Function(String) onChanged,
     Function(String) onEditingComplete,
   }) {
+
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: Flex(
@@ -138,26 +179,61 @@ class QuickAddFoodScreen extends StatelessWidget {
 
           Expanded(
             flex: 8,
-            child: NeumorphicTextfield(
-              onChanged: onChanged,
-              onEditingComplete: onEditingComplete,
-              text: text,
-              textInputAction:  TextInputAction.done,
-              textInputType: textInputType,
-              padding: EdgeInsets.all(8.0),
-              decoration: InputDecoration(
-                hintText: textHint,
-                border: InputBorder.none,
-                hintStyle: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ),
+            child: textfield,
           ),
         ],
       ),
+    );
+  }
+
+  NeumorphicTextfield _buildNeumorphicTextfield({
+    Key key,
+    String text = '', 
+    String textHint,
+    TextInputType textInputType,
+    Function(String) onChanged,
+    Function(String) onEditingComplete,
+  }) {
+    return NeumorphicTextfield(
+        onChanged: onChanged,
+        onEditingComplete: onEditingComplete,
+        text: text,
+        textInputAction:  TextInputAction.done,
+        textInputType: textInputType,
+        padding: EdgeInsets.all(8.0),
+        decoration: InputDecoration(
+          hintText: textHint,
+          border: InputBorder.none,
+          hintStyle: TextStyle(
+            fontFamily: 'Roboto',
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
+      );
+  }
+
+  _showAlertDialog(BuildContext context, String title, String content) {
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.pop(context);
+       },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text(title),
+      content: Text(content),
+      actions: [
+        okButton,
+      ],
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 
