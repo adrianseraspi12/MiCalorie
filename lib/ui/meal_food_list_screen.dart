@@ -273,8 +273,6 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
   void _retainData(BuildContext context, MealFoodListBloc bloc) {
     final arguments = ModalRoute.of(context).settings.arguments as Map;
     final mealNutrients = arguments['mealNutrients'];
-    
-      print('MEAL DETAILS = ${mealNutrients.id}');
 
     if (mealNutrients != null) {
       widget.mealNutrients = mealNutrients;

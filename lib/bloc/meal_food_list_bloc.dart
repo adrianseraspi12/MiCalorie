@@ -40,6 +40,7 @@ class MealFoodListBloc implements Bloc {
   }
 
   void retainFoodList(int index, Food food) {
+    tempFood = null;
     listOfFood.insert(index, food);
     _foodListController.sink.add(listOfFood);
   }
@@ -57,9 +58,6 @@ class MealFoodListBloc implements Bloc {
   void removeFoodOnPop() {
     if (tempFood == null) {
       _updateNutrientsOnPopController.sink.add(true);
-    }
-    else {
-      
     }
     _removeFoodWithCallback(() => _updateNutrientsOnPopController.sink.add(true));
   }
