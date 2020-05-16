@@ -159,6 +159,10 @@ class FoodDetailsBloc implements Bloc {
 
           _totalNutrientsPerDayRepository.upsert(newTotalNutrientsPerDay);
         }
+        else {
+          _mealNutrientsController.sink.add(mealNutrients);
+          return;
+        }
       }
     }
     
