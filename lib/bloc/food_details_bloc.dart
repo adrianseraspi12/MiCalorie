@@ -20,11 +20,11 @@ class FoodDetailsBloc implements Bloc {
     currentCount = _food.numOfServings;
   } 
 
-  final _mealNutrientsController = PublishSubject<MealNutrients>();
+  final _mealNutrientsController = PublishSubject<MealNutrientsResult>();
   final _foodDetailsCountController = PublishSubject<FoodDetailsCountResult>();
 
   Stream<FoodDetailsCountResult> get foodDetailsCountStream => _foodDetailsCountController.stream;
-  Stream<MealNutrients> get mealNutrientsStream => _mealNutrientsController.stream;
+  Stream<MealNutrientsResult> get mealNutrientsStream => _mealNutrientsController.stream;
 
   MealNutrientsRepository _mealNutrientsRepository;
   FoodRepository _foodRepository;
@@ -160,7 +160,7 @@ class FoodDetailsBloc implements Bloc {
           _totalNutrientsPerDayRepository.upsert(newTotalNutrientsPerDay);
         }
         else {
-          _mealNutrientsController.sink.add(mealNutrients);
+          _mealNutrientsController.sink.add(MealNutrientsResult(mealNutrients, 'Food updated'));
           return;
         }
       }
@@ -271,10 +271,13 @@ class FoodDetailsBloc implements Bloc {
   void _insertFood(MealNutrients mealNutrients) async {
     final currentFood = await _foodRepository.getFoodById(_food.id);
     Food updateFood;
+    String message;
 
     if (currentFood == null) {
       var rng = new Random();
       var generatedId = rng.nextInt(900000) + 100000;
+
+      message = 'Food added';
 
       updateFood = Food(
         generatedId,
@@ -288,6 +291,7 @@ class FoodDetailsBloc implements Bloc {
         _food.protein);
     }
     else {
+      message = 'Food added';
       updateFood = Food(
         currentFood.id,
         mealNutrients.id, 
@@ -302,7 +306,7 @@ class FoodDetailsBloc implements Bloc {
 
     await _foodRepository
       .upsert(updateFood)
-      .then( (_) => _mealNutrientsController.sink.add(mealNutrients));
+      .then( (_) => _mealNutrientsController.sink.add(MealNutrientsResult(mealNutrients, message)));
   }
 
   @override
@@ -310,6 +314,15 @@ class FoodDetailsBloc implements Bloc {
     _mealNutrientsController.close();
     _foodDetailsCountController.close();
   }
+
+}
+
+class MealNutrientsResult {
+
+  MealNutrients mealNutrients;
+  String message;
+
+  MealNutrientsResult(this.mealNutrients, this.message);
 
 }
 

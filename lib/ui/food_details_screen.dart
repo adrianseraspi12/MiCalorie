@@ -36,10 +36,10 @@ class FoodDetailsScreen extends StatelessWidget {
 
     bloc.mealNutrientsStream.listen((event) {
       
-      final mealSummary = event;
+      final result = event;
       
-      if (mealSummary != null) {
-        _popAndShowMessage(context, mealSummary);
+      if (result != null) {
+        _popAndShowMessage(context, result.mealNutrients, result.message);
       }
 
     });
@@ -47,9 +47,9 @@ class FoodDetailsScreen extends StatelessWidget {
     return _buildFoodDetails(context, bloc);
   }
 
-  void _popAndShowMessage(BuildContext context, MealNutrients mealNutrients) {
+  void _popAndShowMessage(BuildContext context, MealNutrients mealNutrients, String message) {
     Fluttertoast.showToast(
-      msg: 'Food added',
+      msg: message,
       timeInSecForIosWeb: 2)
       .then((val) => Navigator.popUntil(
         context,
