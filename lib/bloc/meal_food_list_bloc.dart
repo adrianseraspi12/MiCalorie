@@ -16,7 +16,7 @@ class MealFoodListBloc implements Bloc {
 
   Stream<bool> get updateNutrientsOnPopStream => _updateNutrientsOnPopController.stream;
   Stream<List<Food>> get foodListStream => _foodListController.stream;
-  final int mealId;
+  int mealId;
   List<Food> listOfFood;
   Food tempFood;
 

@@ -34,24 +34,17 @@ class FoodDetailsScreen extends StatelessWidget {
 
   Widget _buildResult(BuildContext context, FoodDetailsBloc bloc) {
 
-    return StreamBuilder<MealNutrients>(
-      stream: bloc.mealNutrientsStream,
-      builder: (context, snapshot) {
+    bloc.mealNutrientsStream.listen((event) {
+      
+      final mealSummary = event;
+      
+      if (mealSummary != null) {
+        _popAndShowMessage(context, mealSummary);
+      }
 
-        final mealSummary = snapshot.data;
+    });
 
-        if (mealSummary != null) {
-          _popAndShowMessage(context, mealSummary);
-          return Container();
-        }
-        else {
-          return _buildFoodDetails(context, bloc);
-        }
-
-      },
-    
-    );
-
+    return _buildFoodDetails(context, bloc);
   }
 
   void _popAndShowMessage(BuildContext context, MealNutrients mealNutrients) {
