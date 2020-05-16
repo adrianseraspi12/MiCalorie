@@ -112,10 +112,10 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
                     .then((value) {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => QuickAddFoodScreen(),
+                          builder: (context) => QuickAddFoodScreen(widget.mealNutrients),
                           settings: RouteSettings(name: Routes.quickAddFoodScreen)
                         )
-                      );
+                      ).then((v) => _retainData(context, bloc));
                     }
                   );
                 }, 
@@ -128,9 +128,7 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
                           builder: (context) => SearchFoodScreen(widget.mealNutrients),
                           settings: RouteSettings(name: Routes.searchFoodScreen)
                         )
-                      ).then((v) {
-                          _retainData(context, bloc);
-                      });
+                      ).then((v) => _retainData(context, bloc));
                     }
                   );
 

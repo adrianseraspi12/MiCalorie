@@ -1,8 +1,10 @@
 import 'package:calorie_counter/bloc/quick_add_food_bloc.dart';
+import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
 import 'package:calorie_counter/ui/widgets/circular_button.dart';
 import 'package:calorie_counter/ui/widgets/neumorphic_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class QuickAddFoodScreen extends StatelessWidget {
 
@@ -14,9 +16,14 @@ class QuickAddFoodScreen extends StatelessWidget {
   NeumorphicTextfield _fatTextfield;
   NeumorphicTextfield _proteinTextfield;
 
+  final MealNutrients _mealNutrients;
+
+  QuickAddFoodScreen(this._mealNutrients);
+
   @override
   Widget build(BuildContext context) {
     final bloc = QuickAddFoodBloc();
+    _setupBloc(bloc);
 
     bloc.resultStream.listen((event) {
       final result = event.result;
@@ -24,7 +31,20 @@ class QuickAddFoodScreen extends StatelessWidget {
       switch (result) {
 
         case Result.onSuccess:
-          // TODO: Handle this case.
+          Fluttertoast.showToast(
+            msg: 'Food added',
+            timeInSecForIosWeb: 2)
+            .then((val) => Navigator.popUntil(
+              context,
+              (route) {
+                if (route.settings.name == '/mealFoodListScreen') {
+                  (route.settings.arguments as Map) ['mealNutrients'] = _mealNutrients;
+                  return true;
+                }
+                return false;
+              }
+            )
+          );
           break;
         case Result.onFailed:
           _showAlertDialog(context, 'Error', '${event.errorMessage}');
@@ -49,6 +69,10 @@ class QuickAddFoodScreen extends StatelessWidget {
     );
   }
 
+  void _setupBloc(QuickAddFoodBloc bloc) async {
+    bloc.setupRepository();
+  }
+
 
   Widget _buildActionButtons(BuildContext context, QuickAddFoodBloc bloc) {
     return Neumorphic(
@@ -70,9 +94,10 @@ class QuickAddFoodScreen extends StatelessWidget {
             icon: Icon(Icons.add),
             onPressed: () {
               bloc.addFood(
+                _mealNutrients,
                 _nameTextfield.text, 
                 _brandTextfield.text, 
-                _quantityTextfield.text, 
+                _quantityTextfield.text,
                 _calorieTextfield.text, 
                 _carbsTextfield.text, 
                 _fatTextfield.text, 
