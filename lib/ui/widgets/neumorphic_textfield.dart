@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class NeumorphicTextfield extends StatefulWidget {
@@ -10,6 +11,7 @@ class NeumorphicTextfield extends StatefulWidget {
   final Widget leading;
   final EdgeInsets padding;
   String text;
+  final List<TextInputFormatter> textInputFormatter;
   final TextInputAction textInputAction;
   final TextInputType textInputType;
 
@@ -21,6 +23,7 @@ class NeumorphicTextfield extends StatefulWidget {
     this.text = '',
     this.textInputAction,
     this.textInputType,
+    this.textInputFormatter,
     this.onEditingComplete, 
     this.onChanged, 
     this.onTap}): super(key:key);
@@ -91,6 +94,7 @@ class _NeumorphicTextfieldState extends State<NeumorphicTextfield> {
                     textAlign: TextAlign.left,
                     textInputAction: this.widget.textInputAction,
                     controller: _textEditingController,
+                    inputFormatters: this.widget.textInputFormatter,
                     decoration: this.widget.decoration,
                     onTap: () {
 

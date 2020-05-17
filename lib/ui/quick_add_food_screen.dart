@@ -3,6 +3,7 @@ import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
 import 'package:calorie_counter/ui/widgets/circular_button.dart';
 import 'package:calorie_counter/ui/widgets/neumorphic_textfield.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -133,6 +134,9 @@ class QuickAddFoodScreen extends StatelessWidget {
             title: 'Quantity :', 
             textfield: _quantityTextfield = _buildNeumorphicTextfield(
               text: '1', 
+              textInputFormatter: <TextInputFormatter> [
+                WhitelistingTextInputFormatter.digitsOnly
+              ],
               textInputType: TextInputType.number
             )
           ),
@@ -141,6 +145,9 @@ class QuickAddFoodScreen extends StatelessWidget {
             title: 'Calories :', 
             textfield: _calorieTextfield = _buildNeumorphicTextfield(
               text: '0', 
+              textInputFormatter: <TextInputFormatter> [
+                WhitelistingTextInputFormatter.digitsOnly
+              ],
               textInputType: TextInputType.number,
             ),
           ),
@@ -149,6 +156,9 @@ class QuickAddFoodScreen extends StatelessWidget {
             title: 'Carbs :', 
             textfield: _carbsTextfield = _buildNeumorphicTextfield(
               text: '0', 
+              textInputFormatter: <TextInputFormatter> [
+                WhitelistingTextInputFormatter.digitsOnly
+              ],
               textInputType: TextInputType.number
             ),
           ),
@@ -157,6 +167,9 @@ class QuickAddFoodScreen extends StatelessWidget {
             title: 'Fat :', 
             textfield: _fatTextfield = _buildNeumorphicTextfield(
               text: '0', 
+              textInputFormatter: <TextInputFormatter> [
+                WhitelistingTextInputFormatter.digitsOnly
+              ],
               textInputType: TextInputType.number
             ),
           ),
@@ -165,6 +178,9 @@ class QuickAddFoodScreen extends StatelessWidget {
             title: 'Protein :', 
             textfield: _proteinTextfield = _buildNeumorphicTextfield(
               text: '0',
+              textInputFormatter: <TextInputFormatter> [
+                WhitelistingTextInputFormatter.digitsOnly
+              ],
               textInputType: TextInputType.number
             ),
           ),
@@ -216,6 +232,7 @@ class QuickAddFoodScreen extends StatelessWidget {
     String text = '', 
     String textHint,
     TextInputType textInputType,
+    List<TextInputFormatter> textInputFormatter,
     Function(String) onChanged,
     Function(String) onEditingComplete,
   }) {
@@ -225,6 +242,7 @@ class QuickAddFoodScreen extends StatelessWidget {
         text: text,
         textInputAction:  TextInputAction.done,
         textInputType: textInputType,
+        textInputFormatter: textInputFormatter,
         padding: EdgeInsets.all(8.0),
         decoration: InputDecoration(
           hintText: textHint,
