@@ -32,12 +32,19 @@ class _MealFoodListScreenState extends State<MealFoodListScreen> {
     final bloc = MealFoodListBloc(widget.mealNutrients.id); 
     _setupRepository(bloc);
 
-    return BlocProvider<MealFoodListBloc>(
-      bloc: bloc,
-      child: Scaffold(
-        backgroundColor: Color.fromRGBO(193,214,233, 1),
-        body: Builder(
-          builder: (rootContext) => _buildMealFoodListScreen(rootContext, bloc),)
+    return WillPopScope(
+      onWillPop: () async {
+        _removeSnackbar(context, bloc);
+        Navigator.pop(context, widget.mealNutrients.date);
+        return false;
+      },
+      child: BlocProvider<MealFoodListBloc>(
+        bloc: bloc,
+        child: Scaffold(
+          backgroundColor: Color.fromRGBO(193,214,233, 1),
+          body: Builder(
+            builder: (rootContext) => _buildMealFoodListScreen(rootContext, bloc),)
+        ),
       ),
     );
   }
