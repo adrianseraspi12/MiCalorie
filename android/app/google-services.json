@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "533437967220",
+    "firebase_url": "https://calorie-counter-88ad4.firebaseio.com",
+    "project_id": "calorie-counter-88ad4",
+    "storage_bucket": "calorie-counter-88ad4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533437967220:android:aa46e7f535a3e2bbb25a21",
+        "android_client_info": {
+          "package_name": "com.codace.calorie_counter"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "533437967220-0vvfbtukpbmcj1h9o6217bmv46sgv65v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDfYRCNK3l_ZJJb-E_mCm64cLW8dUWVkek"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "533437967220-0vvfbtukpbmcj1h9o6217bmv46sgv65v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,4 +1,4 @@
-package com.example.calorie_counter
+package com.codace.calorie_counter
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
