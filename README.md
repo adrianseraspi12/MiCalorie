@@ -1,16 +1,12 @@
-# calorie_counter
+# MiCalorie
+<b>MiCalorie</b> is an application to easily monitor your daily calorie count. MiCalorie helps you to keep your diet on track by saving the foods you eat.
 
-A new Flutter project.
+## Features
+- Calculate your calories, carbs, fat, and protein
+- Monitor your daily calorie count
+- Keep track of the foods you eat
+- Search food and add it to your food list
+- Check nutrient content of food
+- Customize a food and input the nutrients by using Quick Add
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Download [MiCalorie](https://play.google.com/store/apps/details?id=com.codace.calorie_counter&hl=en) now
