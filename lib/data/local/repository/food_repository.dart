@@ -35,5 +35,21 @@ class FoodRepository implements Repository<Food> {
       await _foodDao.updateFood(data);
     }
   }
+
+  @override
+  Future<bool> futureUpsert(Food data) async {
+    final id = await _foodDao.insertFood(data);
+
+    if (id == -1 || id == null) {
+      var id = await _foodDao.updateFood(data);
+
+      if (id == -1 || id == null) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+    return true;
+  }
   
 }

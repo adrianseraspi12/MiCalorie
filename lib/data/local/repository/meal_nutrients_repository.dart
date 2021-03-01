@@ -36,4 +36,20 @@ class MealNutrientsRepository implements Repository<MealNutrients> {
     }
   }
 
+  @override
+  Future<bool> futureUpsert(MealNutrients data) async {
+    final id = await _mealNutrientsDao.insertMeal(data);
+
+    if (id == -1 || id == null) {
+      var id = await _mealNutrientsDao.updatedMeal(data);
+
+      if (id == -1 || id == null) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+    return true;
+  }
+
 }
