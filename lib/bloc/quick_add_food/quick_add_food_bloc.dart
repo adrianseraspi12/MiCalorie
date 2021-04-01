@@ -33,20 +33,20 @@ class QuickAddFoodBloc extends Bloc<QuickAddFoodEvent, QuickAddFoodState> {
   int _carbs = 0;
   int _protein = 0;
   int _fat = 0;
-  int _quantity = 0;
+  int _quantity = 1;
   String _name = '';
   String _brand = '';
 
   @override
   Stream<QuickAddFoodState> mapEventToState(QuickAddFoodEvent event) async* {
     if (event is AddFoodEvent) {
-      yield LoadingQuickAddFoodState();
       var errorMessage = _hasErrorMessage(event);
-
       if (errorMessage.isNotEmpty) {
         yield ErrorQuickAddFoodState(errorMessage);
         return;
       }
+
+      yield LoadingQuickAddFoodState();
 
       try {
         var totalNutrientsId = await _updateNutrients(_mealNutrients);

@@ -17,22 +17,24 @@ class QuickAddFoodScreen extends StatelessWidget {
   final MealNutrients _mealNutrients;
 
   QuickAddFoodScreen(this._mealNutrients);
-  QuickAddFoodBloc _quickAddFoodBloc;
 
   @override
   Widget build(BuildContext context) {
+    QuickAddFoodBloc quickAddFoodBloc;
     return FutureBuilder<AppDatabase>(
         future: AppDatabase.getInstance(),
         builder: (context, snapshot) {
+          if (!snapshot.hasData || snapshot.hasError) {
+            return Container();
+          }
           final database = snapshot.data;
-          _quickAddFoodBloc = QuickAddFoodBloc(
+          quickAddFoodBloc = QuickAddFoodBloc(
               MealNutrientsRepository(database.mealNutrientsDao),
               FoodRepository(database.foodDao),
               TotalNutrientsPerDayRepository(database.totalNutrientsPerDayDao),
-              _mealNutrients
-          );
+              _mealNutrients);
           return BlocProvider<QuickAddFoodBloc>(
-            create: (context) => _quickAddFoodBloc,
+            create: (context) => quickAddFoodBloc,
             child: BlocListener<QuickAddFoodBloc, QuickAddFoodState>(
               listener: (context, state) {
                 if (state is LoadingQuickAddFoodState) {
@@ -58,8 +60,8 @@ class QuickAddFoodScreen extends StatelessWidget {
                     child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    _buildActionButtons(context),
-                    Expanded(child: _buildTextfields())
+                    _buildActionButtons(context, quickAddFoodBloc),
+                    Expanded(child: _buildTextfields(quickAddFoodBloc))
                   ],
                 )),
               ),
@@ -68,7 +70,7 @@ class QuickAddFoodScreen extends StatelessWidget {
         });
   }
 
-  Widget _buildActionButtons(BuildContext context) {
+  Widget _buildActionButtons(BuildContext context, QuickAddFoodBloc bloc) {
     return Neumorphic(
       margin: EdgeInsets.only(bottom: 4.0),
       padding: EdgeInsets.all(16.0),
@@ -88,7 +90,7 @@ class QuickAddFoodScreen extends StatelessWidget {
           CircularButton(
             icon: Icon(Icons.add),
             onPressed: () {
-              _quickAddFoodBloc.add(AddFoodEvent());
+              bloc.add(AddFoodEvent());
             },
           ),
         ],
@@ -96,7 +98,7 @@ class QuickAddFoodScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildTextfields() {
+  Widget _buildTextfields(QuickAddFoodBloc bloc) {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
@@ -105,8 +107,7 @@ class QuickAddFoodScreen extends StatelessWidget {
             textfield: _buildNeumorphicTextfield(
                 textHint: 'Food',
                 onChanged: (text) {
-                  _quickAddFoodBloc.updateText(
-                      text, QuickAddFoodTextFieldType.name);
+                  bloc.updateText(text, QuickAddFoodTextFieldType.name);
                 }),
           ),
           _buildTextfield(
@@ -114,8 +115,7 @@ class QuickAddFoodScreen extends StatelessWidget {
             textfield: _buildNeumorphicTextfield(
                 textHint: '(Optional)',
                 onChanged: (text) {
-                  _quickAddFoodBloc.updateText(
-                      text, QuickAddFoodTextFieldType.brand);
+                  bloc.updateText(text, QuickAddFoodTextFieldType.brand);
                 }),
           ),
           _buildTextfield(
@@ -127,7 +127,7 @@ class QuickAddFoodScreen extends StatelessWidget {
                 ],
                 textInputType: TextInputType.number,
                 onChanged: (text) {
-                  _quickAddFoodBloc.updateText(text, QuickAddFoodTextFieldType.quantity);
+                  bloc.updateText(text, QuickAddFoodTextFieldType.quantity);
                 }),
           ),
           _buildTextfield(
@@ -139,8 +139,7 @@ class QuickAddFoodScreen extends StatelessWidget {
                 ],
                 textInputType: TextInputType.number,
                 onChanged: (text) {
-                  _quickAddFoodBloc.updateText(
-                      text, QuickAddFoodTextFieldType.calories);
+                  bloc.updateText(text, QuickAddFoodTextFieldType.calories);
                 }),
           ),
           _buildTextfield(
@@ -152,8 +151,7 @@ class QuickAddFoodScreen extends StatelessWidget {
                 ],
                 textInputType: TextInputType.number,
                 onChanged: (text) {
-                  _quickAddFoodBloc.updateText(
-                      text, QuickAddFoodTextFieldType.carbs);
+                  bloc.updateText(text, QuickAddFoodTextFieldType.carbs);
                 }),
           ),
           _buildTextfield(
@@ -165,8 +163,7 @@ class QuickAddFoodScreen extends StatelessWidget {
                 ],
                 textInputType: TextInputType.number,
                 onChanged: (text) {
-                  _quickAddFoodBloc.updateText(
-                      text, QuickAddFoodTextFieldType.fat);
+                  bloc.updateText(text, QuickAddFoodTextFieldType.fat);
                 }),
           ),
           _buildTextfield(
@@ -178,8 +175,7 @@ class QuickAddFoodScreen extends StatelessWidget {
                 ],
                 textInputType: TextInputType.number,
                 onChanged: (text) {
-                  _quickAddFoodBloc.updateText(
-                      text, QuickAddFoodTextFieldType.protein);
+                  bloc.updateText(text, QuickAddFoodTextFieldType.protein);
                 }),
           ),
         ],
