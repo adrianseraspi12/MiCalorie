@@ -36,6 +36,13 @@ class QuickAddFoodScreen extends StatelessWidget {
           return BlocProvider<QuickAddFoodBloc>(
             create: (context) => quickAddFoodBloc,
             child: BlocListener<QuickAddFoodBloc, QuickAddFoodState>(
+              listenWhen: (previous, state) {
+                if (state is LoadingQuickAddFoodState ||
+                    state is LoadedQuickAddFoodState) {
+                  return true;
+                }
+                return false;
+              },
               listener: (context, state) {
                 if (state is LoadingQuickAddFoodState) {
                   _showAlertDialog(context, 'SAVING', 'LOADING...');
