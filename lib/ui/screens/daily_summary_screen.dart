@@ -11,7 +11,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:intl/intl.dart';
 
 import 'meal_food_list_screen.dart';
-import 'widgets/pie_chart/nutrient_pie_chart_view.dart';
+import '../widgets/pie_chart/nutrient_pie_chart_view.dart';
 
 class DailySummaryScreen extends StatelessWidget {
   @override

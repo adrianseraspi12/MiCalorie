@@ -5,7 +5,7 @@ import 'package:calorie_counter/data/api/model/list_of_food.dart';
 import 'package:calorie_counter/data/api/service.dart';
 import 'package:calorie_counter/data/local/entity/food.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
-import 'package:calorie_counter/ui/food_details_screen.dart';
+import 'package:calorie_counter/ui/screens/food_details_screen.dart';
 import 'package:calorie_counter/ui/widgets/neumorphic/circular_button.dart';
 import 'package:calorie_counter/ui/widgets/neumorphic/neumorphic_textfield.dart';
 import 'package:calorie_counter/util/constant/routes.dart';
