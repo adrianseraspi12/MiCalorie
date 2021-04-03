@@ -9,7 +9,7 @@ void main() {
 
   runApp(
     MaterialApp(
-      title: 'Calorie Counter',
+      title: 'MiCalorie',
       theme: ThemeData(
         primaryColor: Colors.red[400]
       ),
