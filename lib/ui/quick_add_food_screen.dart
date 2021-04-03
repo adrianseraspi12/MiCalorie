@@ -52,7 +52,8 @@ class QuickAddFoodScreen extends StatelessWidget {
                       .then((val) => Navigator.popUntil(context, (route) {
                             if (route.settings.name == '/mealFoodListScreen') {
                               (route.settings.arguments
-                                  as Map)['mealNutrients'] = _mealNutrients;
+                                      as Map)['mealNutrients'] =
+                                  state.mealNutrients;
                               return true;
                             }
                             return false;

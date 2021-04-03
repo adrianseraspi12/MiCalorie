@@ -10,7 +10,14 @@ class InitialQuickAddFoodState extends QuickAddFoodState {}
 
 class LoadingQuickAddFoodState extends QuickAddFoodState {}
 
-class LoadedQuickAddFoodState extends QuickAddFoodState {}
+class LoadedQuickAddFoodState extends QuickAddFoodState {
+  final MealNutrients mealNutrients;
+
+  LoadedQuickAddFoodState(this.mealNutrients);
+
+  @override
+  List<Object> get props => [mealNutrients];
+}
 
 class ErrorQuickAddFoodState extends QuickAddFoodState {
   ErrorQuickAddFoodState(this.message);
