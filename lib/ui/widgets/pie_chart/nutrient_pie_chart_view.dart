@@ -1,9 +1,9 @@
-import 'package:calorie_counter/ui/widgets/pie_chart_view.dart';
+import 'package:calorie_counter/ui/widgets/pie_chart/pie_chart_view.dart';
 import 'package:flutter/material.dart';
 import 'package:calorie_counter/util/extension/ext_number_rounding.dart';
 
 
-import 'circular_view.dart';
+import '../neumorphic/circular_view.dart';
 
 class NutrientPieChartView extends StatelessWidget {
 

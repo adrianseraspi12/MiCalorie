@@ -7,7 +7,7 @@ import 'package:calorie_counter/data/local/repository/meal_nutrients_repository.
 import 'package:calorie_counter/data/local/repository/total_nutrients_per_day_repository.dart';
 import 'package:calorie_counter/ui/quick_add_food_screen.dart';
 import 'package:calorie_counter/ui/search_food_screen.dart';
-import 'package:calorie_counter/ui/widgets/circular_button.dart';
+import 'package:calorie_counter/ui/widgets/neumorphic/circular_button.dart';
 import 'package:calorie_counter/ui/widgets/modal.dart';
 import 'package:calorie_counter/ui/widgets/snackbar.dart';
 import 'package:calorie_counter/ui/widgets/svg_loader.dart';
