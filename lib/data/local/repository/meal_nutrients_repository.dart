@@ -28,12 +28,14 @@ class MealNutrientsRepository implements Repository<MealNutrients> {
   }
 
   @override
-  void upsert(MealNutrients data) async {
-    final id = await _mealNutrientsDao.insertMeal(data);
+  Future<int> upsert(MealNutrients data) async {
+    var id = await _mealNutrientsDao.insertMeal(data);
   
     if (id == -1 || id == null) {
-      await _mealNutrientsDao.updatedMeal(data);
+      id = await _mealNutrientsDao.updatedMeal(data);
     }
+
+    return id;
   }
 
   @override
