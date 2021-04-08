@@ -2,23 +2,26 @@ import 'package:calorie_counter/data/local/dao/total_nutrients_per_day_dao.dart'
 import 'package:calorie_counter/data/local/entity/total_nutrients_per_day.dart';
 import 'package:calorie_counter/data/local/repository/repository.dart';
 
-class TotalNutrientsPerDayRepository implements Repository<TotalNutrientsPerDay> {
-
+class TotalNutrientsPerDayRepository implements TotalNutrientsRepository {
   final TotalNutrientsPerDayDao _totalNutrientsPerDayDao;
 
   TotalNutrientsPerDayRepository(this._totalNutrientsPerDayDao);
 
+  @override
   Future<int> getRowCount() async {
-    final listOfTotalNutrients = await _totalNutrientsPerDayDao.getAllNutrients();
+    final listOfTotalNutrients =
+        await _totalNutrientsPerDayDao.getAllNutrients();
     return listOfTotalNutrients.length;
   }
 
-  Future<TotalNutrientsPerDay> getTotalNutrientsByDate(String itemId) {
-    return _totalNutrientsPerDayDao.findTotalNutrientsByDate(itemId.toString());
+  @override
+  Future<TotalNutrientsPerDay> getDataById(int id) {
+    return _totalNutrientsPerDayDao.findTotalNutrientsById(id);
   }
 
-  Future<TotalNutrientsPerDay> getTotalNutrientsById(int id) {
-    return _totalNutrientsPerDayDao.findTotalNutrientsById(id);
+  @override
+  Future<TotalNutrientsPerDay> getTotalNutrientsByDate(String itemId) {
+    return _totalNutrientsPerDayDao.findTotalNutrientsByDate(itemId.toString());
   }
 
   @override
@@ -35,7 +38,7 @@ class TotalNutrientsPerDayRepository implements Repository<TotalNutrientsPerDay>
   @override
   Future<int> upsert(TotalNutrientsPerDay data) async {
     final id = await _totalNutrientsPerDayDao.insertTotalNutrients(data);
-  
+
     if (id == -1 || id == null) {
       return _totalNutrientsPerDayDao.updateTotalNutrients(data);
     }
@@ -58,5 +61,4 @@ class TotalNutrientsPerDayRepository implements Repository<TotalNutrientsPerDay>
     }
     return true;
   }
-
 }
