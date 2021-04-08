@@ -9,7 +9,6 @@ import 'package:calorie_counter/data/local/entity/total_nutrients_per_day.dart';
 import 'package:calorie_counter/data/local/repository/repository.dart';
 import 'package:calorie_counter/util/constant/meal_type.dart';
 import 'package:calorie_counter/util/extension/ext_meal_nutrients_list.dart';
-import 'package:flutter/cupertino.dart';
 
 class MainDataSource implements DataSource {
   final Repository<Food> _foodRepo;
@@ -212,8 +211,6 @@ class MainDataSource implements DataSource {
 
   Future<MealNutrients> _updateMeal(
       int totalNutrientsPerDayId, Food food, MealNutrients mealNutrients, int newCount) async {
-    debugPrint("OLD ID = ${mealNutrients.id}");
-
     var currentMealNutrients = await _mealNutrientsRepo.getDataById(mealNutrients.id);
 
     if (currentMealNutrients == null) {
@@ -271,8 +268,6 @@ class MainDataSource implements DataSource {
             date: mealNutrients.date);
       }
     }
-
-    debugPrint("NEW ID = ${currentMealNutrients.id}");
     _mealNutrientsRepo.upsert(currentMealNutrients);
     return currentMealNutrients;
   }
