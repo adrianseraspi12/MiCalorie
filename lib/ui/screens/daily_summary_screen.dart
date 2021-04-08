@@ -1,8 +1,7 @@
 import 'package:calorie_counter/bloc/daily_summary/daily_summary_bloc.dart';
 import 'package:calorie_counter/data/local/app_database.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
-import 'package:calorie_counter/data/local/repository/meal_nutrients_repository.dart';
-import 'package:calorie_counter/data/local/repository/total_nutrients_per_day_repository.dart';
+import 'package:calorie_counter/injection.dart';
 import 'package:calorie_counter/util/constant/routes.dart';
 import 'package:calorie_counter/util/extension/ext_meal_type_description.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +9,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:intl/intl.dart';
 
-import 'meal_food_list_screen.dart';
 import '../widgets/pie_chart/nutrient_pie_chart_view.dart';
+import 'meal_food_list_screen.dart';
 
 class DailySummaryScreen extends StatelessWidget {
   @override
@@ -25,9 +24,7 @@ class DailySummaryScreen extends StatelessWidget {
           return Container();
         }
         final database = snapshot.data;
-        dailySummaryBloc = DailySummaryBloc(
-            TotalNutrientsPerDayRepository(database.totalNutrientsPerDayDao),
-            MealNutrientsRepository(database.mealNutrientsDao));
+        dailySummaryBloc = DailySummaryBloc(Injection.provideMainDataSource(database));
 
         final formattedDate = DateTime.now();
         dailySummaryBloc.add(ChangeTimeEvent(formattedDate));
@@ -59,21 +56,19 @@ class DailySummaryScreen extends StatelessWidget {
     );
   }
 
-  void _showMealFoodListScreen(BuildContext context,
-      MealNutrients mealNutrients, DailySummaryBloc bloc) async {
+  void _showMealFoodListScreen(
+      BuildContext context, MealNutrients mealNutrients, DailySummaryBloc bloc) async {
     await Navigator.of(context)
         .push(MaterialPageRoute(
             builder: (context) => MealFoodListScreen(mealNutrients),
-            settings: RouteSettings(
-                name: Routes.mealFoodListScreen, arguments: Map())))
+            settings: RouteSettings(name: Routes.mealFoodListScreen, arguments: Map())))
         .then((val) {
       var dateTime = DateFormat("EEEE, MMM d, yyyy").parse(val);
       bloc.add(LoadTotalNutrientsEvent(dateTime));
     });
   }
 
-  void _buildDatePicker(
-      BuildContext context, DateTime dateTime, DailySummaryBloc bloc) async {
+  void _buildDatePicker(BuildContext context, DateTime dateTime, DailySummaryBloc bloc) async {
     final DateTime pickedDate = await showDatePicker(
         context: context,
         initialDate: dateTime,
@@ -87,8 +82,7 @@ class DailySummaryScreen extends StatelessWidget {
   }
 
   Widget _buildAppBarDate(BuildContext context, DailySummaryBloc bloc) {
-    return BlocBuilder<DailySummaryBloc, DailySummaryState>(
-        buildWhen: (previous, state) {
+    return BlocBuilder<DailySummaryBloc, DailySummaryState>(buildWhen: (previous, state) {
       if (state is LoadedDateTimeState) {
         return true;
       }
@@ -177,12 +171,9 @@ class DailySummaryScreen extends StatelessWidget {
     });
   }
 
-  Widget _buildNutrientsSummary(
-      BuildContext context, int index, DailySummaryBloc bloc) {
-    return BlocBuilder<DailySummaryBloc, DailySummaryState>(
-        buildWhen: (previous, state) {
-      if (state is LoadedDailySummaryState ||
-          state is InitialDailySummaryState) {
+  Widget _buildNutrientsSummary(BuildContext context, int index, DailySummaryBloc bloc) {
+    return BlocBuilder<DailySummaryBloc, DailySummaryState>(buildWhen: (previous, state) {
+      if (state is LoadedDailySummaryState || state is InitialDailySummaryState) {
         return true;
       }
       return false;
@@ -211,8 +202,8 @@ class DailySummaryScreen extends StatelessWidget {
     });
   }
 
-  Widget _buildMealSummary(BuildContext context, DailySummaryBloc bloc,
-      MealNutrients mealNutrients) {
+  Widget _buildMealSummary(
+      BuildContext context, DailySummaryBloc bloc, MealNutrients mealNutrients) {
     return NeumorphicButton(
       margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       onClick: () => _showMealFoodListScreen(context, mealNutrients, bloc),
@@ -297,8 +288,7 @@ class DailySummaryScreen extends StatelessWidget {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 16.0),
+                          padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
                           child: Column(
                             children: <Widget>[
                               FittedBox(

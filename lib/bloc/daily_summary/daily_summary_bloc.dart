@@ -1,10 +1,8 @@
+import 'package:calorie_counter/data/local/data_source/i_data_source.dart';
+import 'package:calorie_counter/data/local/data_source/result.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
 import 'package:calorie_counter/data/local/entity/total_nutrients_per_day.dart';
-import 'package:calorie_counter/data/local/repository/meal_nutrients_repository.dart';
-import 'package:calorie_counter/data/local/repository/total_nutrients_per_day_repository.dart';
-import 'package:calorie_counter/util/constant/meal_type.dart';
 import 'package:calorie_counter/util/extension/ext_date_time_formatter.dart';
-import 'package:calorie_counter/util/extension/ext_meal_nutrients_list.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,12 +12,9 @@ part 'daily_summary_event.dart';
 part 'daily_summary_state.dart';
 
 class DailySummaryBloc extends Bloc<DailySummaryEvent, DailySummaryState> {
-  DailySummaryBloc(
-      this._totalNutrientsPerDayRepository, this._mealNutrientsRepository)
-      : super(InitialDailySummaryState());
+  DailySummaryBloc(this._dataSource) : super(InitialDailySummaryState());
 
-  final TotalNutrientsPerDayRepository _totalNutrientsPerDayRepository;
-  final MealNutrientsRepository _mealNutrientsRepository;
+  final DataSource _dataSource;
 
   @override
   Stream<DailySummaryState> mapEventToState(DailySummaryEvent event) async* {
@@ -29,10 +24,21 @@ class DailySummaryBloc extends Bloc<DailySummaryEvent, DailySummaryState> {
       yield LoadedDateTimeState(dateTimeString, currentDateTime);
     } else if (event is LoadTotalNutrientsEvent) {
       final date = event.dateTime.formatDate('EEEE, MMM d, yyyy');
-      var totalNutrients = await _getTotalNutrientsPerDay(date);
-      var listOfMealNutrients =
-          await _getListOfMealNutrients(date, totalNutrients);
-      yield LoadedDailySummaryState(totalNutrients, listOfMealNutrients);
+      var totalNutrientsResult = await _dataSource.getTotalNutrientsPerDay(date);
+
+      if (totalNutrientsResult is Fail) {
+        return;
+      }
+
+      var totalNutrients = (totalNutrientsResult as Success<TotalNutrientsPerDay>).data;
+      var mealNutrientsResult = await _dataSource.getAllMealNutrients(totalNutrients.id, date);
+
+      if (mealNutrientsResult is Fail) {
+        return;
+      }
+
+      var listOfMeal = (mealNutrientsResult as Success<List<MealNutrients>>).data;
+      yield LoadedDailySummaryState(totalNutrients, listOfMeal);
     }
   }
 
@@ -45,71 +51,5 @@ class DailySummaryBloc extends Bloc<DailySummaryEvent, DailySummaryState> {
     } else {
       return selectedDate;
     }
-  }
-
-  Future<TotalNutrientsPerDay> _getTotalNutrientsPerDay(String date) async {
-    final totalNutrientsPerDay =
-        await _totalNutrientsPerDayRepository.getTotalNutrientsByDate(date);
-    if (totalNutrientsPerDay == null) {
-      final id = await _totalNutrientsPerDayRepository.getRowCount();
-      final currentId = id + 1;
-
-      return TotalNutrientsPerDay(currentId, date, 0, 0, 0, 0);
-    }
-    return totalNutrientsPerDay;
-  }
-
-  Future<List<MealNutrients>> _getListOfMealNutrients(
-      String date, TotalNutrientsPerDay totalNutrientsPerDay) async {
-    var listOfMealNutrients =
-        await _mealNutrientsRepository.findAllDataWith(totalNutrientsPerDay.id);
-
-    if (listOfMealNutrients == null) {
-      List<MealNutrients> listOfMealNutrients = [];
-
-      listOfMealNutrients.add(_createDefaultMealNutrients(
-          totalNutrientsPerDay.id, MealType.BREAKFAST, date));
-      listOfMealNutrients.add(_createDefaultMealNutrients(
-          totalNutrientsPerDay.id, MealType.LUNCH, date));
-      listOfMealNutrients.add(_createDefaultMealNutrients(
-          totalNutrientsPerDay.id, MealType.DINNER, date));
-      listOfMealNutrients.add(_createDefaultMealNutrients(
-          totalNutrientsPerDay.id, MealType.SNACK, date));
-
-      return listOfMealNutrients;
-    } else {
-      if (!listOfMealNutrients.containsType(MealType.BREAKFAST)) {
-        listOfMealNutrients.add(_createDefaultMealNutrients(
-            totalNutrientsPerDay.id, MealType.BREAKFAST, date));
-      }
-
-      if (!listOfMealNutrients.containsType(MealType.LUNCH)) {
-        listOfMealNutrients.add(_createDefaultMealNutrients(
-            totalNutrientsPerDay.id, MealType.LUNCH, date));
-      }
-
-      if (!listOfMealNutrients.containsType(MealType.DINNER)) {
-        listOfMealNutrients.add(_createDefaultMealNutrients(
-            totalNutrientsPerDay.id, MealType.DINNER, date));
-      }
-
-      if (!listOfMealNutrients.containsType(MealType.SNACK)) {
-        listOfMealNutrients.add(_createDefaultMealNutrients(
-            totalNutrientsPerDay.id, MealType.SNACK, date));
-      }
-
-      for (var mealNutrients in listOfMealNutrients) {
-        mealNutrients.date = date;
-      }
-
-      listOfMealNutrients.sort((a, b) => a.type.compareTo(b.type));
-      return listOfMealNutrients;
-    }
-  }
-
-  MealNutrients _createDefaultMealNutrients(
-      int totalNutrientsPerDayId, int type, String date) {
-    return MealNutrients(0, 0, 0, 0, 0, type, totalNutrientsPerDayId,
-        date: date);
   }
 }

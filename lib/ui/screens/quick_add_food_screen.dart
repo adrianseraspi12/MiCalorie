@@ -2,9 +2,7 @@ import 'package:calorie_counter/bloc/quick_add_food/quick_add_food_bloc.dart';
 import 'package:calorie_counter/bloc/quick_add_food/quick_add_food_text_field_type.dart';
 import 'package:calorie_counter/data/local/app_database.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
-import 'package:calorie_counter/data/local/repository/food_repository.dart';
-import 'package:calorie_counter/data/local/repository/meal_nutrients_repository.dart';
-import 'package:calorie_counter/data/local/repository/total_nutrients_per_day_repository.dart';
+import 'package:calorie_counter/injection.dart';
 import 'package:calorie_counter/ui/widgets/neumorphic/circular_button.dart';
 import 'package:calorie_counter/ui/widgets/neumorphic/neumorphic_textfield.dart';
 import 'package:flutter/material.dart';
@@ -28,17 +26,14 @@ class QuickAddFoodScreen extends StatelessWidget {
             return Container();
           }
           final database = snapshot.data;
-          quickAddFoodBloc = QuickAddFoodBloc(
-              MealNutrientsRepository(database.mealNutrientsDao),
-              FoodRepository(database.foodDao),
-              TotalNutrientsPerDayRepository(database.totalNutrientsPerDayDao),
-              _mealNutrients);
+
+          quickAddFoodBloc =
+              QuickAddFoodBloc(_mealNutrients, Injection.provideMainDataSource(database));
           return BlocProvider<QuickAddFoodBloc>(
             create: (context) => quickAddFoodBloc,
             child: BlocListener<QuickAddFoodBloc, QuickAddFoodState>(
               listenWhen: (previous, state) {
-                if (state is LoadingQuickAddFoodState ||
-                    state is LoadedQuickAddFoodState) {
+                if (state is LoadingQuickAddFoodState || state is LoadedQuickAddFoodState) {
                   return true;
                 }
                 return false;
@@ -47,12 +42,10 @@ class QuickAddFoodScreen extends StatelessWidget {
                 if (state is LoadingQuickAddFoodState) {
                   _showAlertDialog(context, 'SAVING', 'LOADING...');
                 } else if (state is LoadedQuickAddFoodState) {
-                  Fluttertoast.showToast(
-                          msg: 'Food added', timeInSecForIosWeb: 2)
+                  Fluttertoast.showToast(msg: 'Food added', timeInSecForIosWeb: 2)
                       .then((val) => Navigator.popUntil(context, (route) {
                             if (route.settings.name == '/mealFoodListScreen') {
-                              (route.settings.arguments
-                                      as Map)['mealNutrients'] =
+                              (route.settings.arguments as Map)['mealNutrients'] =
                                   state.mealNutrients;
                               return true;
                             }
@@ -130,9 +123,7 @@ class QuickAddFoodScreen extends StatelessWidget {
             title: 'Quantity :',
             textfield: _buildNeumorphicTextfield(
                 text: '1',
-                textInputFormatter: <TextInputFormatter>[
-                  WhitelistingTextInputFormatter.digitsOnly
-                ],
+                textInputFormatter: <TextInputFormatter>[WhitelistingTextInputFormatter.digitsOnly],
                 textInputType: TextInputType.number,
                 onChanged: (text) {
                   bloc.updateText(text, QuickAddFoodTextFieldType.quantity);
@@ -142,9 +133,7 @@ class QuickAddFoodScreen extends StatelessWidget {
             title: 'Calories :',
             textfield: _buildNeumorphicTextfield(
                 text: '0',
-                textInputFormatter: <TextInputFormatter>[
-                  WhitelistingTextInputFormatter.digitsOnly
-                ],
+                textInputFormatter: <TextInputFormatter>[WhitelistingTextInputFormatter.digitsOnly],
                 textInputType: TextInputType.number,
                 onChanged: (text) {
                   bloc.updateText(text, QuickAddFoodTextFieldType.calories);
@@ -154,9 +143,7 @@ class QuickAddFoodScreen extends StatelessWidget {
             title: 'Carbs :',
             textfield: _buildNeumorphicTextfield(
                 text: '0',
-                textInputFormatter: <TextInputFormatter>[
-                  WhitelistingTextInputFormatter.digitsOnly
-                ],
+                textInputFormatter: <TextInputFormatter>[WhitelistingTextInputFormatter.digitsOnly],
                 textInputType: TextInputType.number,
                 onChanged: (text) {
                   bloc.updateText(text, QuickAddFoodTextFieldType.carbs);
@@ -166,9 +153,7 @@ class QuickAddFoodScreen extends StatelessWidget {
             title: 'Fat :',
             textfield: _buildNeumorphicTextfield(
                 text: '0',
-                textInputFormatter: <TextInputFormatter>[
-                  WhitelistingTextInputFormatter.digitsOnly
-                ],
+                textInputFormatter: <TextInputFormatter>[WhitelistingTextInputFormatter.digitsOnly],
                 textInputType: TextInputType.number,
                 onChanged: (text) {
                   bloc.updateText(text, QuickAddFoodTextFieldType.fat);
@@ -178,9 +163,7 @@ class QuickAddFoodScreen extends StatelessWidget {
             title: 'Protein :',
             textfield: _buildNeumorphicTextfield(
                 text: '0',
-                textInputFormatter: <TextInputFormatter>[
-                  WhitelistingTextInputFormatter.digitsOnly
-                ],
+                textInputFormatter: <TextInputFormatter>[WhitelistingTextInputFormatter.digitsOnly],
                 textInputType: TextInputType.number,
                 onChanged: (text) {
                   bloc.updateText(text, QuickAddFoodTextFieldType.protein);
