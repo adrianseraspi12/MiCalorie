@@ -2,13 +2,11 @@ import 'package:calorie_counter/bloc/meal_food_list/meal_food_list_bloc.dart';
 import 'package:calorie_counter/data/local/app_database.dart';
 import 'package:calorie_counter/data/local/entity/food.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
-import 'package:calorie_counter/data/local/repository/food_repository.dart';
-import 'package:calorie_counter/data/local/repository/meal_nutrients_repository.dart';
-import 'package:calorie_counter/data/local/repository/total_nutrients_per_day_repository.dart';
+import 'package:calorie_counter/injection.dart';
 import 'package:calorie_counter/ui/screens/quick_add_food_screen.dart';
 import 'package:calorie_counter/ui/screens/search_food_screen.dart';
-import 'package:calorie_counter/ui/widgets/neumorphic/circular_button.dart';
 import 'package:calorie_counter/ui/widgets/modal.dart';
+import 'package:calorie_counter/ui/widgets/neumorphic/circular_button.dart';
 import 'package:calorie_counter/ui/widgets/snackbar.dart';
 import 'package:calorie_counter/ui/widgets/svg_loader.dart';
 import 'package:calorie_counter/util/constant/routes.dart';
@@ -43,12 +41,9 @@ class MealFoodListScreen extends StatelessWidget {
               return Container();
             }
             var database = snapshot.data;
-            mealFoodListBloc = MealFoodListBloc(
-                TotalNutrientsPerDayRepository(
-                    database.totalNutrientsPerDayDao),
-                MealNutrientsRepository(database.mealNutrientsDao),
-                FoodRepository(database.foodDao));
-            mealFoodListBloc.add(SetupFoodListEvent(mealNutrients.id));
+            mealFoodListBloc =
+                MealFoodListBloc(Injection.provideMainDataSource(database), mealNutrients);
+            mealFoodListBloc.add(SetupFoodListEvent(mealNutrients));
             mealFoodListBloc.date = mealNutrients.date;
             return BlocProvider<MealFoodListBloc>(
               create: (context) => mealFoodListBloc,
@@ -84,8 +79,7 @@ class MealFoodListScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAppbar(
-      BuildContext context, MealFoodListBloc bloc, Snackbar snackbar) {
+  Widget _buildAppbar(BuildContext context, MealFoodListBloc bloc, Snackbar snackbar) {
     return Neumorphic(
       margin: EdgeInsets.only(bottom: 4.0),
       padding: EdgeInsets.all(16.0),
@@ -131,10 +125,8 @@ class MealFoodListScreen extends StatelessWidget {
                   Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  QuickAddFoodScreen(mealNutrients),
-                              settings: RouteSettings(
-                                  name: Routes.quickAddFoodScreen)))
+                              builder: (context) => QuickAddFoodScreen(bloc.mealNutrients),
+                              settings: RouteSettings(name: Routes.quickAddFoodScreen)))
                       .then((value) => _retainData(context, bloc));
                 },
                 () {
@@ -143,8 +135,7 @@ class MealFoodListScreen extends StatelessWidget {
                   Navigator.of(context)
                       .push(MaterialPageRoute(
                           builder: (context) => SearchFoodScreen(mealNutrients),
-                          settings:
-                              RouteSettings(name: Routes.searchFoodScreen)))
+                          settings: RouteSettings(name: Routes.searchFoodScreen)))
                       .then((v) => _retainData(context, bloc));
                 }
               ];
@@ -158,8 +149,7 @@ class MealFoodListScreen extends StatelessWidget {
   }
 
   Widget _buildResults(MealFoodListBloc bloc, Snackbar snackbar) {
-    return BlocBuilder<MealFoodListBloc, MealFoodListState>(
-        buildWhen: (previous, state) {
+    return BlocBuilder<MealFoodListBloc, MealFoodListState>(buildWhen: (previous, state) {
       if (state is UpdateNutrientsState) {
         return false;
       }
@@ -235,17 +225,15 @@ class MealFoodListScreen extends StatelessWidget {
     final arguments = ModalRoute.of(context).settings.arguments as Map;
     final retainMealNutrients = arguments['mealNutrients'] as MealNutrients;
     if (retainMealNutrients != null) {
-      bloc.add(SetupFoodListEvent(retainMealNutrients.id));
+      bloc.add(SetupFoodListEvent(retainMealNutrients));
       bloc.date = retainMealNutrients.date;
     }
   }
 
-  void _showFoodDetails(
-      BuildContext context, MealFoodListBloc bloc, Food food) {
+  void _showFoodDetails(BuildContext context, MealFoodListBloc bloc, Food food) {
     Navigator.of(context)
         .push(MaterialPageRoute(
-            builder: (BuildContext context) =>
-                FoodDetailsScreen(food, mealNutrients),
+            builder: (BuildContext context) => FoodDetailsScreen(food, bloc.mealNutrients),
             settings: RouteSettings(name: Routes.foodDetailsScreen)))
         .then((val) {
       _retainData(context, bloc);

@@ -7,12 +7,12 @@ abstract class MealFoodListEvent extends Equatable {
 }
 
 class SetupFoodListEvent extends MealFoodListEvent {
-  final int mealId;
+  final MealNutrients mealNutrients;
 
-  SetupFoodListEvent(this.mealId);
+  SetupFoodListEvent(this.mealNutrients);
 
   @override
-  List<Object> get props => [mealId];
+  List<Object> get props => [mealNutrients];
 }
 
 class RetainFoodListEvent extends MealFoodListEvent {
