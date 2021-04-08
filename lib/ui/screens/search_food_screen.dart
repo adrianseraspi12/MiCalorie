@@ -6,6 +6,7 @@ import 'package:calorie_counter/data/api/service.dart';
 import 'package:calorie_counter/data/local/entity/food.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
 import 'package:calorie_counter/ui/screens/food_details_screen.dart';
+import 'package:calorie_counter/ui/widgets/image_view.dart';
 import 'package:calorie_counter/ui/widgets/neumorphic/circular_button.dart';
 import 'package:calorie_counter/ui/widgets/neumorphic/neumorphic_textfield.dart';
 import 'package:calorie_counter/util/constant/routes.dart';
@@ -13,7 +14,6 @@ import 'package:calorie_counter/util/extension/ext_number_rounding.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loading/indicator/ball_pulse_indicator.dart';
 import 'package:loading/loading.dart';
 
@@ -37,8 +37,7 @@ class SearchFoodScreen extends StatelessWidget {
             create: (context) => searchFoodBloc,
             child: Scaffold(
               backgroundColor: Color.fromRGBO(193, 214, 233, 1),
-              body:
-                  SafeArea(child: _buildSearchScreen(context, searchFoodBloc)),
+              body: SafeArea(child: _buildSearchScreen(context, searchFoodBloc)),
             ),
           );
         });
@@ -88,13 +87,11 @@ class SearchFoodScreen extends StatelessWidget {
   }
 
   Widget _buildCommonFoodResult(SearchFoodBloc searchFoodBloc) {
-    return BlocBuilder<SearchFoodBloc, SearchFoodState>(
-        builder: (context, state) {
+    return BlocBuilder<SearchFoodBloc, SearchFoodState>(builder: (context, state) {
       if (state is InitialSearchFoodState) {
         return _buildEmptyUI('Search now');
       } else if (state is LoadingSearchFoodState) {
-        return Center(
-            child: Loading(indicator: BallPulseIndicator(), size: 50.0));
+        return Center(child: Loading(indicator: BallPulseIndicator(), size: 50.0));
       } else if (state is ErrorSearchFoodState) {
         return _buildEmptyUI(state.errorMessage);
       } else if (state is LoadedSearchFoodState) {
@@ -106,23 +103,11 @@ class SearchFoodScreen extends StatelessWidget {
 
   Widget _buildEmptyUI(String message) {
     final String assetName = 'assets/images/search.svg';
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-              margin: EdgeInsets.only(bottom: 16.0),
-              child: _loadSVGImage(assetName, 100, 100)),
-          Text(
-            message,
-            style: TextStyle(
-              fontFamily: 'Roboto',
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-            ),
-          )
-        ],
-      ),
+    return ImageView(
+      resourceName: assetName,
+      height: 100,
+      width: 100,
+      caption: message,
     );
   }
 
@@ -148,8 +133,7 @@ class SearchFoodScreen extends StatelessWidget {
                   commonFood.details.nutrients.protein.roundTo(0).toInt());
 
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (BuildContext context) =>
-                      FoodDetailsScreen(food, mealNutrients),
+                  builder: (BuildContext context) => FoodDetailsScreen(food, mealNutrients),
                   settings: RouteSettings(name: Routes.foodDetailsScreen)));
             },
             style: NeumorphicStyle(
@@ -174,15 +158,5 @@ class SearchFoodScreen extends StatelessWidget {
             ),
           );
         });
-  }
-
-  Widget _loadSVGImage(String assetName, int height, int width) {
-    return SizedBox(
-      height: 100,
-      width: 100,
-      child: SvgPicture.asset(
-        assetName,
-      ),
-    );
   }
 }

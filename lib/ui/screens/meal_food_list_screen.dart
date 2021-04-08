@@ -5,10 +5,11 @@ import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
 import 'package:calorie_counter/injection.dart';
 import 'package:calorie_counter/ui/screens/quick_add_food_screen.dart';
 import 'package:calorie_counter/ui/screens/search_food_screen.dart';
+import 'package:calorie_counter/ui/widgets/image_view.dart';
+import 'package:calorie_counter/ui/widgets/list_row/food_view.dart';
 import 'package:calorie_counter/ui/widgets/modal.dart';
 import 'package:calorie_counter/ui/widgets/neumorphic/circular_button.dart';
 import 'package:calorie_counter/ui/widgets/snackbar.dart';
-import 'package:calorie_counter/ui/widgets/svg_loader.dart';
 import 'package:calorie_counter/util/constant/routes.dart';
 import 'package:calorie_counter/util/extension/ext_meal_type_description.dart';
 import 'package:flutter/material.dart';
@@ -157,23 +158,11 @@ class MealFoodListScreen extends StatelessWidget {
     }, builder: (context, state) {
       if (state is EmptyMealFoodListState) {
         final assetName = 'assets/images/signs.svg';
-        return Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                  margin: EdgeInsets.only(bottom: 16.0),
-                  child: SvgLoader.load(assetName, 100, 100)),
-              Text(
-                'No saved foods',
-                style: TextStyle(
-                  fontFamily: 'Roboto',
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                ),
-              )
-            ],
-          ),
+        return ImageView(
+          resourceName: assetName,
+          height: 100,
+          width: 100,
+          caption: 'No saved foods',
         );
       } else if (state is LoadedMealFoodListState) {
         var listOfFood = state.listOfFood;
@@ -181,9 +170,9 @@ class MealFoodListScreen extends StatelessWidget {
             itemCount: listOfFood.length,
             itemBuilder: (context, index) {
               final food = listOfFood[index];
-              return NeumorphicButton(
-                margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                onClick: () {
+              return FoodView(
+                food: food,
+                onTap: () {
                   final titles = ['View Food', 'Remove Food'];
                   final actions = [
                     () {
@@ -202,17 +191,6 @@ class MealFoodListScreen extends StatelessWidget {
                   ];
                   modal.bottomSheet(context, titles, actions);
                 },
-                style: NeumorphicStyle(
-                  depth: 2,
-                  shadowLightColor: Colors.white,
-                  shadowDarkColor: Color.fromRGBO(163, 177, 198, 1),
-                  color: Color.fromRGBO(193, 214, 233, 1),
-                ),
-                child: ListTile(
-                  title: Text('${food.name}'),
-                  subtitle: Text('${food.brandName}'),
-                  trailing: Text('${food.numOfServings}'),
-                ),
               );
             });
       }
