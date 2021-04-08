@@ -157,9 +157,9 @@ class MainDataSource implements DataSource {
           totalNutrientsId,
           mealNutrients.date,
           food.calories * newCount,
-          food.calories * newCount,
-          food.calories * newCount,
-          food.calories * newCount);
+          food.carbs * newCount,
+          food.fat * newCount,
+          food.protein * newCount);
 
       _totalNutrientsPerDayRepo.upsert(totalNutrientsPerDay);
     } else {
