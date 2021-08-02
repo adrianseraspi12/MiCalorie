@@ -58,8 +58,8 @@ class _NeumorphicTextfieldState extends State<NeumorphicTextfield> {
       duration: Duration(milliseconds: 150),
       child: Neumorphic(
         margin: EdgeInsets.symmetric(horizontal: 8.0),
-        boxShape: NeumorphicBoxShape.roundRect(borderRadius: BorderRadius.circular(4.0)),
         style: NeumorphicStyle(
+          boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(4.0)),
           depth: _textfieldDepth,
           shadowDarkColorEmboss: Color.fromRGBO(163,177,198, 1),
           shadowLightColorEmboss: Colors.white,

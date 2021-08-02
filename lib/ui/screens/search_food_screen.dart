@@ -14,8 +14,6 @@ import 'package:calorie_counter/util/extension/ext_number_rounding.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:loading/indicator/ball_pulse_indicator.dart';
-import 'package:loading/loading.dart';
 
 class SearchFoodScreen extends StatelessWidget {
   final MealNutrients mealNutrients;
@@ -91,7 +89,7 @@ class SearchFoodScreen extends StatelessWidget {
       if (state is InitialSearchFoodState) {
         return _buildEmptyUI('Search now');
       } else if (state is LoadingSearchFoodState) {
-        return Center(child: Loading(indicator: BallPulseIndicator(), size: 50.0));
+        return Center(child: CircularProgressIndicator(color: Colors.white));
       } else if (state is ErrorSearchFoodState) {
         return _buildEmptyUI(state.errorMessage);
       } else if (state is LoadedSearchFoodState) {
@@ -120,7 +118,7 @@ class SearchFoodScreen extends StatelessWidget {
 
           return NeumorphicButton(
             margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-            onClick: () {
+            onPressed: () {
               final food = Food(
                   -1,
                   mealNutrients.id,

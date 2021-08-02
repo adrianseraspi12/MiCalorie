@@ -13,10 +13,10 @@ abstract class MealNutrientsDao {
   @Query('SELECT * FROM meal_nutrients')
   Future<List<MealNutrients>> getAlldMeal();
 
-  @Insert(onConflict: OnConflictStrategy.IGNORE)
+  @Insert(onConflict: OnConflictStrategy.ignore)
   Future<int> insertMeal(MealNutrients breakfastNutrients);
 
-  @Update(onConflict: OnConflictStrategy.IGNORE)
+  @Update(onConflict: OnConflictStrategy.ignore)
   Future<int> updatedMeal(MealNutrients breakfastNutrients);
 
   @delete

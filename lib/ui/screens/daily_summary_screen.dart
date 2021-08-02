@@ -91,7 +91,7 @@ class DailySummaryScreen extends StatelessWidget {
           NeumorphicButton(
             padding: EdgeInsets.all(16.0),
             margin: EdgeInsets.symmetric(horizontal: 60.0, vertical: 8.0),
-            onClick: () {
+            onPressed: () {
               _buildDatePicker(context, dateTime, bloc);
             },
             style: NeumorphicStyle(
@@ -129,9 +129,9 @@ class DailySummaryScreen extends StatelessWidget {
                   ),
                 ),
                 Neumorphic(
-                  boxShape: NeumorphicBoxShape.circle(),
                   child: Icon(Icons.chevron_right),
                   style: NeumorphicStyle(
+                    boxShape: NeumorphicBoxShape.circle(),
                     shape: NeumorphicShape.convex,
                     shadowDarkColorEmboss: Color.fromRGBO(163, 177, 198, 1),
                     shadowLightColorEmboss: Colors.white,

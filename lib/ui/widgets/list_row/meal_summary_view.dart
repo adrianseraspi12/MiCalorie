@@ -13,7 +13,7 @@ class MealSummaryView extends StatelessWidget {
   Widget build(BuildContext context) {
     return NeumorphicButton(
       margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      onClick: onTap,
+      onPressed: onTap,
       style: NeumorphicStyle(
         shape: NeumorphicShape.convex,
         shadowDarkColorEmboss: Color.fromRGBO(163, 177, 198, 1),
@@ -42,9 +42,9 @@ class MealSummaryView extends StatelessWidget {
               Expanded(
                 flex: 1,
                 child: Neumorphic(
-                  boxShape: NeumorphicBoxShape.circle(),
                   child: Icon(Icons.chevron_right),
                   style: NeumorphicStyle(
+                    boxShape: NeumorphicBoxShape.circle(),
                     shape: NeumorphicShape.convex,
                     shadowDarkColorEmboss: Color.fromRGBO(163, 177, 198, 1),
                     shadowLightColorEmboss: Colors.white,

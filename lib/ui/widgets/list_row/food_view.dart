@@ -12,7 +12,7 @@ class FoodView extends StatelessWidget {
   Widget build(BuildContext context) {
     return NeumorphicButton(
       margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      onClick: onTap,
+      onPressed: onTap,
       style: NeumorphicStyle(
         depth: 2,
         shadowLightColor: Colors.white,

@@ -11,8 +11,8 @@ class CircularView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Neumorphic(
       margin: EdgeInsets.all(24.0),
-      boxShape: NeumorphicBoxShape.circle(),
       style: NeumorphicStyle(
+        boxShape: NeumorphicBoxShape.circle(),
         shadowLightColor: Colors.white,
         shadowDarkColor: Color.fromRGBO(163,177,198, 1),
         color: Color.fromRGBO(193,214,233, 1),

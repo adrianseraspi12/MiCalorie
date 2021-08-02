@@ -128,8 +128,8 @@ class FoodDetailsScreen extends StatelessWidget {
               Neumorphic(
                   margin: EdgeInsets.symmetric(horizontal: 16.0),
                   padding: EdgeInsets.all(16.0),
-                  boxShape: NeumorphicBoxShape.roundRect(borderRadius: BorderRadius.circular(4.0)),
                   style: NeumorphicStyle(
+                    boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(4.0)),
                     depth: -15,
                     shadowDarkColorEmboss: Color.fromRGBO(163, 177, 198, 1),
                     shadowLightColorEmboss: Colors.white,
