@@ -1,6 +1,6 @@
 import 'package:calorie_counter/data/local/entity/total_nutrients_per_day.dart';
 
-typedef SuccessCallback<T> = Function(T);
+typedef SuccessCalalback<T> = Function(T);
 typedef FailCallback = Function(String);
 
 abstract class Repository<T> {
