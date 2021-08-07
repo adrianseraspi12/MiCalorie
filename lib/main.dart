@@ -7,17 +7,17 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
 
 void main() async {
-
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  if (kDebugMode) {
-    // Force disable Crashlytics collection while doing every day development.
-    // Temporarily toggle this to true if you want to test crash reporting in your app.
-    await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
-  } else {
-    // Handle Crashlytics enabled status when not in Debug,
-    // e.g. allow your users to opt-in to crash reporting.
-  }
+  // if (kDebugMode) {
+  //   // Force disable Crashlytics collection while doing every day development.
+  //   // Temporarily toggle this to true if you want to test crash reporting in your app.
+  //   await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(false);
+  // } else {
+  //   // Handle Crashlytics enabled status when not in Debug,
+  //   // e.g. allow your users to opt-in to crash reporting.
+  // }
 
   runApp(
     MaterialApp(

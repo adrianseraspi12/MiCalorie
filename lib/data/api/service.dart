@@ -7,8 +7,8 @@ import 'interceptor/connection_interceptor.dart';
 
 class Service {
   static Future<Config> setUpClientConfig() async {
-    var appId = "";
-    var appKey = "";
+    String? appId = "";
+    String? appKey = "";
 
     try {
       final appConfig = await AppConfig.forCredentials();

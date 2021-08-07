@@ -13,12 +13,12 @@ class FoodRepository implements Repository<Food> {
   }
 
   @override
-  Future<Food> getDataById(int id) {
+  Future<Food?> getDataById(int id) {
     return _foodDao.findFoodById(id);
   }
 
   @override
-  Future<List<Food>> findAllDataWith(int id) {
+  Future<List<Food>?> findAllDataWith(int id) {
     return _foodDao.findAllFoodByMealId(id);
   }
 
@@ -31,7 +31,7 @@ class FoodRepository implements Repository<Food> {
   Future<void> upsert(Food data) async {
     final id = await _foodDao.insertFood(data);
 
-    if (id == -1 || id == null) {
+    if (id == -1) {
       await _foodDao.updateFood(data);
     }
   }
@@ -40,10 +40,10 @@ class FoodRepository implements Repository<Food> {
   Future<bool> futureUpsert(Food data) async {
     final id = await _foodDao.insertFood(data);
 
-    if (id == -1 || id == null) {
+    if (id == -1) {
       var id = await _foodDao.updateFood(data);
 
-      if (id == -1 || id == null) {
+      if (id == -1) {
         return false;
       } else {
         return true;

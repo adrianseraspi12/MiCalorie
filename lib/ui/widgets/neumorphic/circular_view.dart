@@ -3,9 +3,9 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class CircularView extends StatelessWidget {
   
-  final Widget child;
+  final Widget? child;
 
-  CircularView({Key key, this.child}): super(key: key);
+  CircularView({Key? key, this.child}): super(key: key);
 
   @override
   Widget build(BuildContext context) {

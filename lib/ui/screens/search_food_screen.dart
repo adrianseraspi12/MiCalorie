@@ -93,13 +93,13 @@ class SearchFoodScreen extends StatelessWidget {
       } else if (state is ErrorSearchFoodState) {
         return _buildEmptyUI(state.errorMessage);
       } else if (state is LoadedSearchFoodState) {
-        return _buildList(state.listOfFood);
+        return _buildList(state.listOfFood!);
       }
       return Container();
     });
   }
 
-  Widget _buildEmptyUI(String message) {
+  Widget _buildEmptyUI(String? message) {
     final String assetName = 'assets/images/search.svg';
     return ImageView(
       resourceName: assetName,
@@ -114,7 +114,7 @@ class SearchFoodScreen extends StatelessWidget {
         itemCount: listOfCommonFood.length,
         itemBuilder: (context, index) {
           final commonFood = listOfCommonFood[index];
-          var brandName = commonFood.details.brand ?? 'Generic';
+          var brandName = commonFood.details!.brand ?? 'Generic';
 
           return NeumorphicButton(
             margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -122,13 +122,13 @@ class SearchFoodScreen extends StatelessWidget {
               final food = Food(
                   -1,
                   mealNutrients.id,
-                  commonFood.details.name,
+                  commonFood.details!.name,
                   1,
                   brandName,
-                  commonFood.details.nutrients.calories.roundTo(0).toInt(),
-                  commonFood.details.nutrients.carbs.roundTo(0).toInt(),
-                  commonFood.details.nutrients.fat.roundTo(0).toInt(),
-                  commonFood.details.nutrients.protein.roundTo(0).toInt());
+                  commonFood.details!.nutrients!.calories.roundTo(0).toInt(),
+                  commonFood.details!.nutrients!.carbs.roundTo(0).toInt(),
+                  commonFood.details!.nutrients!.fat.roundTo(0).toInt(),
+                  commonFood.details!.nutrients!.protein.roundTo(0).toInt());
 
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (BuildContext context) => FoodDetailsScreen(food, mealNutrients),
@@ -142,7 +142,7 @@ class SearchFoodScreen extends StatelessWidget {
             ),
             child: ListTile(
               title: Text(
-                commonFood.details.name,
+                commonFood.details!.name!,
                 style: TextStyle(
                   fontFamily: 'Roboto',
                 ),

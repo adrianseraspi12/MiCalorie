@@ -2,13 +2,13 @@ import 'package:calorie_counter/data/api/config.dart';
 import 'package:calorie_counter/data/api/model/list_of_food.dart';
 
 class EdamanClient {
-  final Config config;
+  final Config? config;
 
   EdamanClient(this.config);
 
-  Future<ResponseResult<ListOfFood>> searchFood(String food) async {
-    final response = await config.searchService
-        .getListOfSearchFood(config.appId, config.appKey, food);
+  Future<ResponseResult<ListOfFood?>> searchFood(String food) async {
+    final response = await config!.searchService
+        .getListOfSearchFood(config!.appId, config!.appKey, food);
 
     if (response.isSuccessful) {
       //  successful request
@@ -20,13 +20,13 @@ class EdamanClient {
       final code = response.statusCode;
       print('Code = $code');
 
-      return ResponseResult<ListOfFood>(null, 'Something unexpected happened');
+      return ResponseResult<ListOfFood?>(null, 'Something unexpected happened');
     }
   }
 
-  Future<ResponseResult<ListOfFood>> searchBarcode(String upc) async {
-    final response = await config.searchService
-        .getBarcodedFood(config.appId, config.appKey, upc);
+  Future<ResponseResult<ListOfFood?>> searchBarcode(String upc) async {
+    final response = await config!.searchService
+        .getBarcodedFood(config!.appId, config!.appKey, upc);
 
     if (response.isSuccessful) {
       //  successful request
@@ -37,14 +37,14 @@ class EdamanClient {
       // error from server
       final code = response.statusCode;
 
-      return ResponseResult<ListOfFood>(null, 'Something unexpected happened');
+      return ResponseResult<ListOfFood?>(null, 'Something unexpected happened');
     }
   }
 }
 
 class ResponseResult<T> {
   T data;
-  String errorMessage;
+  String? errorMessage;
 
   ResponseResult(this.data, this.errorMessage);
 }

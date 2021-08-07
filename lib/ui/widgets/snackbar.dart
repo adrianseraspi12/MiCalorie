@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class Snackbar {
   final GlobalKey<ScaffoldState> _scaffoldKey;
-  SnackBar snackbar;
+  SnackBar? snackbar;
 
   Snackbar(this._scaffoldKey);
 
@@ -15,10 +15,10 @@ class Snackbar {
     snackbar = SnackBar(
       content: Text(content),
       action: SnackBarAction(
-          label: snackbarActionLabel, onPressed: snackbarActionCallback),
+          label: snackbarActionLabel, onPressed: snackbarActionCallback as void Function()),
     );
 
-    _scaffoldKey.currentState.showSnackBar(snackbar).closed.then((reason) => {
+    _scaffoldKey.currentState!.showSnackBar(snackbar!).closed.then((reason) => {
           if (reason == SnackBarClosedReason.dismiss ||
               reason == SnackBarClosedReason.hide ||
               reason == SnackBarClosedReason.swipe ||
@@ -30,6 +30,6 @@ class Snackbar {
   }
 
   removeSnackbar() {
-    _scaffoldKey.currentState.removeCurrentSnackBar();
+    _scaffoldKey.currentState!.removeCurrentSnackBar();
   }
 }

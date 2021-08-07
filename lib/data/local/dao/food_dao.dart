@@ -5,13 +5,13 @@ import 'package:floor/floor.dart';
 abstract class FoodDao {
 
   @Query('SELECT * FROM food WHERE meal_id = :mealId')
-  Future<List<Food>> findAllFoodByMealId(int mealId);
+  Future<List<Food>?> findAllFoodByMealId(int mealId);
 
   @Query('SELECT * FROM food')
   Future<List<Food>> getAllFood();
 
   @Query('SELECT * FROM food WHERE id = :id')
-  Future<Food> findFoodById(int id);
+  Future<Food?> findFoodById(int id);
 
   @Insert(onConflict: OnConflictStrategy.ignore)
   Future<int> insertFood(Food food);

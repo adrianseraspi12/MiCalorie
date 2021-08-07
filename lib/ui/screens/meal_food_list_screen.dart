@@ -27,12 +27,12 @@ class MealFoodListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MealFoodListBloc mealFoodListBloc;
+    MealFoodListBloc? mealFoodListBloc;
     Snackbar snackbar = Snackbar(_scaffoldKey);
     return WillPopScope(
       onWillPop: () async {
         snackbar.removeSnackbar();
-        mealFoodListBloc.add(RemoveFood(true));
+        mealFoodListBloc!.add(RemoveFood(true));
         return false;
       },
       child: FutureBuilder<AppDatabase>(
@@ -41,13 +41,13 @@ class MealFoodListScreen extends StatelessWidget {
             if (snapshot.hasError || !snapshot.hasData) {
               return Container();
             }
-            var database = snapshot.data;
+            var database = snapshot.data!;
             mealFoodListBloc =
                 MealFoodListBloc(Injection.provideMainDataSource(database), mealNutrients);
-            mealFoodListBloc.add(SetupFoodListEvent(mealNutrients));
-            mealFoodListBloc.date = mealNutrients.date;
+            mealFoodListBloc!.add(SetupFoodListEvent(mealNutrients));
+            mealFoodListBloc!.date = mealNutrients.date;
             return BlocProvider<MealFoodListBloc>(
-              create: (context) => mealFoodListBloc,
+              create: (context) => mealFoodListBloc!,
               child: Scaffold(
                 key: _scaffoldKey,
                 backgroundColor: Color.fromRGBO(193, 214, 233, 1),
@@ -62,7 +62,7 @@ class MealFoodListScreen extends StatelessWidget {
                     if (state is UpdateNutrientsState) {
                       snackbar.removeSnackbar();
                       if (state.isOnPop) {
-                        Navigator.pop(context, mealFoodListBloc.date);
+                        Navigator.pop(context, mealFoodListBloc!.date);
                       }
                     }
                   },
@@ -80,7 +80,7 @@ class MealFoodListScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAppbar(BuildContext context, MealFoodListBloc bloc, Snackbar snackbar) {
+  Widget _buildAppbar(BuildContext context, MealFoodListBloc? bloc, Snackbar snackbar) {
     return Neumorphic(
       margin: EdgeInsets.only(bottom: 4.0),
       padding: EdgeInsets.all(16.0),
@@ -94,7 +94,7 @@ class MealFoodListScreen extends StatelessWidget {
           CircularButton(
             icon: Icon(Icons.chevron_left),
             onPressed: () {
-              bloc.add(RemoveFood(true));
+              bloc!.add(RemoveFood(true));
             },
           ),
           Expanded(
@@ -122,7 +122,7 @@ class MealFoodListScreen extends StatelessWidget {
               final actions = [
                 () {
                   snackbar.removeSnackbar();
-                  bloc.add(RemoveFood(false));
+                  bloc!.add(RemoveFood(false));
                   Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -132,7 +132,7 @@ class MealFoodListScreen extends StatelessWidget {
                 },
                 () {
                   snackbar.removeSnackbar();
-                  bloc.add(RemoveFood(false));
+                  bloc!.add(RemoveFood(false));
                   Navigator.of(context)
                       .push(MaterialPageRoute(
                           builder: (context) => SearchFoodScreen(mealNutrients),
@@ -149,7 +149,7 @@ class MealFoodListScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildResults(MealFoodListBloc bloc, Snackbar snackbar) {
+  Widget _buildResults(MealFoodListBloc? bloc, Snackbar snackbar) {
     return BlocBuilder<MealFoodListBloc, MealFoodListState>(buildWhen: (previous, state) {
       if (state is UpdateNutrientsState) {
         return false;
@@ -177,11 +177,11 @@ class MealFoodListScreen extends StatelessWidget {
                   final actions = [
                     () {
                       snackbar.removeSnackbar();
-                      bloc.add(RemoveFood(false));
+                      bloc!.add(RemoveFood(false));
                       _showFoodDetails(context, bloc, food);
                     },
                     () {
-                      bloc.add(TempRemoveFoodEvent(food));
+                      bloc!.add(TempRemoveFoodEvent(food));
                       snackbar.showSnackbar('Food removed', 'Undo', () {
                         bloc.add(RetainFoodListEvent(index, food));
                       }, () {
@@ -199,19 +199,19 @@ class MealFoodListScreen extends StatelessWidget {
     });
   }
 
-  void _retainData(BuildContext context, MealFoodListBloc bloc) {
-    final arguments = ModalRoute.of(context).settings.arguments as Map;
-    final retainMealNutrients = arguments['mealNutrients'] as MealNutrients;
+  void _retainData(BuildContext context, MealFoodListBloc? bloc) {
+    final arguments = ModalRoute.of(context)!.settings.arguments as Map;
+    final retainMealNutrients = arguments['mealNutrients'] as MealNutrients?;
     if (retainMealNutrients != null) {
-      bloc.add(SetupFoodListEvent(retainMealNutrients));
+      bloc!.add(SetupFoodListEvent(retainMealNutrients));
       bloc.date = retainMealNutrients.date;
     }
   }
 
-  void _showFoodDetails(BuildContext context, MealFoodListBloc bloc, Food food) {
+  void _showFoodDetails(BuildContext context, MealFoodListBloc? bloc, Food food) {
     Navigator.of(context)
         .push(MaterialPageRoute(
-            builder: (BuildContext context) => FoodDetailsScreen(food, bloc.mealNutrients),
+            builder: (BuildContext context) => FoodDetailsScreen(food, bloc!.mealNutrients),
             settings: RouteSettings(name: Routes.foodDetailsScreen)))
         .then((val) {
       _retainData(context, bloc);

@@ -7,13 +7,13 @@ import '../neumorphic/circular_view.dart';
 
 class NutrientPieChartView extends StatelessWidget {
 
-  final int calories;
-  final int carbs;
-  final int fat;
-  final int protein;
+  final int? calories;
+  final int? carbs;
+  final int? fat;
+  final int? protein;
   final isShowChartIfEmpty;
 
-  NutrientPieChartView({Key key, this.calories, this.carbs, this.fat, this.protein, this.isShowChartIfEmpty = false}): super(key: key);
+  NutrientPieChartView({Key? key, this.calories, this.carbs, this.fat, this.protein, this.isShowChartIfEmpty = false}): super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,15 +28,15 @@ class NutrientPieChartView extends StatelessWidget {
     double fatPercentage;
     double proteinPercentage;
 
-    if (calories >= 0 && carbs == 0 && fat == 0 && protein == 0) {
+    if (calories! >= 0 && carbs == 0 && fat == 0 && protein == 0) {
       carbsPercentage = 0;
       fatPercentage = 0;
       proteinPercentage = 0;
     }
     else {
-      carbsPercentage = fullNutrientsData[NutrientDataType.CARBS]['Carbs'].roundTo(1);
-      fatPercentage = fullNutrientsData[NutrientDataType.FAT]['Fat'].roundTo(1);
-      proteinPercentage = fullNutrientsData[NutrientDataType.PROTEIN]['Protein'].roundTo(1);
+      carbsPercentage = fullNutrientsData[NutrientDataType.CARBS]!['Carbs'].roundTo(1);
+      fatPercentage = fullNutrientsData[NutrientDataType.FAT]!['Fat'].roundTo(1);
+      proteinPercentage = fullNutrientsData[NutrientDataType.PROTEIN]!['Protein'].roundTo(1);
     }
 
     return Column(
@@ -114,12 +114,12 @@ class NutrientPieChartView extends StatelessWidget {
 
   Widget _buildPieChart(
     List<Color> listOfColor, 
-    Map<String, double> data, 
-    int nutrientGram,
+    Map<String, double>? data, 
+    int? nutrientGram,
     double nutrientPercentage,
     String title) {
 
-      if (calories >= 0 && carbs == 0 && fat == 0 && protein == 0 && !isShowChartIfEmpty) {
+      if (calories! >= 0 && carbs == 0 && fat == 0 && protein == 0 && !isShowChartIfEmpty) {
         return Expanded(
           flex: 1,
           child: Container()
@@ -190,9 +190,9 @@ class NutrientPieChartView extends StatelessWidget {
       );
   }
 
-  Map<NutrientDataType ,Map<String, double>> _getNutrientPercentage() {
-    if (calories >= 0 && carbs == 0 && fat == 0 && protein == 0) {
-      Map<NutrientDataType, Map<String, double>> fullNutrientsData = Map();
+  Map<NutrientDataType ,Map<String, double>?> _getNutrientPercentage() {
+    if (calories! >= 0 && carbs == 0 && fat == 0 && protein == 0) {
+      Map<NutrientDataType, Map<String, double>?> fullNutrientsData = Map();
       fullNutrientsData.putIfAbsent(NutrientDataType.CALORIES, () => null);
       fullNutrientsData.putIfAbsent(NutrientDataType.CARBS, () => null);
       fullNutrientsData.putIfAbsent(NutrientDataType.FAT, () => null);
@@ -200,9 +200,9 @@ class NutrientPieChartView extends StatelessWidget {
       return fullNutrientsData;
     }
 
-    final computedCarbs = carbs * 4;
-    final computedFat = fat * 9;
-    final computedProtein = protein * 4;
+    final computedCarbs = carbs! * 4;
+    final computedFat = fat! * 9;
+    final computedProtein = protein! * 4;
     final totalNutrient = computedCarbs + computedFat + computedProtein;
 
     final carbPercentage = (computedCarbs / totalNutrient) * 100;

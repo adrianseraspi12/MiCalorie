@@ -3,11 +3,11 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:pie_chart/pie_chart.dart';
 
 class PieChartView extends StatefulWidget {
-  final Map<String, double> data;
-  final List<Color> listOfColor;
-  final Widget child;
+  final Map<String, double>? data;
+  final List<Color>? listOfColor;
+  final Widget? child;
 
-  PieChartView({Key key, this.data, this.listOfColor, this.child}) : super(key: key);
+  PieChartView({Key? key, this.data, this.listOfColor, this.child}) : super(key: key);
 
   @override
   _PieChartViewState createState() => _PieChartViewState();
@@ -37,14 +37,14 @@ class _PieChartViewState extends State<PieChartView> {
                 child: Stack(children: <Widget>[
                   _buildPieChart(colors),
                   Positioned.fill(
-                    child: widget.child,
+                    child: widget.child!,
                   )
                 ]),
               ),
             ));
   }
 
-  Widget _buildPieChart(List<Color> colors) {
+  Widget _buildPieChart(List<Color>? colors) {
     if (widget.data == null) {
       final Map<String, double> mapData = Map();
       mapData.putIfAbsent('Placeholder', () => 0);
@@ -54,7 +54,7 @@ class _PieChartViewState extends State<PieChartView> {
         dataMap: mapData,
         initialAngleInDegree: 11,
         legendOptions: LegendOptions(showLegends: false),
-        colorList: colors,
+        colorList: colors!,
         chartRadius: MediaQuery.of(context).size.width,
         chartValuesOptions: ChartValuesOptions(
             chartValueStyle: defaultChartValueStyle.copyWith(
@@ -63,10 +63,10 @@ class _PieChartViewState extends State<PieChartView> {
       );
     } else {
       return PieChart(
-        dataMap: widget.data,
+        dataMap: widget.data!,
         initialAngleInDegree: 11,
         legendOptions: LegendOptions(showLegends: false),
-        colorList: widget.listOfColor,
+        colorList: widget.listOfColor!,
         chartRadius: MediaQuery.of(context).size.width,
         chartValuesOptions: ChartValuesOptions(
             chartValueStyle: defaultChartValueStyle.copyWith(

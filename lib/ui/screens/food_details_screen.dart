@@ -25,7 +25,7 @@ class FoodDetailsScreen extends StatelessWidget {
           if (!snapshot.hasData | snapshot.hasError) {
             return Container();
           }
-          var database = snapshot.data;
+          var database = snapshot.data!;
           foodDetailsBloc = FoodDetailsBloc(food, Injection.provideMainDataSource(database));
           foodDetailsBloc.add(SetupFoodDetailsEvent());
           return BlocProvider<FoodDetailsBloc>(
@@ -92,7 +92,7 @@ class FoodDetailsScreen extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: FittedBox(
                   fit: BoxFit.contain,
-                  child: Text(food.name,
+                  child: Text(food.name ?? '',
                       style: TextStyle(
                           fontFamily: 'Roboto', fontSize: 48, fontWeight: FontWeight.w700)),
                 ),
@@ -101,7 +101,7 @@ class FoodDetailsScreen extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: FittedBox(
                   fit: BoxFit.contain,
-                  child: Text(food.brandName,
+                  child: Text(food.brandName ?? '',
                       style: TextStyle(
                           fontFamily: 'Roboto', fontSize: 16, fontWeight: FontWeight.w400)),
                 ),
@@ -154,7 +154,7 @@ class FoodDetailsScreen extends StatelessWidget {
     ]);
   }
 
-  void _popAndShowMessage(BuildContext context, MealNutrients mealNutrients, String message) {
+  void _popAndShowMessage(BuildContext context, MealNutrients? mealNutrients, String message) {
     if (message.isEmpty) {
       Navigator.popUntil(context, (route) {
         if (route.settings.name == '/mealFoodListScreen') {

@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class MealSummaryView extends StatelessWidget {
-  MealSummaryView({Key key, this.mealNutrients, this.onTap});
+  MealSummaryView({Key? key, this.mealNutrients, this.onTap});
 
-  final MealNutrients mealNutrients;
-  final Function onTap;
+  final MealNutrients? mealNutrients;
+  final Function? onTap;
 
   @override
   Widget build(BuildContext context) {
     return NeumorphicButton(
       margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-      onPressed: onTap,
+      onPressed: onTap as void Function()?,
       style: NeumorphicStyle(
         shape: NeumorphicShape.convex,
         shadowDarkColorEmboss: Color.fromRGBO(163, 177, 198, 1),
@@ -33,9 +33,9 @@ class MealSummaryView extends StatelessWidget {
                   direction: Axis.horizontal,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    _buildNutrient('Carbs', mealNutrients.carbs),
-                    _buildNutrient('Fat', mealNutrients.fat),
-                    _buildNutrient('Protein', mealNutrients.protein)
+                    _buildNutrient('Carbs', mealNutrients!.carbs),
+                    _buildNutrient('Fat', mealNutrients!.fat),
+                    _buildNutrient('Protein', mealNutrients!.protein)
                   ],
                 ),
               ),
@@ -65,7 +65,7 @@ class MealSummaryView extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          Text('${mealNutrients.type.description()}',
+          Text('${mealNutrients!.type.description()}',
               style: TextStyle(
                 fontFamily: 'Roboto',
                 fontSize: 20.0,
@@ -75,7 +75,7 @@ class MealSummaryView extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerRight,
               child: FittedBox(
-                child: Text('${mealNutrients.calories}',
+                child: Text('${mealNutrients!.calories}',
                     style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: 24.0,
@@ -89,7 +89,7 @@ class MealSummaryView extends StatelessWidget {
     );
   }
 
-  Widget _buildNutrient(String mealType, int nutrientCount) {
+  Widget _buildNutrient(String mealType, int? nutrientCount) {
     return Expanded(
       flex: 1,
       child: Align(

@@ -1,14 +1,14 @@
 import 'package:calorie_counter/data/local/entity/total_nutrients_per_day.dart';
 
-typedef SuccessCalalback<T> = Function(T);
+typedef SuccessCallback<T> = Function(T);
 typedef FailCallback = Function(String);
 
 abstract class Repository<T> {
-  Future<List<T>> findAllDataWith(int id);
+  Future<List<T>?> findAllDataWith(int id);
 
   Future<bool> futureUpsert(T data);
 
-  Future<T> getDataById(int id);
+  Future<T?> getDataById(int id);
 
   Future<int> getRowCount();
 
@@ -19,5 +19,5 @@ abstract class Repository<T> {
 
 abstract class TotalNutrientsRepository
     extends Repository<TotalNutrientsPerDay> {
-  Future<TotalNutrientsPerDay> getTotalNutrientsByDate(String itemId);
+  Future<TotalNutrientsPerDay?> getTotalNutrientsByDate(String itemId);
 }

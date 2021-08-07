@@ -40,7 +40,7 @@ class QuickAddFoodBloc extends Bloc<QuickAddFoodEvent, QuickAddFoodState> {
       yield LoadingQuickAddFoodState();
 
       try {
-        var food = createFood(_mealNutrients.id);
+        var food = createFood(_mealNutrients.id ?? -1);
         var result = await _dataSource.updateOrInsertFood(_mealNutrients, food, _quantity);
 
         if (result is Fail) {

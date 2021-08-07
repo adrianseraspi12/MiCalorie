@@ -27,14 +27,14 @@ class SearchFoodBloc extends Bloc<SearchFoodEvent, SearchFoodState> {
       try {
         final results = await edamanClient.searchFood(query);
 
-        if (results.data == null || results.data.commonFood == null) {
+        if (results.data == null || results.data!.commonFood == null) {
           yield ErrorSearchFoodState(results.errorMessage);
           return;
-        } else if (results.data.commonFood.length == 0) {
+        } else if (results.data!.commonFood!.length == 0) {
           yield ErrorSearchFoodState('No food found');
           return;
         } else {
-          yield LoadedSearchFoodState(results.data.commonFood);
+          yield LoadedSearchFoodState(results.data!.commonFood);
         }
       } on NoInternetConnectionException catch (error) {
         yield ErrorSearchFoodState(error.message);

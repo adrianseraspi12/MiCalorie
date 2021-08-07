@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class FoodView extends StatelessWidget {
-  FoodView({Key key, this.food, this.onTap});
+  FoodView({Key? key, this.food, this.onTap});
 
-  final Food food;
-  final Function onTap;
+  final Food? food;
+  final Function? onTap;
 
   @override
   Widget build(BuildContext context) {
     return NeumorphicButton(
       margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      onPressed: onTap,
+      onPressed: onTap as void Function()?,
       style: NeumorphicStyle(
         depth: 2,
         shadowLightColor: Colors.white,
@@ -20,9 +20,9 @@ class FoodView extends StatelessWidget {
         color: Color.fromRGBO(193, 214, 233, 1),
       ),
       child: ListTile(
-        title: Text('${food.name}'),
-        subtitle: Text('${food.brandName}'),
-        trailing: Text('${food.numOfServings}'),
+        title: Text('${food!.name}'),
+        subtitle: Text('${food!.brandName}'),
+        trailing: Text('${food!.numOfServings}'),
       ),
     );
   }

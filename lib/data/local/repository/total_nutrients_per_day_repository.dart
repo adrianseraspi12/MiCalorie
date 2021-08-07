@@ -15,12 +15,12 @@ class TotalNutrientsPerDayRepository implements TotalNutrientsRepository {
   }
 
   @override
-  Future<TotalNutrientsPerDay> getDataById(int id) {
+  Future<TotalNutrientsPerDay?> getDataById(int id) {
     return _totalNutrientsPerDayDao.findTotalNutrientsById(id);
   }
 
   @override
-  Future<TotalNutrientsPerDay> getTotalNutrientsByDate(String itemId) {
+  Future<TotalNutrientsPerDay?> getTotalNutrientsByDate(String itemId) {
     return _totalNutrientsPerDayDao.findTotalNutrientsByDate(itemId.toString());
   }
 
@@ -30,16 +30,10 @@ class TotalNutrientsPerDayRepository implements TotalNutrientsRepository {
   }
 
   @override
-  Future<List<TotalNutrientsPerDay>> findAllDataWith(int id) {
-    // TODO: implement findAllDataWith
-    return null;
-  }
-
-  @override
   Future<int> upsert(TotalNutrientsPerDay data) async {
     final id = await _totalNutrientsPerDayDao.insertTotalNutrients(data);
 
-    if (id == -1 || id == null) {
+    if (id == -1) {
       return _totalNutrientsPerDayDao.updateTotalNutrients(data);
     }
 
@@ -50,15 +44,21 @@ class TotalNutrientsPerDayRepository implements TotalNutrientsRepository {
   Future<bool> futureUpsert(TotalNutrientsPerDay data) async {
     final id = await _totalNutrientsPerDayDao.insertTotalNutrients(data);
 
-    if (id == -1 || id == null) {
+    if (id == -1) {
       var id = await _totalNutrientsPerDayDao.updateTotalNutrients(data);
 
-      if (id == -1 || id == null) {
+      if (id == -1) {
         return false;
       } else {
         return true;
       }
     }
     return true;
+  }
+
+  @override
+  Future<List<TotalNutrientsPerDay>?> findAllDataWith(int id) {
+    // TODO: implement findAllDataWith
+    throw UnimplementedError();
   }
 }

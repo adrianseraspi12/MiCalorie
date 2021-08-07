@@ -4,15 +4,15 @@ import 'package:floor/floor.dart';
 @Entity(tableName: 'meal_nutrients')
 class MealNutrients {
   @primaryKey
-  final int id;
-  final int calories;
-  final int carbs;
-  final int fat;
-  final int protein;
-  final int type;
+  final int? id;
+  final int? calories;
+  final int? carbs;
+  final int? fat;
+  final int? protein;
+  final int? type;
 
   @ColumnInfo(name: 'total_nutrients_per_day_id')
-  final int totalNutrientsPerDayId;
+  final int? totalNutrientsPerDayId;
 
   @ignore
   String date;

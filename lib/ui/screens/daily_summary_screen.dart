@@ -15,7 +15,7 @@ import 'meal_food_list_screen.dart';
 class DailySummaryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    DailySummaryBloc dailySummaryBloc;
+    DailySummaryBloc? dailySummaryBloc;
 
     return FutureBuilder<AppDatabase>(
       future: AppDatabase.getInstance(),
@@ -23,17 +23,17 @@ class DailySummaryScreen extends StatelessWidget {
         if (!snapshot.hasData || snapshot.hasError) {
           return Container();
         }
-        final database = snapshot.data;
+        final database = snapshot.data!;
         dailySummaryBloc = DailySummaryBloc(Injection.provideMainDataSource(database));
 
         final formattedDate = DateTime.now();
-        dailySummaryBloc.add(ChangeTimeEvent(formattedDate));
-        dailySummaryBloc.add(LoadTotalNutrientsEvent(formattedDate));
+        dailySummaryBloc!.add(ChangeTimeEvent(formattedDate));
+        dailySummaryBloc!.add(LoadTotalNutrientsEvent(formattedDate));
         return BlocProvider<DailySummaryBloc>(
-          create: (context) => dailySummaryBloc,
+          create: (context) => dailySummaryBloc!,
           child: Scaffold(
               backgroundColor: Color.fromRGBO(193, 214, 233, 1),
-              body: SafeArea(child: _buildResult(context, dailySummaryBloc))),
+              body: SafeArea(child: _buildResult(context, dailySummaryBloc!))),
         );
       },
     );
@@ -193,7 +193,7 @@ class DailySummaryScreen extends StatelessWidget {
   }
 
   void _buildDatePicker(BuildContext context, DateTime dateTime, DailySummaryBloc bloc) async {
-    final DateTime pickedDate = await showDatePicker(
+    final DateTime? pickedDate = await showDatePicker(
         context: context,
         initialDate: dateTime,
         firstDate: DateTime(1920),

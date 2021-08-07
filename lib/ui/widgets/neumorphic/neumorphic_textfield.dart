@@ -4,19 +4,19 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class NeumorphicTextfield extends StatefulWidget {
   
-  final InputDecoration decoration;
-  final Function(String) onEditingComplete;
-  final Function(String) onChanged;
-  final Function onTap;
-  final Widget leading;
+  final InputDecoration? decoration;
+  final Function(String)? onEditingComplete;
+  final Function(String)? onChanged;
+  final Function? onTap;
+  final Widget? leading;
   final EdgeInsets padding;
   String text;
-  final List<TextInputFormatter> textInputFormatter;
-  final TextInputAction textInputAction;
-  final TextInputType textInputType;
+  final List<TextInputFormatter>? textInputFormatter;
+  final TextInputAction? textInputAction;
+  final TextInputType? textInputType;
 
   NeumorphicTextfield({
-    Key key,
+    Key? key,
     this.leading, 
     this.decoration, 
     this.padding = const EdgeInsets.all(0), 
@@ -33,7 +33,7 @@ class NeumorphicTextfield extends StatefulWidget {
 }
 
 class _NeumorphicTextfieldState extends State<NeumorphicTextfield> {
-  TextEditingController _textEditingController;
+  TextEditingController? _textEditingController;
   double _textfieldDepth = 5;
 
   @override
@@ -68,7 +68,8 @@ class _NeumorphicTextfieldState extends State<NeumorphicTextfield> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            this.widget.leading == null ? Container() : this.widget.leading,
+            this.widget.leading == null ? Container() :
+            this.widget.leading ?? Container(),
 
             Expanded(
               child: Container(
@@ -76,10 +77,10 @@ class _NeumorphicTextfieldState extends State<NeumorphicTextfield> {
                 margin: EdgeInsets.symmetric(horizontal: 8.0),
                 child: Focus(
                   onFocusChange: (hasFocus) {
-                    this.widget.text = _textEditingController.text;
+                    this.widget.text = _textEditingController!.text;
                     if (!hasFocus) {
-                      final text = _textEditingController.text;
-                      if (text == null || text.isEmpty) {
+                      final text = _textEditingController!.text;
+                      if (text.isEmpty) {
                         if (_textfieldDepth.toInt() != 5) {
                           setState(() {
                             _textfieldDepth = 5;
@@ -99,7 +100,7 @@ class _NeumorphicTextfieldState extends State<NeumorphicTextfield> {
                     onTap: () {
 
                       if (this.widget.onTap != null) {
-                        this.widget.onTap();
+                        this.widget.onTap!();
                       }
 
                       if (_textfieldDepth.toInt() != -5) {
@@ -110,9 +111,9 @@ class _NeumorphicTextfieldState extends State<NeumorphicTextfield> {
                     },
 
                     onChanged: (string) {
-                      this.widget.text = _textEditingController.text;
+                      this.widget.text = _textEditingController!.text;
                       if (this.widget.onChanged != null) {
-                        this.widget.onChanged(string);
+                        this.widget.onChanged!(string);
                       }
 
                       if (_textfieldDepth.toInt() != -5) {
@@ -122,9 +123,9 @@ class _NeumorphicTextfieldState extends State<NeumorphicTextfield> {
                       }
                     },
                     onEditingComplete: () {
-                      this.widget.text = _textEditingController.text;
-                      final text = _textEditingController.text;
-                      if (text == null || text.isEmpty) {
+                      this.widget.text = _textEditingController!.text;
+                      final text = _textEditingController!.text;
+                      if (text.isEmpty) {
                         if (_textfieldDepth.toInt() != 5) {
                           setState(() {
                             _textfieldDepth = 5;
@@ -133,7 +134,7 @@ class _NeumorphicTextfieldState extends State<NeumorphicTextfield> {
                       }
 
                       if (this.widget.onEditingComplete != null) {
-                        this.widget.onEditingComplete(text);
+                        this.widget.onEditingComplete!(text);
                       }
 
                       FocusScope.of(context).requestFocus(FocusNode());
@@ -151,7 +152,7 @@ class _NeumorphicTextfieldState extends State<NeumorphicTextfield> {
   @override
   void dispose() {
     super.dispose();
-    _textEditingController.dispose();
+    _textEditingController!.dispose();
   }
 
 }

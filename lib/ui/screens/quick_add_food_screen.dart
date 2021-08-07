@@ -25,7 +25,7 @@ class QuickAddFoodScreen extends StatelessWidget {
           if (!snapshot.hasData || snapshot.hasError) {
             return Container();
           }
-          final database = snapshot.data;
+          final database = snapshot.data!;
 
           quickAddFoodBloc =
               QuickAddFoodBloc(_mealNutrients, Injection.provideMainDataSource(database));
@@ -123,7 +123,7 @@ class QuickAddFoodScreen extends StatelessWidget {
             title: 'Quantity :',
             textfield: _buildNeumorphicTextfield(
                 text: '1',
-                textInputFormatter: <TextInputFormatter>[WhitelistingTextInputFormatter.digitsOnly],
+                textInputFormatter: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
                 textInputType: TextInputType.number,
                 onChanged: (text) {
                   bloc.updateText(text, QuickAddFoodTextFieldType.quantity);
@@ -133,7 +133,7 @@ class QuickAddFoodScreen extends StatelessWidget {
             title: 'Calories :',
             textfield: _buildNeumorphicTextfield(
                 text: '0',
-                textInputFormatter: <TextInputFormatter>[WhitelistingTextInputFormatter.digitsOnly],
+                textInputFormatter: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
                 textInputType: TextInputType.number,
                 onChanged: (text) {
                   bloc.updateText(text, QuickAddFoodTextFieldType.calories);
@@ -143,7 +143,7 @@ class QuickAddFoodScreen extends StatelessWidget {
             title: 'Carbs :',
             textfield: _buildNeumorphicTextfield(
                 text: '0',
-                textInputFormatter: <TextInputFormatter>[WhitelistingTextInputFormatter.digitsOnly],
+                textInputFormatter: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
                 textInputType: TextInputType.number,
                 onChanged: (text) {
                   bloc.updateText(text, QuickAddFoodTextFieldType.carbs);
@@ -153,7 +153,7 @@ class QuickAddFoodScreen extends StatelessWidget {
             title: 'Fat :',
             textfield: _buildNeumorphicTextfield(
                 text: '0',
-                textInputFormatter: <TextInputFormatter>[WhitelistingTextInputFormatter.digitsOnly],
+                textInputFormatter: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
                 textInputType: TextInputType.number,
                 onChanged: (text) {
                   bloc.updateText(text, QuickAddFoodTextFieldType.fat);
@@ -163,7 +163,7 @@ class QuickAddFoodScreen extends StatelessWidget {
             title: 'Protein :',
             textfield: _buildNeumorphicTextfield(
                 text: '0',
-                textInputFormatter: <TextInputFormatter>[WhitelistingTextInputFormatter.digitsOnly],
+                textInputFormatter: <TextInputFormatter>[FilteringTextInputFormatter.digitsOnly],
                 textInputType: TextInputType.number,
                 onChanged: (text) {
                   bloc.updateText(text, QuickAddFoodTextFieldType.protein);
@@ -175,9 +175,8 @@ class QuickAddFoodScreen extends StatelessWidget {
   }
 
   Widget _buildTextfield({
-    Key key,
-    NeumorphicTextfield textfield,
-    String title,
+    required NeumorphicTextfield textfield,
+    required String title,
   }) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -205,13 +204,12 @@ class QuickAddFoodScreen extends StatelessWidget {
   }
 
   NeumorphicTextfield _buildNeumorphicTextfield({
-    Key key,
     String text = '',
-    String textHint,
-    TextInputType textInputType,
-    List<TextInputFormatter> textInputFormatter,
-    Function(String) onChanged,
-    Function(String) onEditingComplete,
+    String? textHint,
+    TextInputType? textInputType,
+    List<TextInputFormatter>? textInputFormatter,
+    Function(String)? onChanged,
+    Function(String)? onEditingComplete,
   }) {
     return NeumorphicTextfield(
       onChanged: onChanged,
@@ -234,7 +232,7 @@ class QuickAddFoodScreen extends StatelessWidget {
   }
 
   _showAlertDialog(BuildContext context, String title, String content) {
-    Widget okButton = FlatButton(
+    Widget okButton = TextButton(
       child: Text("OK"),
       onPressed: () {
         Navigator.pop(context);

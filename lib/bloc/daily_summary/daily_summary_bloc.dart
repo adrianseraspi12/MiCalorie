@@ -31,7 +31,8 @@ class DailySummaryBloc extends Bloc<DailySummaryEvent, DailySummaryState> {
       }
 
       var totalNutrients = (totalNutrientsResult as Success<TotalNutrientsPerDay>).data;
-      var mealNutrientsResult = await _dataSource.getAllMealNutrients(totalNutrients.id, date);
+      var mealNutrientsResult =
+          await _dataSource.getAllMealNutrients(totalNutrients.id ?? -1, date);
 
       if (mealNutrientsResult is Fail) {
         return;
