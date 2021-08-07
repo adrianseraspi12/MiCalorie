@@ -1,10 +1,9 @@
-
-import 'package:calorie_counter/ui/screens/main_screen.dart';
+import 'package:calorie_counter/app.dart';
+import 'package:calorie_counter/data/local/app_database.dart';
+import 'package:calorie_counter/injection.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:flutter/foundation.dart' show kDebugMode;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,13 +18,8 @@ void main() async {
   //   // e.g. allow your users to opt-in to crash reporting.
   // }
 
-  runApp(
-    MaterialApp(
-      title: 'MiCalorie',
-      theme: ThemeData(
-        primaryColor: Colors.red[400]
-      ),
-      home: MainScreen(),
-    )
-  );
+  // Initialize database
+  var appDatabase = await AppDatabase.getInstance();
+
+  runApp(App(mainDataSource: Injection.provideMainDataSource(appDatabase)));
 }
