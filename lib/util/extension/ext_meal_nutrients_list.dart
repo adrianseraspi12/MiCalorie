@@ -1,16 +1,14 @@
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
 
-extension MealNutrientsList on List<MealNutrients?> {
-
+extension MealNutrientsList on List<MealNutrients> {
   bool containsType(int type) {
-    var mealNutrients = this.firstWhere((meal) => meal!.type == type, orElse: () => null);
+    MealNutrients mealNutrients = this.firstWhere((meal) => meal.type == type,
+        orElse: () => MealNutrients(-100, null, null, null, null, null, null));
 
-    if (mealNutrients != null) {
+    if (mealNutrients.id != -100) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
   }
-
 }

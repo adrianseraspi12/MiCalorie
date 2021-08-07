@@ -1,7 +1,6 @@
 import 'package:calorie_counter/bloc/daily_summary/daily_summary_bloc.dart';
-import 'package:calorie_counter/data/local/app_database.dart';
+import 'package:calorie_counter/data/local/data_source/main_data_source.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
-import 'package:calorie_counter/injection.dart';
 import 'package:calorie_counter/ui/widgets/list_row/meal_summary_view.dart';
 import 'package:calorie_counter/util/constant/routes.dart';
 import 'package:flutter/material.dart';
@@ -15,48 +14,41 @@ import 'meal_food_list_screen.dart';
 class DailySummaryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    DailySummaryBloc? dailySummaryBloc;
-
-    return FutureBuilder<AppDatabase>(
-      future: AppDatabase.getInstance(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData || snapshot.hasError) {
-          return Container();
-        }
-        final database = snapshot.data!;
-        dailySummaryBloc = DailySummaryBloc(Injection.provideMainDataSource(database));
-
-        final formattedDate = DateTime.now();
-        dailySummaryBloc!.add(ChangeTimeEvent(formattedDate));
-        dailySummaryBloc!.add(LoadTotalNutrientsEvent(formattedDate));
-        return BlocProvider<DailySummaryBloc>(
-          create: (context) => dailySummaryBloc!,
-          child: Scaffold(
-              backgroundColor: Color.fromRGBO(193, 214, 233, 1),
-              body: SafeArea(child: _buildResult(context, dailySummaryBloc!))),
-        );
-      },
+    return BlocProvider(
+      create: (context) => DailySummaryBloc(RepositoryProvider.of<MainDataSource>(context)),
+      child: Scaffold(
+          backgroundColor: Color.fromRGBO(193, 214, 233, 1),
+          body: SafeArea(child: DailySummaryContentScreen())),
     );
   }
+}
 
-  Widget _buildResult(BuildContext context, DailySummaryBloc dailySummaryBloc) {
+class DailySummaryContentScreen extends StatelessWidget {
+  const DailySummaryContentScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final formattedDate = DateTime.now();
+    context.read<DailySummaryBloc>().add(ChangeTimeEvent(formattedDate));
+    context.read<DailySummaryBloc>().add(LoadTotalNutrientsEvent(formattedDate));
+
     return SingleChildScrollView(
       child: Column(
         children: [
-          _buildAppBarDate(context, dailySummaryBloc),
+          _buildAppBarDate(),
           ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               itemCount: 5,
               itemBuilder: (context, index) {
-                return _buildNutrientsSummary(context, index, dailySummaryBloc);
+                return _buildNutrientsSummary(index);
               })
         ],
       ),
     );
   }
 
-  Widget _buildAppBarDate(BuildContext context, DailySummaryBloc bloc) {
+  Widget _buildAppBarDate() {
     return BlocBuilder<DailySummaryBloc, DailySummaryState>(buildWhen: (previous, state) {
       if (state is LoadedDateTimeState) {
         return true;
@@ -92,7 +84,7 @@ class DailySummaryScreen extends StatelessWidget {
             padding: EdgeInsets.all(16.0),
             margin: EdgeInsets.symmetric(horizontal: 60.0, vertical: 8.0),
             onPressed: () {
-              _buildDatePicker(context, dateTime, bloc);
+              _buildDatePicker(context, dateTime);
             },
             style: NeumorphicStyle(
               shape: NeumorphicShape.convex,
@@ -146,14 +138,14 @@ class DailySummaryScreen extends StatelessWidget {
     });
   }
 
-  Widget _buildNutrientsSummary(BuildContext context, int index, DailySummaryBloc bloc) {
+  Widget _buildNutrientsSummary(int index) {
     return BlocBuilder<DailySummaryBloc, DailySummaryState>(buildWhen: (previous, state) {
       if (state is LoadedDailySummaryState || state is InitialDailySummaryState) {
         return true;
       }
       return false;
     }, builder: (context, state) {
-      if (state is InitialDailySummaryState) {
+      if (state is InitialDailySummaryState || state is LoadedDateTimeState) {
         return Container();
       }
       var loadedDailySummaryState = state as LoadedDailySummaryState;
@@ -164,10 +156,10 @@ class DailySummaryScreen extends StatelessWidget {
         return Container(
             margin: EdgeInsets.all(16.0),
             child: NutrientPieChartView(
-                calories: totalNutrientsPerDay.calories,
-                carbs: totalNutrientsPerDay.carbs,
-                fat: totalNutrientsPerDay.fat,
-                protein: totalNutrientsPerDay.protein,
+                calories: totalNutrientsPerDay.calories ?? 0,
+                carbs: totalNutrientsPerDay.carbs ?? 0,
+                fat: totalNutrientsPerDay.fat ?? 0,
+                protein: totalNutrientsPerDay.protein ?? 0,
                 isShowChartIfEmpty: true));
       }
 
@@ -176,23 +168,22 @@ class DailySummaryScreen extends StatelessWidget {
           margin: EdgeInsets.symmetric(vertical: 8.0),
           child: MealSummaryView(
               mealNutrients: currentMealNutrients,
-              onTap: () => _showMealFoodListScreen(context, currentMealNutrients, bloc)));
+              onTap: () => _showMealFoodListScreen(context, currentMealNutrients)));
     });
   }
 
-  void _showMealFoodListScreen(
-      BuildContext context, MealNutrients mealNutrients, DailySummaryBloc bloc) async {
-    await Navigator.of(context)
+  void _showMealFoodListScreen(BuildContext buildContext, MealNutrients mealNutrients) async {
+    await Navigator.of(buildContext)
         .push(MaterialPageRoute(
             builder: (context) => MealFoodListScreen(mealNutrients),
             settings: RouteSettings(name: Routes.mealFoodListScreen, arguments: Map())))
         .then((val) {
       var dateTime = DateFormat("EEEE, MMM d, yyyy").parse(val);
-      bloc.add(LoadTotalNutrientsEvent(dateTime));
+      buildContext.read<DailySummaryBloc>().add(LoadTotalNutrientsEvent(dateTime));
     });
   }
 
-  void _buildDatePicker(BuildContext context, DateTime dateTime, DailySummaryBloc bloc) async {
+  void _buildDatePicker(BuildContext context, DateTime dateTime) async {
     final DateTime? pickedDate = await showDatePicker(
         context: context,
         initialDate: dateTime,
@@ -200,8 +191,8 @@ class DailySummaryScreen extends StatelessWidget {
         lastDate: DateTime(2120));
 
     if (pickedDate != null) {
-      bloc.add(ChangeTimeEvent(pickedDate));
-      bloc.add(LoadTotalNutrientsEvent(pickedDate));
+      context.read<DailySummaryBloc>().add(ChangeTimeEvent(pickedDate));
+      context.read<DailySummaryBloc>().add(LoadTotalNutrientsEvent(pickedDate));
     }
   }
 }
