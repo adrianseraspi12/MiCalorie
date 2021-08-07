@@ -56,10 +56,7 @@ class _PieChartViewState extends State<PieChartView> {
         legendOptions: LegendOptions(showLegends: false),
         colorList: colors!,
         chartRadius: MediaQuery.of(context).size.width,
-        chartValuesOptions: ChartValuesOptions(
-            chartValueStyle: defaultChartValueStyle.copyWith(
-          color: Colors.black.withOpacity(0),
-        )),
+        chartValuesOptions: ChartValuesOptions(showChartValues: false)
       );
     } else {
       return PieChart(
@@ -68,10 +65,7 @@ class _PieChartViewState extends State<PieChartView> {
         legendOptions: LegendOptions(showLegends: false),
         colorList: widget.listOfColor!,
         chartRadius: MediaQuery.of(context).size.width,
-        chartValuesOptions: ChartValuesOptions(
-            chartValueStyle: defaultChartValueStyle.copyWith(
-          color: Colors.black.withOpacity(0),
-        )),
+        chartValuesOptions: ChartValuesOptions(showChartValues: false),
       );
     }
   }

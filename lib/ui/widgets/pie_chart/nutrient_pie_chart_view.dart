@@ -1,39 +1,43 @@
 import 'package:calorie_counter/ui/widgets/pie_chart/pie_chart_view.dart';
-import 'package:flutter/material.dart';
 import 'package:calorie_counter/util/extension/ext_number_rounding.dart';
-
+import 'package:flutter/material.dart';
 
 import '../neumorphic/circular_view.dart';
 
 class NutrientPieChartView extends StatelessWidget {
-
-  final int? calories;
-  final int? carbs;
-  final int? fat;
-  final int? protein;
+  final int calories;
+  final int carbs;
+  final int fat;
+  final int protein;
   final isShowChartIfEmpty;
 
-  NutrientPieChartView({Key? key, this.calories, this.carbs, this.fat, this.protein, this.isShowChartIfEmpty = false}): super(key: key);
+  NutrientPieChartView(
+      {Key? key,
+      this.calories = 0,
+      this.carbs = 0,
+      this.fat = 0,
+      this.protein = 0,
+      this.isShowChartIfEmpty = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var fullNutrientsData = _getNutrientPercentage();
     var height = MediaQuery.of(context).size.height;
     final calorieColors = [Colors.green, Colors.red, Colors.blue];
-    final carbsColor =[Colors.green, Colors.transparent];
-    final fatColor =[Colors.red, Colors.transparent];
-    final proteinColor =[Colors.blue, Colors.transparent];
+    final carbsColor = [Colors.green, Colors.transparent];
+    final fatColor = [Colors.red, Colors.transparent];
+    final proteinColor = [Colors.blue, Colors.transparent];
 
     double carbsPercentage;
     double fatPercentage;
     double proteinPercentage;
 
-    if (calories! >= 0 && carbs == 0 && fat == 0 && protein == 0) {
+    if (calories >= 0 && carbs == 0 && fat == 0 && protein == 0) {
       carbsPercentage = 0;
       fatPercentage = 0;
       proteinPercentage = 0;
-    }
-    else {
+    } else {
       carbsPercentage = fullNutrientsData[NutrientDataType.CARBS]!['Carbs'].roundTo(1);
       fatPercentage = fullNutrientsData[NutrientDataType.FAT]!['Fat'].roundTo(1);
       proteinPercentage = fullNutrientsData[NutrientDataType.PROTEIN]!['Protein'].roundTo(1);
@@ -41,18 +45,15 @@ class NutrientPieChartView extends StatelessWidget {
 
     return Column(
       children: <Widget>[
-
         SizedBox(
           height: height * 0.35,
           child: Container(
             margin: EdgeInsets.only(top: 16.0),
             child: PieChartView(
-              listOfColor: calorieColors,
-              data: fullNutrientsData[NutrientDataType.CALORIES],
-              child: CircularView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
+                listOfColor: calorieColors,
+                data: fullNutrientsData[NutrientDataType.CALORIES],
+                child: CircularView(
+                  child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
                     Text(
                       '$calories',
                       style: TextStyle(
@@ -69,13 +70,10 @@ class NutrientPieChartView extends StatelessWidget {
                         fontWeight: FontWeight.w400,
                       ),
                     ),
-                  ]
-                ),
-              )
-            ),
+                  ]),
+                )),
           ),
-        ), 
-
+        ),
         SizedBox(
           height: height * 0.25,
           child: Padding(
@@ -83,115 +81,79 @@ class NutrientPieChartView extends StatelessWidget {
             child: Flex(
               direction: Axis.horizontal,
               children: <Widget>[
+                _buildPieChart(carbsColor, fullNutrientsData[NutrientDataType.CARBS], carbs,
+                    carbsPercentage, 'Carbs'),
                 _buildPieChart(
-                  carbsColor, 
-                  fullNutrientsData[NutrientDataType.CARBS], 
-                  carbs, 
-                  carbsPercentage,
-                  'Carbs'),
-
-                _buildPieChart(
-                  fatColor, 
-                  fullNutrientsData[NutrientDataType.FAT], 
-                  fat, 
-                  fatPercentage,
-                  'Fat'),
-    
-                _buildPieChart(
-                  proteinColor, 
-                  fullNutrientsData[NutrientDataType.PROTEIN], 
-                  protein, 
-                  proteinPercentage,
-                  'Protein')
+                    fatColor, fullNutrientsData[NutrientDataType.FAT], fat, fatPercentage, 'Fat'),
+                _buildPieChart(proteinColor, fullNutrientsData[NutrientDataType.PROTEIN], protein,
+                    proteinPercentage, 'Protein')
               ],
             ),
           ),
         ),
-
       ],
     );
   }
 
-  Widget _buildPieChart(
-    List<Color> listOfColor, 
-    Map<String, double>? data, 
-    int? nutrientGram,
-    double nutrientPercentage,
-    String title) {
+  Widget _buildPieChart(List<Color> listOfColor, Map<String, double>? data, int? nutrientGram,
+      double nutrientPercentage, String title) {
+    if (calories >= 0 && carbs == 0 && fat == 0 && protein == 0 && !isShowChartIfEmpty) {
+      return Expanded(flex: 1, child: Container());
+    }
 
-      if (calories! >= 0 && carbs == 0 && fat == 0 && protein == 0 && !isShowChartIfEmpty) {
-        return Expanded(
-          flex: 1,
-          child: Container()
-        );
-      }
-    
-      final fontColor = listOfColor[0];
+    final fontColor = listOfColor[0];
 
-      return Expanded(
+    return Expanded(
         flex: 1,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.0),  
-              child: PieChartView(
-                listOfColor: listOfColor,
-                data: data,
-                child: CircularView(
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            child: PieChartView(
+              listOfColor: listOfColor,
+              data: data,
+              child: CircularView(
                   child: Align(
-                    alignment: Alignment.center,
-                    child: FittedBox(
-                      child: Container(
-                        margin: EdgeInsets.all(4.0),
-                        child: Text(
-                          '${nutrientGram}g',
-                          style: TextStyle(
-                            fontFamily: 'Roboto',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w700,
+                      alignment: Alignment.center,
+                      child: FittedBox(
+                        child: Container(
+                          margin: EdgeInsets.all(4.0),
+                          child: Text(
+                            '${nutrientGram}g',
+                            style: TextStyle(
+                              fontFamily: 'Roboto',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                  )
-                ),
-              ),
+                      ))),
             ),
-
-            Container(
-              margin: EdgeInsets.only(top: 16.0),
-              child: Column(
-                children: <Widget>[
-                  Text(
-                    title,
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 16.0),
+            child: Column(
+              children: <Widget>[
+                Text(title,
                     style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
-                    )
-                  ),
-
-                  Text(
-                    '$nutrientPercentage%',
+                    )),
+                Text('$nutrientPercentage%',
                     style: TextStyle(
                       fontFamily: 'Roboto',
                       fontSize: 14,
                       color: fontColor,
                       fontWeight: FontWeight.w700,
-                    )
-                  ),
-
-                ],
-              ),
-            )
-          ]
-        )
-      );
+                    )),
+              ],
+            ),
+          )
+        ]));
   }
 
-  Map<NutrientDataType ,Map<String, double>?> _getNutrientPercentage() {
-    if (calories! >= 0 && carbs == 0 && fat == 0 && protein == 0) {
+  Map<NutrientDataType, Map<String, double>?> _getNutrientPercentage() {
+    if (calories >= 0 && carbs == 0 && fat == 0 && protein == 0) {
       Map<NutrientDataType, Map<String, double>?> fullNutrientsData = Map();
       fullNutrientsData.putIfAbsent(NutrientDataType.CALORIES, () => null);
       fullNutrientsData.putIfAbsent(NutrientDataType.CARBS, () => null);
@@ -200,9 +162,9 @@ class NutrientPieChartView extends StatelessWidget {
       return fullNutrientsData;
     }
 
-    final computedCarbs = carbs! * 4;
-    final computedFat = fat! * 9;
-    final computedProtein = protein! * 4;
+    final computedCarbs = carbs * 4;
+    final computedFat = fat * 9;
+    final computedProtein = protein * 4;
     final totalNutrient = computedCarbs + computedFat + computedProtein;
 
     final carbPercentage = (computedCarbs / totalNutrient) * 100;
@@ -236,11 +198,4 @@ class NutrientPieChartView extends StatelessWidget {
   }
 }
 
-enum NutrientDataType {
-
-  CALORIES,
-  CARBS,
-  FAT,
-  PROTEIN
-
-}
+enum NutrientDataType { CALORIES, CARBS, FAT, PROTEIN }
