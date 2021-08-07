@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
-import 'food_details_screen.dart';
+import 'food_details/ui/food_details_screen.dart';
 
 class MealFoodListScreen extends StatelessWidget {
   final modal = Modal();

@@ -45,7 +45,7 @@ class FoodDetailsBloc extends Bloc<FoodDetailsEvent, FoodDetailsState> {
       yield LoadedFoodDetailsState(
           currentCalories, currentCarbs, currentFat, currentProtein, currentCount);
     } else if (event is DecrementEvent) {
-      if (currentCount>= 2) {
+      if (currentCount >= 2) {
         yield LoadingFoodDetailsState();
         currentCount -= 1;
         currentCalories = _food.calories! * currentCount;

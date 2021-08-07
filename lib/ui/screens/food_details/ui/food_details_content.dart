@@ -1,8 +1,6 @@
-import 'package:calorie_counter/bloc/food_details/food_details_bloc.dart';
-import 'package:calorie_counter/data/local/app_database.dart';
 import 'package:calorie_counter/data/local/entity/food.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
-import 'package:calorie_counter/injection.dart';
+import 'package:calorie_counter/ui/screens/food_details/bloc/food_details_bloc.dart';
 import 'package:calorie_counter/ui/widgets/neumorphic/circular_button.dart';
 import 'package:calorie_counter/ui/widgets/pie_chart/nutrient_pie_chart_view.dart';
 import 'package:flutter/material.dart';
@@ -10,62 +8,39 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-class FoodDetailsScreen extends StatelessWidget {
-  final Food food;
-  final MealNutrients _mealNutrients;
+class FoodDetailsContent extends StatelessWidget {
+  const FoodDetailsContent({Key? key, required this.food, required this.mealNutrients})
+      : super(key: key);
 
-  FoodDetailsScreen(this.food, this._mealNutrients);
+  final Food food;
+  final MealNutrients mealNutrients;
 
   @override
   Widget build(BuildContext context) {
-    FoodDetailsBloc foodDetailsBloc;
-    return FutureBuilder<AppDatabase>(
-        future: AppDatabase.getInstance(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData | snapshot.hasError) {
-            return Container();
+    context.read<FoodDetailsBloc>().add(SetupFoodDetailsEvent());
+    return BlocListener<FoodDetailsBloc, FoodDetailsState>(
+      listenWhen: (previous, state) => state is FoodSaveState,
+      listener: (context, state) {
+        if (state is FoodSaveState) {
+          _popAndShowMessage(context, state.mealNutrients, state.message);
+        }
+      },
+      child: _buildResults(context),
+    );
+  }
+
+  Widget _buildResults(BuildContext context) {
+    return BlocBuilder<FoodDetailsBloc, FoodDetailsState>(
+        buildWhen: (previous, state) => state is LoadedFoodDetailsState,
+        builder: (context, state) {
+          if (state is LoadedFoodDetailsState) {
+            return _buildFoodDetails(context, state);
           }
-          var database = snapshot.data!;
-          foodDetailsBloc = FoodDetailsBloc(food, Injection.provideMainDataSource(database));
-          foodDetailsBloc.add(SetupFoodDetailsEvent());
-          return BlocProvider<FoodDetailsBloc>(
-            create: (context) => foodDetailsBloc,
-            child: Scaffold(
-              backgroundColor: Color.fromRGBO(193, 214, 233, 1),
-              body: BlocListener<FoodDetailsBloc, FoodDetailsState>(
-                  listenWhen: (previous, state) {
-                    if (state is FoodSaveState) {
-                      return true;
-                    }
-                    return false;
-                  },
-                  listener: (context, state) {
-                    if (state is FoodSaveState) {
-                      _popAndShowMessage(context, state.mealNutrients, state.message);
-                    }
-                  },
-                  child: SafeArea(child: _buildResults(context, foodDetailsBloc))),
-            ),
-          );
+          return Container();
         });
   }
 
-  Widget _buildResults(BuildContext context, FoodDetailsBloc bloc) {
-    return BlocBuilder<FoodDetailsBloc, FoodDetailsState>(buildWhen: (previous, state) {
-      if (state is FoodSaveState) {
-        return false;
-      }
-      return true;
-    }, builder: (context, state) {
-      if (state is LoadedFoodDetailsState) {
-        return _buildFoodDetails(context, state, bloc);
-      }
-      return Container();
-    });
-  }
-
-  Widget _buildFoodDetails(
-      BuildContext context, LoadedFoodDetailsState state, FoodDetailsBloc bloc) {
+  Widget _buildFoodDetails(BuildContext context, LoadedFoodDetailsState state) {
     final height = MediaQuery.of(context).size.height;
     return Column(children: <Widget>[
       Container(
@@ -79,7 +54,7 @@ class FoodDetailsScreen extends StatelessWidget {
             ),
             CircularButton(
               icon: Icon(Icons.add),
-              onPressed: () => bloc.add(AddFoodEvent(_mealNutrients)),
+              onPressed: () => context.read<FoodDetailsBloc>().add(AddFoodEvent(mealNutrients)),
             ),
           ],
         ),
@@ -123,7 +98,7 @@ class FoodDetailsScreen extends StatelessWidget {
             children: <Widget>[
               CircularButton(
                 icon: Icon(Icons.remove),
-                onPressed: () => bloc.add(DecrementEvent()),
+                onPressed: () => context.read<FoodDetailsBloc>().add(DecrementEvent()),
               ),
               Neumorphic(
                   margin: EdgeInsets.symmetric(horizontal: 16.0),
@@ -145,7 +120,7 @@ class FoodDetailsScreen extends StatelessWidget {
                   )),
               CircularButton(
                 icon: Icon(Icons.add),
-                onPressed: () => bloc.add(IncrementEvent()),
+                onPressed: () => context.read<FoodDetailsBloc>().add(IncrementEvent()),
               ),
             ],
           ),
