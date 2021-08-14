@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-import '../../meal_food_list_screen.dart';
+import '../../meal_food_list/ui/meal_food_list_screen.dart';
 
 class DailySummaryContentScreen extends StatelessWidget {
   const DailySummaryContentScreen({Key? key}) : super(key: key);
@@ -62,13 +62,13 @@ class DailySummaryContentScreen extends StatelessWidget {
   }
 
   void _showMealFoodListScreen(BuildContext buildContext, MealNutrients mealNutrients) async {
-    await Navigator.of(buildContext)
-        .push(MaterialPageRoute(
+    String? result = await Navigator
+        .push(buildContext, MaterialPageRoute(
             builder: (context) => MealFoodListScreen(mealNutrients),
-            settings: RouteSettings(name: Routes.mealFoodListScreen, arguments: Map())))
-        .then((val) {
-      var dateTime = DateFormat("EEEE, MMM d, yyyy").parse(val);
-      buildContext.read<DailySummaryBloc>().add(LoadTotalNutrientsEvent(dateTime));
-    });
+            settings: RouteSettings(name: Routes.mealFoodListScreen, arguments: Map())));
+
+    if (result == null) return;
+    var dateTime = DateFormat("EEEE, MMM d, yyyy").parse(result);
+    buildContext.read<DailySummaryBloc>().add(LoadTotalNutrientsEvent(dateTime));
   }
 }

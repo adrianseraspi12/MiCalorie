@@ -24,6 +24,7 @@ class MealFoodListBloc extends Bloc<MealFoodListEvent, MealFoodListState> {
     if (event is SetupFoodListEvent) {
       yield LoadingMealFoodListState();
       mealNutrients = event.mealNutrients;
+      date = mealNutrients.date;
       var listOfFoodResult = await _dataSource.getAllFood(mealNutrients.id ?? -1);
       if (listOfFoodResult is Fail) {
         yield EmptyMealFoodListState();
