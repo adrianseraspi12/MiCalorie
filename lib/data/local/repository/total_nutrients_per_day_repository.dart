@@ -33,7 +33,7 @@ class TotalNutrientsPerDayRepository implements TotalNutrientsRepository {
   Future<int> upsert(TotalNutrientsPerDay data) async {
     final id = await _totalNutrientsPerDayDao.insertTotalNutrients(data);
 
-    if (id == -1) {
+    if (id == 0) {
       return _totalNutrientsPerDayDao.updateTotalNutrients(data);
     }
 
@@ -44,10 +44,10 @@ class TotalNutrientsPerDayRepository implements TotalNutrientsRepository {
   Future<bool> futureUpsert(TotalNutrientsPerDay data) async {
     final id = await _totalNutrientsPerDayDao.insertTotalNutrients(data);
 
-    if (id == -1) {
+    if (id == 0) {
       var id = await _totalNutrientsPerDayDao.updateTotalNutrients(data);
 
-      if (id == -1) {
+      if (id == 0) {
         return false;
       } else {
         return true;

@@ -93,9 +93,9 @@ class MainDataSource implements DataSource {
     final fat = food.fat! * numberOfServings;
     final protein = food.protein! * numberOfServings;
 
-    final currentMeal = await (_mealNutrientsRepo.getDataById(mealId) as FutureOr<MealNutrients>);
+    final currentMeal = await (_mealNutrientsRepo.getDataById(mealId));
 
-    var totalNutrientsPerDayId = currentMeal.totalNutrientsPerDayId ?? -1;
+    var totalNutrientsPerDayId = currentMeal!.totalNutrientsPerDayId ?? -1;
     await _removeFoodFromTotalNutrients(totalNutrientsPerDayId, calories, carbs, fat, protein);
 
     _removeFoodFromMealNutrients(currentMeal, calories, carbs, fat, protein);
@@ -127,10 +127,10 @@ class MainDataSource implements DataSource {
     final updatedTotalNutrients = TotalNutrientsPerDay(
         totalNutrientsPerDay?.id,
         totalNutrientsPerDay?.date,
-        totalNutrientsPerDay?.calories ?? 0 - calories,
-        totalNutrientsPerDay?.carbs ?? 0 - carbs,
-        totalNutrientsPerDay?.fat ?? 0 - fat,
-        totalNutrientsPerDay?.protein ?? 0 - protein);
+        totalNutrientsPerDay!.calories! - calories,
+        totalNutrientsPerDay.carbs! - carbs,
+        totalNutrientsPerDay.fat! - fat,
+        totalNutrientsPerDay.protein! - protein);
 
     return _totalNutrientsPerDayRepo.upsert(updatedTotalNutrients);
   }

@@ -31,7 +31,7 @@ class FoodRepository implements Repository<Food> {
   Future<void> upsert(Food data) async {
     final id = await _foodDao.insertFood(data);
 
-    if (id == -1) {
+    if (id == 0) {
       await _foodDao.updateFood(data);
     }
   }
@@ -40,10 +40,10 @@ class FoodRepository implements Repository<Food> {
   Future<bool> futureUpsert(Food data) async {
     final id = await _foodDao.insertFood(data);
 
-    if (id == -1) {
+    if (id == 0) {
       var id = await _foodDao.updateFood(data);
 
-      if (id == -1) {
+      if (id == 0) {
         return false;
       } else {
         return true;
