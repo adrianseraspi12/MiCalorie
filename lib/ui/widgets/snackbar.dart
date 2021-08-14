@@ -2,34 +2,39 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Snackbar {
-  final GlobalKey<ScaffoldState> _scaffoldKey;
+  final BuildContext _context;
   SnackBar? snackbar;
 
-  Snackbar(this._scaffoldKey);
+  Snackbar(this._context);
 
-  showSnackbar(String content, String snackbarActionLabel,
-      Function snackbarActionCallback, Function onDismissCallback) {
+  showSnackbar(
+      String content,
+      String snackbarActionLabel,
+      VoidCallback snackbarActionCallback,
+      VoidCallback onDismissCallback) {
     if (snackbar != null) {
       removeSnackbar();
     }
     snackbar = SnackBar(
       content: Text(content),
       action: SnackBarAction(
-          label: snackbarActionLabel, onPressed: snackbarActionCallback as void Function()),
+          label: snackbarActionLabel,
+          onPressed: snackbarActionCallback
+      ),
     );
 
-    _scaffoldKey.currentState!.showSnackBar(snackbar!).closed.then((reason) => {
-          if (reason == SnackBarClosedReason.dismiss ||
-              reason == SnackBarClosedReason.hide ||
-              reason == SnackBarClosedReason.swipe ||
-              reason == SnackBarClosedReason.timeout)
-            {
-              onDismissCallback()
-            }
-        });
+    ScaffoldMessenger.of(_context).showSnackBar(snackbar!).closed.then((reason) => {
+     if (reason == SnackBarClosedReason.dismiss ||
+          reason == SnackBarClosedReason.hide ||
+          reason == SnackBarClosedReason.swipe ||
+          reason == SnackBarClosedReason.timeout)
+        {
+          onDismissCallback()
+        }
+    });
   }
 
   removeSnackbar() {
-    _scaffoldKey.currentState!.removeCurrentSnackBar();
+    ScaffoldMessenger.of(_context).removeCurrentSnackBar();
   }
 }
