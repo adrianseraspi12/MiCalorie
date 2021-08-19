@@ -1,4 +1,5 @@
 import 'package:calorie_counter/app.dart';
+import 'package:calorie_counter/data/api/service.dart';
 import 'package:calorie_counter/data/local/app_database.dart';
 import 'package:calorie_counter/injection.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -20,6 +21,11 @@ void main() async {
 
   // Initialize database
   var appDatabase = await AppDatabase.getInstance();
+  var config = await Service.setUpClientConfig();
 
-  runApp(App(mainDataSource: Injection.provideMainDataSource(appDatabase)));
+  runApp(App(
+      mainDataSource: Injection.provideMainDataSource(appDatabase),
+      edamanClient: Injection.provideClient(config)
+    )
+  );
 }
