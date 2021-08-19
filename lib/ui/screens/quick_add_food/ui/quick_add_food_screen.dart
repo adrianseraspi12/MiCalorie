@@ -1,8 +1,8 @@
-import 'package:calorie_counter/bloc/quick_add_food/quick_add_food_bloc.dart';
-import 'package:calorie_counter/bloc/quick_add_food/quick_add_food_text_field_type.dart';
+import 'package:calorie_counter/ui/screens/quick_add_food/bloc/quick_add_food_bloc.dart';
 import 'package:calorie_counter/data/local/app_database.dart';
 import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
 import 'package:calorie_counter/injection.dart';
+import 'package:calorie_counter/ui/screens/quick_add_food/bloc/quick_add_food_text_field_type.dart';
 import 'package:calorie_counter/ui/widgets/neumorphic/circular_button.dart';
 import 'package:calorie_counter/ui/widgets/neumorphic/neumorphic_textfield.dart';
 import 'package:flutter/material.dart';

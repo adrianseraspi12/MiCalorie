@@ -1,4 +1,4 @@
-import 'package:calorie_counter/bloc/quick_add_food/quick_add_food_text_field_type.dart';
+
 import 'package:calorie_counter/data/local/data_source/i_data_source.dart';
 import 'package:calorie_counter/data/local/data_source/result.dart';
 import 'package:calorie_counter/data/local/entity/food.dart';
@@ -9,6 +9,8 @@ import 'package:calorie_counter/util/extension/ext_number_rounding.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'quick_add_food_text_field_type.dart';
 
 part 'quick_add_food_event.dart';
 
