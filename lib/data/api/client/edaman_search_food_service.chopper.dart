@@ -6,18 +6,21 @@ part of 'edaman_search_food_service.dart';
 // ChopperGenerator
 // **************************************************************************
 
+// ignore_for_file: always_put_control_body_on_new_line, always_specify_types, prefer_const_declarations
 class _$EdamanSearchFoodService extends EdamanSearchFoodService {
-  _$EdamanSearchFoodService([ChopperClient client]) {
+  _$EdamanSearchFoodService([ChopperClient? client]) {
     if (client == null) return;
     this.client = client;
   }
 
+  @override
   final definitionType = EdamanSearchFoodService;
 
-  Future<Response> getListOfSearchFood(
-      String appId, String appKey, String food) {
+  @override
+  Future<Response<dynamic>> getListOfSearchFood(
+      String? appId, String? appKey, String food) {
     final $url = '/parser';
-    final Map<String, dynamic> $params = {
+    final $params = <String, dynamic>{
       'app_id': appId,
       'app_key': appKey,
       'ingr': food
@@ -26,9 +29,11 @@ class _$EdamanSearchFoodService extends EdamanSearchFoodService {
     return client.send<dynamic, dynamic>($request);
   }
 
-  Future<Response> getBarcodedFood(String appId, String appKey, String upc) {
+  @override
+  Future<Response<dynamic>> getBarcodedFood(
+      String? appId, String? appKey, String upc) {
     final $url = '/parser';
-    final Map<String, dynamic> $params = {
+    final $params = <String, dynamic>{
       'app_id': appId,
       'app_key': appKey,
       'upc': upc

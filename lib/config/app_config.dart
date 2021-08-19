@@ -3,11 +3,10 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 
 class AppConfig {
-
   final String appId;
   final String appKey;
 
-  AppConfig({this.appId, this.appKey});
+  AppConfig({required this.appId, required this.appKey});
 
   static Future<AppConfig> forCredentials() async {
     // load the json file
@@ -19,5 +18,4 @@ class AppConfig {
     //  convert json to AppConfig object
     return AppConfig(appId: json["appId"], appKey: json["appKey"]);
   }
-
 }

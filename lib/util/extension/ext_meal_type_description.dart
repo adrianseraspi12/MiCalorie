@@ -1,6 +1,6 @@
 import 'package:calorie_counter/util/constant/meal_type.dart';
 
-extension MealTypeDescription on int {
+extension MealTypeDescription on int? {
 
   String description() {
     if (this == MealType.BREAKFAST) {

@@ -4,22 +4,22 @@ import 'package:floor/floor.dart';
 class Food {
 
   @primaryKey
-  final int id;
+  final int? id;
   
   @ColumnInfo(name: 'meal_id')
-  final int mealId;
+  final int? mealId;
 
-  final String name;
+  final String? name;
 
   @ColumnInfo(name: 'number_of_servings')
-  final int numOfServings;
+  final int? numOfServings;
 
   @ColumnInfo(name: 'brand_name')
-  final String brandName;
-  final int calories;
-  final int carbs;
-  final int fat;
-  final int protein;
+  final String? brandName;
+  final int? calories;
+  final int? carbs;
+  final int? fat;
+  final int? protein;
 
   Food(this.id, 
       this.mealId, 

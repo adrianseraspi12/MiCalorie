@@ -4,12 +4,12 @@ import 'package:floor/floor.dart';
 class TotalNutrientsPerDay {
 
   @primaryKey
-  final int id;
-  final String date;
-  final int calories;
-  final int carbs;
-  final int fat;
-  final int protein;
+  final int? id;
+  final String? date;
+  final int? calories;
+  final int? carbs;
+  final int? fat;
+  final int? protein;
 
   TotalNutrientsPerDay(this.id,
                       this.date, 

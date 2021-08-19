@@ -22,11 +22,11 @@ class $FloorAppDatabase {
 class _$AppDatabaseBuilder {
   _$AppDatabaseBuilder(this.name);
 
-  final String name;
+  final String? name;
 
   final List<Migration> _migrations = [];
 
-  Callback _callback;
+  Callback? _callback;
 
   /// Adds migrations to the builder.
   _$AppDatabaseBuilder addMigrations(List<Migration> migrations) {
@@ -43,7 +43,7 @@ class _$AppDatabaseBuilder {
   /// Creates the database and initializes it.
   Future<AppDatabase> build() async {
     final path = name != null
-        ? join(await sqflite.getDatabasesPath(), name)
+        ? await sqfliteDatabaseFactory.getDatabasePath(name!)
         : ':memory:';
     final database = _$AppDatabase();
     database.database = await database.open(
@@ -56,23 +56,23 @@ class _$AppDatabaseBuilder {
 }
 
 class _$AppDatabase extends AppDatabase {
-  _$AppDatabase([StreamController<String> listener]) {
+  _$AppDatabase([StreamController<String>? listener]) {
     changeListener = listener ?? StreamController<String>.broadcast();
   }
 
-  TotalNutrientsPerDayDao _totalNutrientsPerDayDaoInstance;
+  TotalNutrientsPerDayDao? _totalNutrientsPerDayDaoInstance;
 
-  MealNutrientsDao _mealNutrientsDaoInstance;
+  MealNutrientsDao? _mealNutrientsDaoInstance;
 
-  FoodDao _foodDaoInstance;
+  FoodDao? _foodDaoInstance;
 
   Future<sqflite.Database> open(String path, List<Migration> migrations,
-      [Callback callback]) async {
-    return sqflite.openDatabase(
-      path,
+      [Callback? callback]) async {
+    final databaseOptions = sqflite.OpenDatabaseOptions(
       version: 1,
       onConfigure: (database) async {
         await database.execute('PRAGMA foreign_keys = ON');
+        await callback?.onConfigure?.call(database);
       },
       onOpen: (database) async {
         await callback?.onOpen?.call(database);
@@ -94,6 +94,7 @@ class _$AppDatabase extends AppDatabase {
         await callback?.onCreate?.call(database, version);
       },
     );
+    return sqfliteDatabaseFactory.openDatabase(path, options: databaseOptions);
   }
 
   @override
@@ -120,7 +121,7 @@ class _$TotalNutrientsPerDayDao extends TotalNutrientsPerDayDao {
         _totalNutrientsPerDayInsertionAdapter = InsertionAdapter(
             database,
             'total_nutrients_per_day',
-            (TotalNutrientsPerDay item) => <String, dynamic>{
+            (TotalNutrientsPerDay item) => <String, Object?>{
                   'id': item.id,
                   'date': item.date,
                   'calories': item.calories,
@@ -132,7 +133,7 @@ class _$TotalNutrientsPerDayDao extends TotalNutrientsPerDayDao {
             database,
             'total_nutrients_per_day',
             ['id'],
-            (TotalNutrientsPerDay item) => <String, dynamic>{
+            (TotalNutrientsPerDay item) => <String, Object?>{
                   'id': item.id,
                   'date': item.date,
                   'calories': item.calories,
@@ -144,7 +145,7 @@ class _$TotalNutrientsPerDayDao extends TotalNutrientsPerDayDao {
             database,
             'total_nutrients_per_day',
             ['id'],
-            (TotalNutrientsPerDay item) => <String, dynamic>{
+            (TotalNutrientsPerDay item) => <String, Object?>{
                   'id': item.id,
                   'date': item.date,
                   'calories': item.calories,
@@ -159,15 +160,6 @@ class _$TotalNutrientsPerDayDao extends TotalNutrientsPerDayDao {
 
   final QueryAdapter _queryAdapter;
 
-  static final _total_nutrients_per_dayMapper = (Map<String, dynamic> row) =>
-      TotalNutrientsPerDay(
-          row['id'] as int,
-          row['date'] as String,
-          row['calories'] as int,
-          row['carbs'] as int,
-          row['fat'] as int,
-          row['protein'] as int);
-
   final InsertionAdapter<TotalNutrientsPerDay>
       _totalNutrientsPerDayInsertionAdapter;
 
@@ -177,37 +169,55 @@ class _$TotalNutrientsPerDayDao extends TotalNutrientsPerDayDao {
       _totalNutrientsPerDayDeletionAdapter;
 
   @override
-  Future<TotalNutrientsPerDay> findTotalNutrientsByDate(String date) async {
+  Future<TotalNutrientsPerDay?> findTotalNutrientsByDate(String date) async {
     return _queryAdapter.query(
-        'SELECT * FROM total_nutrients_per_day WHERE date = ?',
-        arguments: <dynamic>[date],
-        mapper: _total_nutrients_per_dayMapper);
+        'SELECT * FROM total_nutrients_per_day WHERE date = ?1',
+        mapper: (Map<String, Object?> row) => TotalNutrientsPerDay(
+            row['id'] as int?,
+            row['date'] as String?,
+            row['calories'] as int?,
+            row['carbs'] as int?,
+            row['fat'] as int?,
+            row['protein'] as int?),
+        arguments: [date]);
   }
 
   @override
-  Future<TotalNutrientsPerDay> findTotalNutrientsById(int id) async {
+  Future<TotalNutrientsPerDay?> findTotalNutrientsById(int id) async {
     return _queryAdapter.query(
-        'SELECT * FROM total_nutrients_per_day WHERE id = ?',
-        arguments: <dynamic>[id],
-        mapper: _total_nutrients_per_dayMapper);
+        'SELECT * FROM total_nutrients_per_day WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => TotalNutrientsPerDay(
+            row['id'] as int?,
+            row['date'] as String?,
+            row['calories'] as int?,
+            row['carbs'] as int?,
+            row['fat'] as int?,
+            row['protein'] as int?),
+        arguments: [id]);
   }
 
   @override
   Future<List<TotalNutrientsPerDay>> getAllNutrients() async {
     return _queryAdapter.queryList('SELECT * FROM total_nutrients_per_day',
-        mapper: _total_nutrients_per_dayMapper);
+        mapper: (Map<String, Object?> row) => TotalNutrientsPerDay(
+            row['id'] as int?,
+            row['date'] as String?,
+            row['calories'] as int?,
+            row['carbs'] as int?,
+            row['fat'] as int?,
+            row['protein'] as int?));
   }
 
   @override
   Future<int> insertTotalNutrients(TotalNutrientsPerDay totalNutrientsPerDay) {
     return _totalNutrientsPerDayInsertionAdapter.insertAndReturnId(
-        totalNutrientsPerDay, sqflite.ConflictAlgorithm.ignore);
+        totalNutrientsPerDay, OnConflictStrategy.ignore);
   }
 
   @override
   Future<int> updateTotalNutrients(TotalNutrientsPerDay totalNutrientsPerDay) {
     return _totalNutrientsPerDayUpdateAdapter.updateAndReturnChangedRows(
-        totalNutrientsPerDay, sqflite.ConflictAlgorithm.ignore);
+        totalNutrientsPerDay, OnConflictStrategy.ignore);
   }
 
   @override
@@ -223,7 +233,7 @@ class _$MealNutrientsDao extends MealNutrientsDao {
         _mealNutrientsInsertionAdapter = InsertionAdapter(
             database,
             'meal_nutrients',
-            (MealNutrients item) => <String, dynamic>{
+            (MealNutrients item) => <String, Object?>{
                   'id': item.id,
                   'calories': item.calories,
                   'carbs': item.carbs,
@@ -236,7 +246,7 @@ class _$MealNutrientsDao extends MealNutrientsDao {
             database,
             'meal_nutrients',
             ['id'],
-            (MealNutrients item) => <String, dynamic>{
+            (MealNutrients item) => <String, Object?>{
                   'id': item.id,
                   'calories': item.calories,
                   'carbs': item.carbs,
@@ -249,7 +259,7 @@ class _$MealNutrientsDao extends MealNutrientsDao {
             database,
             'meal_nutrients',
             ['id'],
-            (MealNutrients item) => <String, dynamic>{
+            (MealNutrients item) => <String, Object?>{
                   'id': item.id,
                   'calories': item.calories,
                   'carbs': item.carbs,
@@ -265,16 +275,6 @@ class _$MealNutrientsDao extends MealNutrientsDao {
 
   final QueryAdapter _queryAdapter;
 
-  static final _meal_nutrientsMapper = (Map<String, dynamic> row) =>
-      MealNutrients(
-          row['id'] as int,
-          row['calories'] as int,
-          row['carbs'] as int,
-          row['fat'] as int,
-          row['protein'] as int,
-          row['type'] as int,
-          row['total_nutrients_per_day_id'] as int);
-
   final InsertionAdapter<MealNutrients> _mealNutrientsInsertionAdapter;
 
   final UpdateAdapter<MealNutrients> _mealNutrientsUpdateAdapter;
@@ -282,35 +282,57 @@ class _$MealNutrientsDao extends MealNutrientsDao {
   final DeletionAdapter<MealNutrients> _mealNutrientsDeletionAdapter;
 
   @override
-  Future<MealNutrients> findMealById(int id) async {
-    return _queryAdapter.query('SELECT * FROM meal_nutrients WHERE id = ?',
-        arguments: <dynamic>[id], mapper: _meal_nutrientsMapper);
+  Future<MealNutrients?> findMealById(int id) async {
+    return _queryAdapter.query('SELECT * FROM meal_nutrients WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => MealNutrients(
+            row['id'] as int?,
+            row['calories'] as int?,
+            row['carbs'] as int?,
+            row['fat'] as int?,
+            row['protein'] as int?,
+            row['type'] as int?,
+            row['total_nutrients_per_day_id'] as int?),
+        arguments: [id]);
   }
 
   @override
   Future<List<MealNutrients>> finddMealByTotalNutrientsId(int id) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM meal_nutrients WHERE total_nutrients_per_day_id = ?',
-        arguments: <dynamic>[id],
-        mapper: _meal_nutrientsMapper);
+        'SELECT * FROM meal_nutrients WHERE total_nutrients_per_day_id = ?1',
+        mapper: (Map<String, Object?> row) => MealNutrients(
+            row['id'] as int?,
+            row['calories'] as int?,
+            row['carbs'] as int?,
+            row['fat'] as int?,
+            row['protein'] as int?,
+            row['type'] as int?,
+            row['total_nutrients_per_day_id'] as int?),
+        arguments: [id]);
   }
 
   @override
   Future<List<MealNutrients>> getAlldMeal() async {
     return _queryAdapter.queryList('SELECT * FROM meal_nutrients',
-        mapper: _meal_nutrientsMapper);
+        mapper: (Map<String, Object?> row) => MealNutrients(
+            row['id'] as int?,
+            row['calories'] as int?,
+            row['carbs'] as int?,
+            row['fat'] as int?,
+            row['protein'] as int?,
+            row['type'] as int?,
+            row['total_nutrients_per_day_id'] as int?));
   }
 
   @override
   Future<int> insertMeal(MealNutrients breakfastNutrients) {
     return _mealNutrientsInsertionAdapter.insertAndReturnId(
-        breakfastNutrients, sqflite.ConflictAlgorithm.ignore);
+        breakfastNutrients, OnConflictStrategy.ignore);
   }
 
   @override
   Future<int> updatedMeal(MealNutrients breakfastNutrients) {
     return _mealNutrientsUpdateAdapter.updateAndReturnChangedRows(
-        breakfastNutrients, sqflite.ConflictAlgorithm.ignore);
+        breakfastNutrients, OnConflictStrategy.ignore);
   }
 
   @override
@@ -326,7 +348,7 @@ class _$FoodDao extends FoodDao {
         _foodInsertionAdapter = InsertionAdapter(
             database,
             'food',
-            (Food item) => <String, dynamic>{
+            (Food item) => <String, Object?>{
                   'id': item.id,
                   'meal_id': item.mealId,
                   'name': item.name,
@@ -341,7 +363,7 @@ class _$FoodDao extends FoodDao {
             database,
             'food',
             ['id'],
-            (Food item) => <String, dynamic>{
+            (Food item) => <String, Object?>{
                   'id': item.id,
                   'meal_id': item.mealId,
                   'name': item.name,
@@ -356,7 +378,7 @@ class _$FoodDao extends FoodDao {
             database,
             'food',
             ['id'],
-            (Food item) => <String, dynamic>{
+            (Food item) => <String, Object?>{
                   'id': item.id,
                   'meal_id': item.mealId,
                   'name': item.name,
@@ -374,17 +396,6 @@ class _$FoodDao extends FoodDao {
 
   final QueryAdapter _queryAdapter;
 
-  static final _foodMapper = (Map<String, dynamic> row) => Food(
-      row['id'] as int,
-      row['meal_id'] as int,
-      row['name'] as String,
-      row['number_of_servings'] as int,
-      row['brand_name'] as String,
-      row['calories'] as int,
-      row['carbs'] as int,
-      row['fat'] as int,
-      row['protein'] as int);
-
   final InsertionAdapter<Food> _foodInsertionAdapter;
 
   final UpdateAdapter<Food> _foodUpdateAdapter;
@@ -392,32 +403,62 @@ class _$FoodDao extends FoodDao {
   final DeletionAdapter<Food> _foodDeletionAdapter;
 
   @override
-  Future<List<Food>> findAllFoodByMealId(int mealId) async {
-    return _queryAdapter.queryList('SELECT * FROM food WHERE meal_id = ?',
-        arguments: <dynamic>[mealId], mapper: _foodMapper);
+  Future<List<Food>?> findAllFoodByMealId(int mealId) async {
+    return _queryAdapter.queryList('SELECT * FROM food WHERE meal_id = ?1',
+        mapper: (Map<String, Object?> row) => Food(
+            row['id'] as int?,
+            row['meal_id'] as int?,
+            row['name'] as String?,
+            row['number_of_servings'] as int?,
+            row['brand_name'] as String?,
+            row['calories'] as int?,
+            row['carbs'] as int?,
+            row['fat'] as int?,
+            row['protein'] as int?),
+        arguments: [mealId]);
   }
 
   @override
   Future<List<Food>> getAllFood() async {
-    return _queryAdapter.queryList('SELECT * FROM food', mapper: _foodMapper);
+    return _queryAdapter.queryList('SELECT * FROM food',
+        mapper: (Map<String, Object?> row) => Food(
+            row['id'] as int?,
+            row['meal_id'] as int?,
+            row['name'] as String?,
+            row['number_of_servings'] as int?,
+            row['brand_name'] as String?,
+            row['calories'] as int?,
+            row['carbs'] as int?,
+            row['fat'] as int?,
+            row['protein'] as int?));
   }
 
   @override
-  Future<Food> findFoodById(int id) async {
-    return _queryAdapter.query('SELECT * FROM food WHERE id = ?',
-        arguments: <dynamic>[id], mapper: _foodMapper);
+  Future<Food?> findFoodById(int id) async {
+    return _queryAdapter.query('SELECT * FROM food WHERE id = ?1',
+        mapper: (Map<String, Object?> row) => Food(
+            row['id'] as int?,
+            row['meal_id'] as int?,
+            row['name'] as String?,
+            row['number_of_servings'] as int?,
+            row['brand_name'] as String?,
+            row['calories'] as int?,
+            row['carbs'] as int?,
+            row['fat'] as int?,
+            row['protein'] as int?),
+        arguments: [id]);
   }
 
   @override
   Future<int> insertFood(Food food) {
     return _foodInsertionAdapter.insertAndReturnId(
-        food, sqflite.ConflictAlgorithm.ignore);
+        food, OnConflictStrategy.ignore);
   }
 
   @override
   Future<int> updateFood(Food food) {
     return _foodUpdateAdapter.updateAndReturnChangedRows(
-        food, sqflite.ConflictAlgorithm.ignore);
+        food, OnConflictStrategy.ignore);
   }
 
   @override

@@ -3,7 +3,6 @@ import 'package:calorie_counter/data/local/entity/food.dart';
 import 'package:calorie_counter/data/local/repository/repository.dart';
 
 class FoodRepository implements Repository<Food> {
-
   final FoodDao _foodDao;
 
   FoodRepository(this._foodDao);
@@ -14,12 +13,13 @@ class FoodRepository implements Repository<Food> {
   }
 
   @override
-  Future<List<Food>> findAllDataWith(int id) {
-    return _foodDao.findAllFoodByMealId(id);
+  Future<Food?> getDataById(int id) {
+    return _foodDao.findFoodById(id);
   }
 
-  Future<Food> getFoodById(int id) {
-    return _foodDao.findFoodById(id);
+  @override
+  Future<List<Food>?> findAllDataWith(int id) {
+    return _foodDao.findAllFoodByMealId(id);
   }
 
   @override
@@ -31,9 +31,30 @@ class FoodRepository implements Repository<Food> {
   Future<void> upsert(Food data) async {
     final id = await _foodDao.insertFood(data);
 
-    if (id == -1 || id == null) {
+    if (id == 0) {
       await _foodDao.updateFood(data);
     }
   }
-  
+
+  @override
+  Future<bool> futureUpsert(Food data) async {
+    final id = await _foodDao.insertFood(data);
+
+    if (id == 0) {
+      var id = await _foodDao.updateFood(data);
+
+      if (id == 0) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+    return true;
+  }
+
+  @override
+  Future<int> getRowCount() async {
+    var listOfFood = await _foodDao.getAllFood();
+    return listOfFood.length;
+  }
 }

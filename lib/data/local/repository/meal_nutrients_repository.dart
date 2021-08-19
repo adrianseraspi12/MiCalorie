@@ -8,11 +8,13 @@ class MealNutrientsRepository implements Repository<MealNutrients> {
 
   MealNutrientsRepository(this._mealNutrientsDao);
 
-  Future<MealNutrients> getMeal(int id) {
+  @override
+  Future<MealNutrients?> getDataById(int id) {
     return _mealNutrientsDao.findMealById(id);
   }
 
-  Future<int> getAllMealCount() async {
+  @override
+  Future<int> getRowCount() async {
     final allMeals = await _mealNutrientsDao.getAlldMeal();
     return allMeals.length;
   }
@@ -28,12 +30,30 @@ class MealNutrientsRepository implements Repository<MealNutrients> {
   }
 
   @override
-  void upsert(MealNutrients data) async {
-    final id = await _mealNutrientsDao.insertMeal(data);
+  Future<int> upsert(MealNutrients data) async {
+    var id = await _mealNutrientsDao.insertMeal(data);
   
-    if (id == -1 || id == null) {
-      await _mealNutrientsDao.updatedMeal(data);
+    if (id == 0) {
+      id = await _mealNutrientsDao.updatedMeal(data);
     }
+
+    return id;
+  }
+
+  @override
+  Future<bool> futureUpsert(MealNutrients data) async {
+    final id = await _mealNutrientsDao.insertMeal(data);
+
+    if (id == 0) {
+      var id = await _mealNutrientsDao.updatedMeal(data);
+
+      if (id == 0) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+    return true;
   }
 
 }
