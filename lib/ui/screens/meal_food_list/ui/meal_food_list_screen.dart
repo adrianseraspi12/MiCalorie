@@ -3,7 +3,7 @@ import 'package:calorie_counter/data/local/entity/meal_nutrients.dart';
 import 'package:calorie_counter/ui/screens/meal_food_list/bloc/meal_food_list_bloc.dart';
 import 'package:calorie_counter/ui/screens/meal_food_list/ui/meal_food_list_content.dart';
 import 'package:calorie_counter/ui/screens/quick_add_food/ui/quick_add_food_screen.dart';
-import 'package:calorie_counter/ui/screens/search_food_screen.dart';
+import 'package:calorie_counter/ui/screens/search_food/ui/search_food_screen.dart';
 import 'package:calorie_counter/ui/widgets/modal.dart';
 import 'package:calorie_counter/ui/widgets/neumorphic/circular_button.dart';
 import 'package:calorie_counter/ui/widgets/snackbar.dart';
