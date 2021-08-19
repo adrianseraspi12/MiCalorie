@@ -1,4 +1,3 @@
-
 import 'package:calorie_counter/data/local/data_source/i_data_source.dart';
 import 'package:calorie_counter/data/local/data_source/result.dart';
 import 'package:calorie_counter/data/local/entity/food.dart';
