@@ -6,7 +6,7 @@ part 'list_of_food.g.dart';
 class ListOfFood {
 
   @JsonKey(name: 'hints')
-  List<CommonFood> commonFood;
+  List<CommonFood>? commonFood;
 
   ListOfFood(this.commonFood);
 
@@ -20,7 +20,7 @@ class ListOfFood {
 class CommonFood {
 
   @JsonKey(name: 'food')
-  FoodDetails details;
+  FoodDetails? details;
 
   CommonFood(this.details);
 
@@ -34,11 +34,11 @@ class CommonFood {
 class FoodDetails {
 
   @JsonKey(name: 'label')
-  String name;
+  String? name;
 
-  String brand;
+  String? brand;
 
-  Nutrients nutrients;
+  Nutrients? nutrients;
 
   FoodDetails(this.name, this.brand, this.nutrients);
 
@@ -52,16 +52,16 @@ class FoodDetails {
 class Nutrients {
 
   @JsonKey(name: 'ENERC_KCAL')
-  double calories;
+  double? calories;
 
   @JsonKey(name: 'CHOCDF')
-  double carbs;
+  double? carbs;
 
   @JsonKey(name: 'FAT')
-  double fat;
+  double? fat;
 
   @JsonKey(name: 'PROCNT')
-  double protein;
+  double? protein;
 
   Nutrients(this.calories, this.carbs, this.fat, this.protein);
 

@@ -8,10 +8,9 @@ part of 'list_of_food.dart';
 
 ListOfFood _$ListOfFoodFromJson(Map<String, dynamic> json) {
   return ListOfFood(
-    (json['hints'] as List)
-        ?.map((e) =>
-            e == null ? null : CommonFood.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+    (json['hints'] as List<dynamic>?)
+        ?.map((e) => CommonFood.fromJson(e as Map<String, dynamic>))
+        .toList(),
   );
 }
 
@@ -35,8 +34,8 @@ Map<String, dynamic> _$CommonFoodToJson(CommonFood instance) =>
 
 FoodDetails _$FoodDetailsFromJson(Map<String, dynamic> json) {
   return FoodDetails(
-    json['label'] as String,
-    json['brand'] as String,
+    json['label'] as String?,
+    json['brand'] as String?,
     json['nutrients'] == null
         ? null
         : Nutrients.fromJson(json['nutrients'] as Map<String, dynamic>),
@@ -52,10 +51,10 @@ Map<String, dynamic> _$FoodDetailsToJson(FoodDetails instance) =>
 
 Nutrients _$NutrientsFromJson(Map<String, dynamic> json) {
   return Nutrients(
-    (json['ENERC_KCAL'] as num)?.toDouble(),
-    (json['CHOCDF'] as num)?.toDouble(),
-    (json['FAT'] as num)?.toDouble(),
-    (json['PROCNT'] as num)?.toDouble(),
+    (json['ENERC_KCAL'] as num?)?.toDouble(),
+    (json['CHOCDF'] as num?)?.toDouble(),
+    (json['FAT'] as num?)?.toDouble(),
+    (json['PROCNT'] as num?)?.toDouble(),
   );
 }
 

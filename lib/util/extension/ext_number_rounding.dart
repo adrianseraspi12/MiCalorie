@@ -1,4 +1,4 @@
-extension NumberRounding on double {
+extension NumberRounding on double? {
 
   double roundTo(int number) {
 
@@ -6,7 +6,7 @@ extension NumberRounding on double {
       return 0;
     }
 
-    return double.parse((this).toStringAsFixed(number));
+    return double.parse(this!.toStringAsFixed(number));
   } 
 
 }
